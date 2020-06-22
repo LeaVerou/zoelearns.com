@@ -46,6 +46,16 @@ p {
 	color: var(--color);
 }
 
+@keyframes number-appear {
+	from {
+		transform: translateY(-100vh) translateX(-50%);
+	}
+
+	50% {
+		transform: translateX(-50%) scale(1.2, .8);
+	}
+}
+
 .number::before {
 	content: "";
 	position: absolute;
@@ -63,6 +73,8 @@ p {
 	</svg>') 0 0 / calc(100% / var(--columns)) var(--dim);
 	background-repeat: round;
 	filter: hue-rotate(calc(var(--hue) * 1deg));
+	animation: .5s number-appear both;
+	transform-origin: bottom;
 }
 
 .number-2::before,
