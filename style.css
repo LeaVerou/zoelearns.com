@@ -1,0 +1,77 @@
+html {
+	cursor: url('data:image/svg+xml,\
+		<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">\
+			<circle cx="50" cy="50" r="50" fill="red" />\
+	</svg>'), auto;
+}
+
+body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	height: 100vh;
+	font: 300 200%/1 Helvetica Neue, sans-serif;
+}
+
+p {
+	margin: 0;
+}
+
+@keyframes fade {
+	to {
+		opacity: 0;
+	}
+}
+
+.instruction {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	animation: fade 1s 1s both;
+}
+
+#word {
+	display: flex;
+	font-size: 800%;
+	line-height: .8;
+	font-weight: bold;
+}
+
+.letter {
+	color: var(--color);
+}
+
+.number {
+	position: relative;
+	color: var(--color);
+}
+
+.number::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 100%;
+	margin: auto;
+	--dim: .2em;
+	--columns: 1;
+	width: calc(var(--dim) * 2);
+	height: calc(var(--number) * var(--dim) / var(--columns));
+	background: url('data:image/svg+xml,\
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\
+			<text y=".9em" font-size="90">🍎</text>\
+	</svg>') 0 0 / calc(100% / var(--columns)) var(--dim);
+	background-repeat: round;
+	filter: hue-rotate(calc(var(--hue) * 1deg));
+}
+
+.number-2::before,
+.number-4::before,
+.number-6::before,
+.number-8::before {
+	--columns: 2;
+}
+
+.number-9::before {
+	--columns: 3;
+}
