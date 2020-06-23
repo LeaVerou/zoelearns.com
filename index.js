@@ -5,7 +5,8 @@ const $ = Bliss;
 
 let playing = true;
 
-document.oncontextmenu = evt => {
+document.oncontextmenu =
+document.onkeypress = evt => {
 	if (playing) {
 		evt.preventDefault();
 	}
@@ -22,17 +23,19 @@ document.onkeyup = evt => {
 	}
 };
 
+let lastKey = 0;
+
 document.onkeydown = evt => {
 	switch (evt.key) {
 		case " ":
-			Promise.all($.transition($.$("*", word), {opacity: 0}, 400)).then(() => {
-				word.textContent = "";
-			});
-
-			return;
+			return clear();
 		case "Backspace":
 		case "Escape":
 			word.lastElementChild?.remove();
+			return;
+		case "Enter":
+
+			showPhoto(word.textContent);
 			return;
 	}
 
@@ -41,6 +44,14 @@ document.onkeydown = evt => {
 	let isNumber = /^\p{Number}$/ui.test(evt.key);
 
 	if (isLetter || isNumber) {
+		let timeElapsed = Date.now() - lastKey;
+
+		if (timeElapsed < 500) {
+			return;
+		}
+
+		lastKey = Date.now();
+
 		let hue, color, classes, style;
 
 		if (isLetter) {
@@ -70,3 +81,39 @@ document.onkeydown = evt => {
 		});
 	}
 };
+
+async function clear() {
+	await Promise.all($.transition($.$("#word *", word), {opacity: 0}, 400))
+	word.textContent = "";
+}
+
+async translate(word) {
+	// https://www.wordreference.com/gren/%CE%B3%CE%B1%CF%84%CE%B1
+	let response = await fetch(`https://www.wordreference.com/gren/${encodeURIComponent(word)}`);
+	let html = await response.text();
+	let root = new DOMParser().parseFromString(html, "text/html");
+}
+
+async function showPhoto(word) {
+	let url = new URL("https://api.unsplash.com/search/photos/");
+	url.searchParams.set("query", word);
+	let response = await fetch(url, {
+		headers: {
+			Authorization: "Client-ID Sxsv-UZ99YLiDi84bRufynBYxDxGVCPb4Os1nI6uZ-c"
+		}
+	});
+	let json = await response.json();
+
+	photos.textContent = "";
+
+	for (let photo of json.results) {
+		$.create("img", {
+			src: photo.urls.small,
+			alt: photo.description,
+			style: {
+				"--color": photo.color
+			},
+			inside: photos
+		})
+	}
+}
