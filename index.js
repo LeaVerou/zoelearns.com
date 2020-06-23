@@ -87,7 +87,7 @@ async function clear() {
 	word.textContent = "";
 }
 
-async translate(word) {
+async function translate(word) {
 	// https://www.wordreference.com/gren/%CE%B3%CE%B1%CF%84%CE%B1
 	let response = await fetch(`https://www.wordreference.com/gren/${encodeURIComponent(word)}`);
 	let html = await response.text();
