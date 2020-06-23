@@ -31,10 +31,17 @@ p {
 }
 
 #word {
+	position: relative;
 	display: flex;
+	flex-wrap: wrap;
+	padding: .1em;
 	font-size: 800%;
 	line-height: .8;
 	font-weight: bold;
+	background: hsl(0 0% 100% / .8);
+	backdrop-filter: blur(5px);
+	-webkit-text-stroke: 1px white;
+	border-radius: .1em;
 }
 
 .letter {
@@ -87,3 +94,23 @@ p {
 .number-9::before {
 	--columns: 3;
 }
+
+#photos {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	height: calc(50vh - 4em);
+	display: flex;
+	flex-wrap: wrap;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+	#photos > img {
+		flex: 1;
+		height: 100%;
+		background: var(--color);
+		object-fit: cover;
+
+	}
