@@ -25,7 +25,7 @@ document.onkeyup = evt => {
 
 let lastKey = 0;
 
-document.onkeydown = evt => {
+document.onkeydown = async evt => {
 	switch (evt.key) {
 		case " ":
 			return clear();
@@ -34,8 +34,16 @@ document.onkeydown = evt => {
 			word.lastElementChild?.remove();
 			return;
 		case "Enter":
+			let text = word.textContent.trim();
 
-			showPhoto(word.textContent);
+			if (isScript("Greek", text)) {
+				text = await translate(text);
+			}
+
+			if (text) {
+				showPhoto(text);
+			}
+
 			return;
 	}
 
@@ -89,11 +97,24 @@ async function clear() {
 	word.textContent = "";
 }
 
+function isScript(script, text) {
+	let regex = new RegExp(`\\p{Script_Extensions=${script}}+`, "u");
+	return regex.test(text);
+}
+
+// Only GR to EN for now
 async function translate(word) {
-	// https://www.wordreference.com/gren/%CE%B3%CE%B1%CF%84%CE%B1
 	let response = await fetch(`https://www.wordreference.com/gren/${encodeURIComponent(word)}`);
 	let html = await response.text();
 	let root = new DOMParser().parseFromString(html, "text/html");
+	let toWord = root?.querySelector("tr:not(.langHeader) > td.ToWrd")?.textContent.trim();
+	let fromWord = root?.querySelector("tr:not(.langHeader) > td.FrWrd > strong")?.textContent.trim();
+
+	if (isScript("Greek", toWord)) {
+		return fromWord;
+	}
+
+	return toWord;
 }
 
 async function showPhoto(word) {
