@@ -46,7 +46,9 @@ document.onkeydown = evt => {
 	if (isLetter || isNumber) {
 		let timeElapsed = Date.now() - lastKey;
 
-		if (timeElapsed < 500) {
+		let lastCharacter = word.lastElementChild?.textContent;
+
+		if (lastCharacter === evt.key && timeElapsed < 500) {
 			return;
 		}
 
