@@ -2,81 +2,59 @@ import Color from "https://colorjs.io/color.js";
 import "https://blissfuljs.com/bliss.js";
 
 const $ = Bliss;
+const defer = delay => new Promise(resolve => delay === undefined? requestAnimationFrame(resolve) : setTimeout(resolve, delay));
 
 let playing = true;
 
 document.oncontextmenu =
-document.onkeypress = evt => {
+document.onkeyup =
+document.onclick =
+evt => {
 	if (playing) {
 		evt.preventDefault();
+		buffer.focus;
 	}
 };
 
-document.onkeyup = evt => {
-	if (evt.key === "F" && evt.metaKey && evt.shiftKey) {
+document.addEventListener("keyup", evt => {
+	if (evt.key === "1" && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
 		playing = !playing;
 		document.documentElement.classList.toggle("playing", playing);
+
+		showNotice({
+			textContent: playing? "Playing" : "Paused",
+			className: "play-notice " + (!playing? "not-" : "") + "-playing"
+		});
+	}
+});
+
+let isLetter = text => /^\p{Letter}$/ui.test(text);
+let isNumber = text => /^\p{Number}$/ui.test(text);
+
+buffer.oninput = evt => {
+	let {target} = evt;
+	let text = target.value;
+	let hue, color, classes, style;
+
+	if (isLetter(text)) {
+		let code = text.charCodeAt(0)
+		hue = (code - 65) * 12;
+		color = new Color("lch", [60, 80, hue]);
+		classes = `letter letter-${text}`;
+		style = {"--code": code};
+	}
+	else if (isNumber(text)) {
+		hue = text * 36;
+		color = new Color("lch", [70, 90, hue]);
+		classes = `number number-${text}`;
+		style = {"--number": text}
+	}
+	else if (!/^\p{Lm}|\p{Mc}|\p{Sk}+$/u.test(text)) {
+		// Not a modifier, not a letter, not a number, yeet
+		target.value = "";
 	}
 
-	if (playing) {
-		evt.preventDefault();
-	}
-};
-
-let lastKey = 0;
-
-document.onkeydown = async evt => {
-	switch (evt.key) {
-		case " ":
-			return clear();
-		case "Backspace":
-		case "Escape":
-			word.lastElementChild?.remove();
-			return;
-		case "Enter":
-			let text = word.textContent.trim();
-
-			if (isScript("Greek", text)) {
-				text = await translate(text);
-			}
-
-			if (text) {
-				showPhoto(text);
-			}
-
-			return;
-	}
-
-
-	let isLetter = /^\p{Letter}$/ui.test(evt.key);
-	let isNumber = /^\p{Number}$/ui.test(evt.key);
-
-	if (isLetter || isNumber) {
-		let timeElapsed = Date.now() - lastKey;
-
-		let lastCharacter = word.lastElementChild?.textContent;
-
-		if (lastCharacter === evt.key && timeElapsed < 500) {
-			return;
-		}
-
-		lastKey = Date.now();
-
-		let hue, color, classes, style;
-
-		if (isLetter) {
-			hue = (evt.keyCode - 65) * 12;
-			color = new Color("lch", [60, 80, hue]);
-			classes = `letter letter-${evt.key}`;
-			style = {"--code": evt.keyCode};
-		}
-		else if (isNumber) {
-			hue = (evt.keyCode - 65) * 36;
-			color = new Color("lch", [70, 90, hue]);
-			classes = `number number-${evt.key}`;
-			style = {"--number": evt.key}
-		}
-
+	if (style) {
 		let colorStr = color.toString({fallback: true});
 
 		$.create("span", {
@@ -86,15 +64,81 @@ document.onkeydown = async evt => {
 				"--color": colorStr,
 				"--hue": hue
 			},
-			textContent: evt.key,
+			textContent: text,
 			inside: word
 		});
+
+		target.value = "";
+		content.hidden = false;
+	}
+
+}
+
+document.addEventListener("focusout", evt => {
+	buffer.focus();
+});
+
+document.addEventListener("blur", evt => {
+	buffer.focus();
+}, true);
+
+document.onkeydown = async evt => {
+	switch (evt.key) {
+		case " ":
+		case "Escape":
+			clear();
+			evt.preventDefault();
+			return;
+		case "Backspace":
+			word.lastElementChild?.remove();
+			evt.preventDefault();
+			return;
+		case "Tab":
+			buffer.focus();
+			evt.preventDefault();
+			return;
+		case "Enter":
+			let text = word.textContent.trim();
+
+			if (isScript("Greek", text)) {
+				text = await translate(text);
+				translation.textContent = text;
+				translation.hidden = false;
+				word.lang = "el";
+			}
+			else {
+				translation.hidden = true;
+				word.lang = "en";
+			}
+
+			if (text) {
+				showPhoto(text);
+			}
+
+			evt.preventDefault();
+			return;
 	}
 };
 
+
+
+async function showNotice(el) {
+	el = $.create(el);
+	document.body.prepend(el);
+	await defer(2000);
+	return fadeRemove(el).then(arr => arr[0]);
+}
+
+async function fadeRemove(els) {
+	els = Array.isArray(els)? els : [els];
+	els = await Promise.all($.transition(els, {opacity: 0}, 400));
+	return els.map(el => el.remove());
+}
+
 async function clear() {
-	await Promise.all($.transition($.$("#word *", word), {opacity: 0}, 400))
-	word.textContent = "";
+	await fadeRemove($.$("#word *, #photos *"));
+	photos.textContent = word.textContent = "";
+	content.hidden = true;
 }
 
 function isScript(script, text) {
