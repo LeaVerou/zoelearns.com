@@ -125,17 +125,17 @@ p {
 	left: 0;
 	top: 0;
 	right: 0;
-	height: 100vh;
 	display: flex;
 	flex-wrap: wrap;
 	align-content: stretch;
 	-webkit-user-select: none;
 	user-select: none;
+	--rows: 3;
 }
 
 	#photos > img {
 		flex: 1;
-		height: calc(100vh / 3);
+		height: calc(100vh / var(--rows));
 		background: var(--color);
 		object-fit: cover;
 

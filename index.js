@@ -4,7 +4,7 @@ import "https://blissfuljs.com/bliss.js";
 const $ = Bliss;
 const defer = delay => new Promise(resolve => delay === undefined? requestAnimationFrame(resolve) : setTimeout(resolve, delay));
 
-let playing = true;
+let playing;
 
 document.oncontextmenu =
 document.onkeyup =
@@ -16,15 +16,21 @@ evt => {
 	}
 };
 
+function togglePlaying() {
+	playing = !playing;
+	document.documentElement.classList.toggle("playing", playing);
+
+	showNotice({
+		textContent: playing? "Playing" : "Paused",
+		className: "play-notice " + (!playing? "not-" : "") + "-playing"
+	});
+}
+
+togglePlaying();
+
 document.addEventListener("keyup", evt => {
 	if (evt.key === "1" && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
-		playing = !playing;
-		document.documentElement.classList.toggle("playing", playing);
-
-		showNotice({
-			textContent: playing? "Playing" : "Paused",
-			className: "play-notice " + (!playing? "not-" : "") + "-playing"
-		});
+		togglePlaying();
 	}
 });
 
@@ -136,9 +142,10 @@ async function fadeRemove(els) {
 }
 
 async function clear() {
-	await fadeRemove($.$("#word *, #photos *"));
-	photos.textContent = word.textContent = "";
-	content.hidden = true;
+	let els = await Promise.all($.transition($.$("#word *, #photos *, #translation"), {opacity: 0}, 400));
+	photos.textContent = word.textContent = translation.textContent = "";
+	content.hidden = translation.hidden = true;
+	els.forEach(el => el.style.opacity = "");
 }
 
 function isScript(script, text) {
@@ -173,14 +180,30 @@ async function showPhoto(word) {
 
 	photos.textContent = "";
 
-	for (let photo of json.results) {
-		$.create("img", {
-			src: photo.urls.small,
-			alt: photo.description,
-			style: {
-				"--color": photo.color
-			},
-			inside: photos
-		})
+	let imgs = json.results.map(photo => $.create("img", {
+		src: photo.urls.small,
+		alt: photo.description,
+		style: {
+			"--color": photo.color
+		},
+		inside: photos
+	}));
+
+	let onloads = imgs.map(img => new Promise(r => img.addEventListener("load", r)));
+
+	await Promise.all(onloads);
+	let rows = getComputedStyle(photos).getPropertyValue("--rows");
+	let offset = photos.scrollHeight - innerHeight;
+	if (offset < 0) {
+		while ((photos.scrollHeight < innerHeight - 10) && rows > 1) {
+			photos.style.setProperty("--rows", --rows);
+			console.log("--", rows);
+		}
+	}
+	else {
+		while ((photos.scrollHeight > innerHeight + 40) && rows < 5) {
+			photos.style.setProperty("--rows", ++rows);
+			console.log("++", rows);
+		}
 	}
 }
