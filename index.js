@@ -2,6 +2,7 @@ import Color from "https://colorjs.io/color.js";
 import "https://blissfuljs.com/bliss.js";
 
 const $ = Bliss;
+const $$ = $.$;
 const defer = delay => new Promise(resolve => delay === undefined? requestAnimationFrame(resolve) : setTimeout(resolve, delay));
 
 let playing;
@@ -22,7 +23,7 @@ function togglePlaying() {
 
 	showNotice({
 		textContent: playing? "Playing" : "Paused",
-		className: "play-notice " + (!playing? "not-" : "") + "-playing"
+		className: "play-notice " + (!playing? "not-" : "") + "playing"
 	});
 }
 
@@ -97,6 +98,7 @@ document.onkeydown = async evt => {
 			return;
 		case "Backspace":
 			word.lastElementChild?.remove();
+			translation.textContent = "";
 			evt.preventDefault();
 			return;
 		case "Tab":
@@ -107,8 +109,10 @@ document.onkeydown = async evt => {
 			let text = word.textContent.trim();
 
 			if (isScript("Greek", text)) {
+				let textEn = text;
 				text = await translate(text);
 				translation.textContent = text;
+				translation.href = `https://www.wordreference.com/gren/${textEn}`
 				translation.hidden = false;
 				word.lang = "el";
 			}
@@ -126,8 +130,6 @@ document.onkeydown = async evt => {
 	}
 };
 
-
-
 async function showNotice(el) {
 	el = $.create(el);
 	document.body.prepend(el);
@@ -142,7 +144,7 @@ async function fadeRemove(els) {
 }
 
 async function clear() {
-	let els = await Promise.all($.transition($.$("#word *, #photos *, #translation"), {opacity: 0}, 400));
+	let els = await Promise.all($.transition($$("#word *, #photos *, #translation"), {opacity: 0}, 400));
 	photos.textContent = word.textContent = translation.textContent = "";
 	content.hidden = translation.hidden = true;
 	els.forEach(el => el.style.opacity = "");
@@ -158,14 +160,14 @@ async function translate(word) {
 	let response = await fetch(`https://www.wordreference.com/gren/${encodeURIComponent(word)}`);
 	let html = await response.text();
 	let root = new DOMParser().parseFromString(html, "text/html");
-	let toWord = root?.querySelector("tr:not(.langHeader) > td.ToWrd")?.textContent.trim();
-	let fromWord = root?.querySelector("tr:not(.langHeader) > td.FrWrd > strong")?.textContent.trim();
 
-	if (isScript("Greek", toWord)) {
-		return fromWord;
-	}
+	// Is translation in first or second column?
+	let toWords = $$("tr:not(.langHeader) > td.ToWrd", root).map(td => td.textContent.trim());
+	let fromWords = $$("tr:not(.langHeader) > td.FrWrd > strong", root).map(strong => strong.textContent.trim());
+	let words = isScript("Greek", toWords[0])? fromWords : toWords;
 
-	return toWord;
+	// Sometimes the first row doesn't contain the best translation
+	return words[0]?.length > words[1]?.length? words[1] : words[0];
 }
 
 async function showPhoto(word) {
@@ -194,6 +196,7 @@ async function showPhoto(word) {
 	await Promise.all(onloads);
 	let rows = getComputedStyle(photos).getPropertyValue("--rows");
 	let offset = photos.scrollHeight - innerHeight;
+	//console.log(offset, photos.scrollHeight, innerHeight);
 	if (offset < 0) {
 		while ((photos.scrollHeight < innerHeight - 10) && rows > 1) {
 			photos.style.setProperty("--rows", --rows);
