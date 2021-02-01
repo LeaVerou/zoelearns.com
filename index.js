@@ -53,8 +53,8 @@ buffer.oninput = evt => {
 	let hue, color, classes, style;
 
 	if (isLetter(text)) {
-		let code = text.charCodeAt(0)
-		hue = (code - 65) * 12;
+		let code = text.toUpperCase().charCodeAt(0);
+		hue = (code % 100) * 30;
 		color = new Color("lch", [60, 80, hue]);
 		classes = `letter letter-${text}`;
 		style = {"--code": code};
