@@ -17,9 +17,11 @@ evt => {
 	}
 };
 
-function togglePlaying() {
+async function togglePlaying() {
 	playing = !playing;
 	document.documentElement.classList.toggle("playing", playing);
+
+	await navigator.keyboard?.[playing? "lock" : "unlock"]();
 
 	showNotice({
 		textContent: playing? "Playing" : "Paused",
@@ -32,6 +34,13 @@ togglePlaying();
 document.addEventListener("keyup", evt => {
 	if (evt.key === "1" && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
 		togglePlaying();
+	}
+});
+
+document.addEventListener("keydown", evt => {
+	if (evt.ctrlKey || evt.metaKey) {
+		// Disable built-in shortcuts
+		evt.preventDefault();
 	}
 });
 
