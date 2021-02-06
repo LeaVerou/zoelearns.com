@@ -39,8 +39,8 @@ for (let i=0; i<languageCodes.length; i++) {
 			properties: {
 				times: settings.audio.times
 			},
-			// hidden: true,
-			controls: true,
+			hidden: true,
+			// controls: true,
 			inside: document.body
 		});
 	}
