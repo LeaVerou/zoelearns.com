@@ -1,0 +1,200 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+@property --extrude-height {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --progress {
+	syntax: '<percentage>';
+	inherits: true;
+	initial-value: 0%;
+}
+
+body, html {
+	height: 100vh;
+}
+
+body {
+	--root-padding: 5vh;
+	--extrude-height: 3vh;
+	--gap-h: 5vh;
+	--button-padding: 3vh;
+
+	--gap-v: calc(var(--gap-h) + var(--extrude-height));
+	--main-height: calc(100vh - 2 * var(--root-padding));
+
+	margin: 0;
+	font: 200%/1 Helvetica Neue, sans-serif;
+	padding: var(--root-padding);
+	background: hsl(220 10% 60%);
+}
+
+main {
+	height: var(--main-height);
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+	gap: var(--gap-v) var(--gap-h);
+	margin-top: calc(.5 * var(--extrude-height));
+}
+
+button {
+	position: relative;
+	background: white;
+	font: inherit;
+	box-shadow: 0 var(--extrude-height) hsl(220 10% 80%), 0 var(--extrude-height) 1rem rgb(0 0 0 / .4);
+	border-radius: .3em;
+	border: none;
+}
+
+dialog#number,
+button.number {
+	background: var(--color);
+	color: white;
+}
+
+dialog#number:not(.expanded),
+button.number,
+button {
+	top: calc(-1 * var(--extrude-height));
+}
+
+dialog#number:not(.expanded),
+button.number {
+	padding: var(--button-padding);
+	border-radius: 4vh;
+	border: 4px solid white;
+}
+
+.number {
+	text-shadow: 0 -.01em .05em rgb(0 0 0 / .1);
+	font-weight: bold;
+	font-size: calc(
+		(var(--main-height) - 2 * var(--gap-v)) / 3
+		- var(--button-padding) * 2
+	);
+	transition: 400ms;
+	line-height: .8;
+}
+
+button.number {
+	min-height: 100%;
+}
+
+	button:active {
+		--extrude-height: 0;
+	}
+
+	button:focus {
+		outline: none;
+		border-color: yellow;
+	}
+
+dialog#number {
+	border: 0;
+	background: var(--color);
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	max-width: none;
+	max-height: none;
+	color: white;
+	transition: 400ms;
+	overflow: hidden;
+}
+
+dialog#number.expanded {
+	padding: 1em;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 2rem;
+}
+
+@media (orientation: portrait) {
+	dialog#number.expanded {
+		flex-flow: column;
+	}
+}
+
+dialog#number:not(.expanded) {
+	top: calc(1px * var(--top));
+	right: calc(1px * var(--right));
+	bottom: calc(1px * var(--bottom));
+	left: calc(1px * var(--left));
+	width: calc(1px * var(--width));
+	height: calc(1px * var(--height));
+	text-align: center;
+}
+
+	dialog#number:not(.expanded) > * {
+		opacity: 0;
+	}
+
+	dialog#number.expanded .number {
+		font-size: 80vh;
+		grid-column: 1;
+	}
+
+	dialog#number .close {
+		position: absolute;
+		margin-top: 1em;
+		right: 1em;
+		font-size: 200%;
+		padding: .25em;
+	}
+
+	dialog#number .close:not(:active) {
+		--extrude-height: .2em;
+	}
+
+.words {
+	grid-column: 2;
+	font-size: 10vmin;
+	font-weight: bold;
+}
+
+@keyframes progression {
+	from { --progress: 0% }
+	to { --progress: 100% }
+}
+
+.word {
+	width: fit-content;
+	white-space: nowrap;
+}
+
+.word.speaking {
+	animation: progression 1s linear infinite;
+	-webkit-mask: linear-gradient(to right, white 1.2em, white 0, transparent var(--progress), white);
+}
+
+.word::before {
+	content: var(--flag);
+	margin-right: .4em;;
+}
+
+.objects {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	align-items: center;
+	max-width: 50%;
+	font-size: 25vmin;
+	grid-column: 3;
+	text-shadow: 0 -.01em .05em rgb(0 0 0 / .1)
+}
+
+	.objects > ::before {
+		content: "🍓";
+		display: block;
+	}
