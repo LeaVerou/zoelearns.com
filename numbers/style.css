@@ -51,6 +51,7 @@ button {
 	box-shadow: 0 var(--extrude-height) hsl(220 10% 80%), 0 var(--extrude-height) 1rem rgb(0 0 0 / .4);
 	border-radius: .3em;
 	border: none;
+	cursor: pointer;
 }
 
 dialog#number,
@@ -152,6 +153,17 @@ dialog#number:not(.expanded) {
 		right: .5em;
 		font-size: 180%;
 		padding: .25em;
+	}
+
+	/* Expand hit area */
+	.close::before {
+		content: "";
+		position: absolute;
+		top: -1em;
+		right: -1em;
+		left: 0;
+		bottom: 0;
+		z-index: -1;
 	}
 
 	.close:not(:active) {
