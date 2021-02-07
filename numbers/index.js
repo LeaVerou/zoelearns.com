@@ -18,7 +18,10 @@ const seconds = s => new Promise(resolve => setTimeout(resolve, s * 1000));
 
 // Setup
 const main = $("main");
+const objects = $(".objects");
+
 let words = $$(".word");
+let shownNumber;
 
 for (let i=1; i<=9; i++) {
 	create({
@@ -69,26 +72,36 @@ async function showNumber(button) {
 	let rect = button.getBoundingClientRect();
 	let cs = getComputedStyle(button);
 
+	shownNumber = i;
+
 	style(dialog, {
 		"--color": cs.backgroundColor,
-		"--top": rect.top,
-		"--right": rect.right,
-		"--bottom": rect.bottom,
-		"--left": rect.left,
-		"--width": rect.width,
-		"--height": rect.height,
+		"--number": i
 	});
+
+	for (let prop in rect) {
+		if (typeof rect[prop] === "number") {
+			style(dialog, "--" + prop, rect[prop]);
+		}
+	}
 
 	$(".number", dialog).textContent = button.textContent;
 
 	languageCodes.map((code, j) => {
 		let name = languages[code].names[i];
 		words[j].textContent = name;
+		words[j].onclick = e => count(code);
 	});
 
-	let objects = $(".objects");
-
-	Array(i).fill().map(x => create({
+	Array(i).fill().map((x, i) => create({
+		style: {
+			"--index": i
+		},
+		onclick: async e => {
+			for (let code of languageCodes) {
+				await countOne(i + 1, code);
+			}
+		},
 		inside: objects
 	}));
 
@@ -105,16 +118,28 @@ async function showNumber(button) {
 
 	await seconds(.6);
 
-	for (let code of languageCodes) {
-		await speak(i, code);
-	}
+	await speakAll(i);
+
+	await countAll();
 }
+
+number.addEventListener("close", evt => {
+	shownNumber = undefined;
+	objects.textContent = "";
+	evt.target.classList.remove("expanded");
+	style(objects, "--factor", "initial");
+});
 
 addEventListener("resize", e => {
 	if (number.open) {
-		fitObjects($(".objects"));
+		fitObjects(objects);
 	}
 });
+
+$("#number .number").addEventListener("click", e => {
+	let i = +e.target.textContent;
+	speakAll(i);
+})
 
 function fitObjects(objects) {
 	let f = 1;
@@ -126,11 +151,27 @@ function fitObjects(objects) {
 	}
 }
 
-number.addEventListener("close", evt => {
-	$(".objects").textContent = "";
-	evt.target.classList.remove("expanded");
-	style($(".objects"), "--factor", "initial");
-});
+async function countOne(i, code = "en") {
+	let object = objects.children[i - 1];
+	object.classList.add("count");
+	let duration = parseInt(getComputedStyle(object).animationDuration);
+	await Promise.all([seconds(duration), speak(i, code)]);
+	object.classList.remove("count");
+}
+
+async function count(code = "en") {
+	for (let i=1; i<=shownNumber; i++) {
+		await countOne(i, code)
+	}
+}
+
+self.count = count;
+
+async function countAll(i) {
+	for (let code of languageCodes) {
+		await count(code);
+	}
+}
 
 async function speak(i, code="en") {
 	let settings = languages[code];
@@ -146,16 +187,29 @@ async function speak(i, code="en") {
 
 	await audio.play();
 
-	let word = $(`.word[lang=${code}]`);
-	style(word, "--duration", end - start);
-	word?.classList.add("speaking");
+	let word;
+
+	if (i === shownNumber) {
+		word = $(`.word[lang=${code}]`);
+		style(word, "--duration", end - start);
+		word?.classList.add("speaking");
+	}
 
 	await seconds(end - start);
 
 	audio.pause();
-	word?.classList.remove("speaking");
+
+	if (i === shownNumber && word) {
+		word.classList.remove("speaking");
+	}
 
 	return true;
+}
+
+async function speakAll(i) {
+	for (let code of languageCodes) {
+		await speak(i, code);
+	}
 }
 
 self.speak = speak;
