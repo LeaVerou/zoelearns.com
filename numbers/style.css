@@ -1,3 +1,8 @@
+@font-face {
+	font-family: 'Noto Color Emoji';
+	src: url("https://gitcdn.xyz/repo/googlefonts/noto-emoji/master/fonts/NotoColorEmoji.ttf");
+}
+
 * {
 	padding: 0;
 	margin: 0;
@@ -23,11 +28,8 @@
 	initial-value: 0%;
 }
 
-body, html {
-	height: 100vh;
-}
-
-body {
+:root {
+	--font-emoji: Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, emoji;
 	--root-padding: 5vh;
 	--extrude-height: 3vh;
 	--gap-h: 5vh;
@@ -35,7 +37,13 @@ body {
 
 	--gap-v: calc(var(--gap-h) + var(--extrude-height));
 	--main-height: calc(100vh - 2 * var(--root-padding));
+}
 
+body, html {
+	height: 100vh;
+}
+
+body {
 	margin: 0;
 	font: 200%/1 Helvetica Neue, sans-serif;
 	padding: var(--root-padding);
@@ -202,7 +210,8 @@ dialog#number:not(.expanded) {
 	content: var(--flag);
 	display: inline-block;
 	vertical-align: middle;
-	margin-right: .3em;;
+	margin-right: .3em;
+	font-family: var(--font-emoji);
 }
 
 .objects {
@@ -237,4 +246,5 @@ dialog#number:not(.expanded) {
 	.objects > ::before {
 		content: "🍓";
 		display: block;
+		font-family: var(--font-emoji);
 	}
