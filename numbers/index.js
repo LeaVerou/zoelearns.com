@@ -5,6 +5,12 @@ import $$ from "https://v2.blissfuljs.com/src/$$.js";
 import create from "https://v2.blissfuljs.com/src/dom/create.js";
 import style from "https://v2.blissfuljs.com/src/dom/style.js";
 
+if (!self.HTMLDialogElement) {
+	import("https://cdn.jsdelivr.net/npm/dialog-polyfill").then(() => {
+		dialogPolyfill.registerDialog(number);
+	});
+}
+
 import languages from "./languages.js";
 let languageCodes = Object.keys(languages);
 
