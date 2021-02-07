@@ -99,16 +99,37 @@ async function showNumber(button) {
 
 	dialog.classList.add("expanded");
 
-	await seconds(1);
+	await seconds (.4);
+
+	fitObjects(objects);
+
+	await seconds(.6);
 
 	for (let code of languageCodes) {
 		await speak(i, code);
 	}
 }
 
+addEventListener("resize", e => {
+	if (number.open) {
+		fitObjects($(".objects"));
+	}
+});
+
+function fitObjects(objects) {
+	let f = 1;
+	style(objects, "--factor", 1);
+
+	while (objects.offsetHeight > innerHeight && f > .1) {
+		// Not all objects are visible!
+		style(objects, "--factor", f *= .9);
+	}
+}
+
 number.addEventListener("close", evt => {
 	$(".objects").textContent = "";
 	evt.target.classList.remove("expanded");
+	style($(".objects"), "--factor", "initial");
 });
 
 async function speak(i, code="en") {
@@ -126,6 +147,7 @@ async function speak(i, code="en") {
 	await audio.play();
 
 	let word = $(`.word[lang=${code}]`);
+	style(word, "--duration", end - start);
 	word?.classList.add("speaking");
 
 	await seconds(end - start);
