@@ -1,0 +1,13 @@
+{
+"name": "Zoe Learns Numbers!",
+"short_name": "Numbers!",
+"categories": ["kids", "education", "entertainment"],
+"display": "standalone",
+"orientation": "landscape",
+"icons": [
+  {
+    "src": "favicon.svg",
+    "sizes": "48x48 72x72 96x96 128x128 256x256"
+  }
+]
+}
