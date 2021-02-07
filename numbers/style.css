@@ -96,12 +96,19 @@ button.number {
 .number {
 	text-shadow: 0 -.01em .05em rgb(0 0 0 / .1);
 	font-weight: bold;
-	font-size: calc(
+	--cell-height: calc(
 		(var(--main-height) - 2 * var(--gap-v)) / 3
 		- var(--button-padding) * 2
 	);
+	font-size: var(--cell-height);
 	transition: 400ms;
 	line-height: .8;
+}
+
+@supports (width: min(1px, 1em)) {
+	.number {
+		font-size: min(20vw, var(--cell-height));
+	}
 }
 
 button.number {
