@@ -59,6 +59,11 @@ main {
 	margin-top: calc(.5 * var(--extrude-height));
 }
 
+/* For polyfill */
+dialog:not([open]) {
+	display: none;
+}
+
 button {
 	position: relative;
 	background: white;
