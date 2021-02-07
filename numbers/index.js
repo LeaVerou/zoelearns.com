@@ -213,3 +213,7 @@ async function speakAll(i) {
 }
 
 self.speak = speak;
+
+if (screen.lockOrientation) {
+	screen.lockOrientation("landscape");
+}
