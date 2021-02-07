@@ -4,6 +4,13 @@
 	box-sizing: border-box;
 }
 
+@media (pointer: coarse) {
+	* {
+		-webkit-user-select: none;
+		user-select: none;
+	}
+}
+
 @property --extrude-height {
 	syntax: '<length>';
 	inherits: true;
