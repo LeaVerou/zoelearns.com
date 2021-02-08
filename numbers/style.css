@@ -61,7 +61,7 @@ main {
 
 /* For polyfill */
 dialog:not([open]) {
-	display: none;
+	display: none !important;
 }
 
 button {
@@ -136,6 +136,11 @@ dialog#number {
 	height: 100vh;
 	max-width: none;
 	max-height: none;
+	display: grid;
+	grid-template-columns: repeat(3, auto);
+	align-items: center;
+	justify-content: space-around;
+	gap: 2rem;
 	color: white;
 	transition: 400ms;
 	overflow: hidden;
@@ -143,15 +148,13 @@ dialog#number {
 
 dialog#number.expanded {
 	padding: 1em;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 2rem;
 }
 
 @media (orientation: portrait) {
-	dialog#number.expanded {
-		flex-flow: column;
+	dialog#number {
+		grid-template-columns: auto 1fr;
+		grid-template-rows: auto 1fr;
+		justify-content: center;
 	}
 }
 
@@ -170,7 +173,7 @@ dialog#number:not(.expanded) {
 	}
 
 	dialog#number.expanded .number {
-		font-size: 80vh;
+		font-size: 80vmin;
 		grid-column: 1;
 	}
 
@@ -228,15 +231,23 @@ dialog#number:not(.expanded) {
 	}
 
 .objects {
-	max-width: 3em;
+	grid-column: 3;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
+	max-width: 3em;
 	font-size: calc(25vmin * var(--factor, 1));
 	line-height: 1.2;
-	grid-column: 3;
 	text-shadow: 0 -.01em .05em rgb(0 0 0 / .1);
 }
+
+	@media (orientation: portrait) {
+		.objects {
+			grid-row: 2;
+			grid-column: 1 / span 2;
+			margin: auto;
+		}
+	}
 
 	@keyframes count {
 		60% {
