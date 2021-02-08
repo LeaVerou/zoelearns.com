@@ -30,10 +30,10 @@
 
 :root {
 	--font-emoji: Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, emoji;
-	--root-padding: 5vh;
-	--extrude-height: 3vh;
-	--gap-h: 5vh;
-	--button-padding: 3vh;
+	--root-padding: 5vmin;
+	--extrude-height: 3vmin;
+	--gap-h: 5vmin;
+	--button-padding: 3vmin;
 
 	--gap-v: calc(var(--gap-h) + var(--extrude-height));
 	--main-height: calc(100vh - 2 * var(--root-padding));
