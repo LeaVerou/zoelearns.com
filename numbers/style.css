@@ -216,6 +216,7 @@ dialog#number:not(.expanded) {
 	.word.speaking {
 		animation: progression calc(var(--duration, 1) * 1s) linear infinite;
 		-webkit-mask: linear-gradient(to right, white 1.2em, white 0, hsl(0 0% 0% / .4) var(--progress), white);
+		mask: linear-gradient(to right, white 1.2em, white 0, hsl(0 0% 0% / .4) var(--progress), white);
 	}
 
 	.word::before {
