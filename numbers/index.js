@@ -151,8 +151,13 @@ function fitObjects(objects) {
 	}
 }
 
-async function countOne(i, code = "en") {
+async function countOne (i, code = "en") {
 	let object = objects.children[i - 1];
+
+	if (!object) {
+		return;
+	}
+
 	object.classList.add("count");
 	let duration = parseInt(getComputedStyle(object).animationDuration);
 	await Promise.all([seconds(duration), speak(i, code)]);
