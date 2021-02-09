@@ -14,6 +14,10 @@
 		-webkit-user-select: none;
 		user-select: none;
 	}
+
+	:root {
+		padding-bottom: 1px;
+	}
 }
 
 @property --extrude-height {

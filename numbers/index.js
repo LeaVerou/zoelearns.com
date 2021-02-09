@@ -55,6 +55,9 @@ for (let i=0; i<languageCodes.length; i++) {
 	}
 }
 
+// To remove toolbar on iPhone
+scrollTo(0, 1);
+
 document.addEventListener("click", evt => {
 	if (evt.target.matches("button.number")) {
 		showNumber(evt.target);
