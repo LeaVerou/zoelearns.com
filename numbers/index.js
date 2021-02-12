@@ -133,10 +133,22 @@ number.addEventListener("close", evt => {
 	style(objects, "--factor", "initial");
 });
 
+function windowResized() {
+	console.log(innerWidth, innerHeight);
+	style(document.documentElement, {
+		"--innerwidth": innerWidth / 100 + "px",
+		"--innerheight": innerHeight / 100 + "px",
+	});
+}
+
+windowResized();
+
 addEventListener("resize", e => {
 	if (number.open) {
 		fitObjects(objects);
 	}
+
+	windowResized();
 });
 
 $("#number .number").addEventListener("click", e => {
