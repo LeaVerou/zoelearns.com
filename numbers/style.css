@@ -128,7 +128,7 @@ button.number {
 }
 
 button.number {
-	
+
 }
 
 	button:active {
@@ -196,7 +196,7 @@ dialog#number:not(.expanded) {
 	.close {
 		position: absolute;
 		top: .7em;
-		right: .5em;
+		left: .5em;
 		font-size: 180%;
 		padding: .25em;
 	}
