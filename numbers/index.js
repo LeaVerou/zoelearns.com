@@ -42,7 +42,7 @@ for (let i=0; i<languageCodes.length; i++) {
 	style(words[i], "--flag", `"${settings.flag}"`);
 
 	if (settings.audio) {
-		create("audio", {
+		settings.audio.element = create("audio", {
 			src: `./audio/${settings.audio.src}`,
 			id: "audio-" + code,
 			properties: {
@@ -64,12 +64,26 @@ document.addEventListener("click", evt => {
 	}
 });
 
+navigator.keyboard?.lock();
+
+document.addEventListener("keyup", evt => {
+	evt.preventDefault();
+
+	if (/^\d$/.test(evt.key)) {
+		showNumber(main.children[evt.key - 1]);
+	}
+});
+
 function getColor(number) {
 	let hue = 40 * (number - 1);
 	return new Color("lch", [60, 60, hue]);
 }
 
 async function showNumber(button) {
+	if (number.open) {
+		await closeDialog({immediate: true});
+	}
+
 	let i = +button.textContent;
 	let dialog = number;
 	let rect = button.getBoundingClientRect();
@@ -115,7 +129,7 @@ async function showNumber(button) {
 
 	dialog.classList.add("expanded");
 
-	await seconds (.4);
+	await seconds(.4);
 
 	fitObjects(objects);
 
@@ -126,29 +140,44 @@ async function showNumber(button) {
 	await countAll();
 }
 
-number.addEventListener("close", evt => {
+async function closeDialog({immediate} = {}) {
+	number.classList.remove("expanded");
+
+	if (number.open) {
+		if (!immediate) {
+			await seconds(.2);
+		}
+
+		number.close(shownNumber);
+	}
+
 	shownNumber = undefined;
+
 	objects.textContent = "";
-	evt.target.classList.remove("expanded");
 	style(objects, "--factor", "initial");
+}
+
+number.addEventListener("close", evt => {
+	closeDialog();
 });
 
-function windowResized() {
-	console.log(innerWidth, innerHeight);
+$("#number .close").addEventListener("click", closeDialog);
+
+function updateViewportSize() {
 	style(document.documentElement, {
 		"--innerwidth": innerWidth / 100 + "px",
 		"--innerheight": innerHeight / 100 + "px",
 	});
 }
 
-windowResized();
+updateViewportSize();
 
 addEventListener("resize", e => {
 	if (number.open) {
 		fitObjects(objects);
 	}
 
-	windowResized();
+	updateViewportSize();
 });
 
 $("#number .number").addEventListener("click", e => {
@@ -156,7 +185,7 @@ $("#number .number").addEventListener("click", e => {
 	speakAll(i);
 })
 
-function fitObjects(objects) {
+function fitObjects (objects) {
 	let f = 1;
 	style(objects, "--factor", 1);
 
@@ -180,16 +209,31 @@ async function countOne (i, code = "en") {
 }
 
 async function count(code = "en") {
+	count.controller?.abort();
+
+	let {signal} = count.controller = new AbortController();
+
+	signal.addEventListener("abort", e => {
+		throw new DOMException("Aborted", "AbortError")
+	});
+
 	for (let i=1; i<=shownNumber; i++) {
 		await countOne(i, code)
 	}
-}
 
-self.count = count;
+	delete count.controller;
+}
 
 async function countAll(i) {
 	for (let code of languageCodes) {
-		await count(code);
+		try {
+			await count(code);
+		}
+		catch (e) {
+			if (e.name !== "AbortError") {
+				throw e;
+			}
+		}
 	}
 }
 
@@ -231,8 +275,6 @@ async function speakAll(i) {
 		await speak(i, code);
 	}
 }
-
-self.speak = speak;
 
 if (screen.lockOrientation) {
 	screen.lockOrientation("landscape");
