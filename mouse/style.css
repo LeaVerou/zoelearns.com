@@ -1,0 +1,102 @@
+html.playing {
+	cursor: url('data:image/svg+xml,\
+		<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">\
+			<text y="1em" font-size="90">👆🏼</text>\
+	</svg>') 34 16, pointer;
+}
+
+html {
+	overflow: hidden;
+}
+
+body {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0;
+	height: 100vh;
+	font: 300 200%/1 Helvetica Neue, sans-serif;
+}
+
+p {
+	margin: 0;
+}
+
+@keyframes fade {
+	to {
+		opacity: 0;
+	}
+}
+
+.play-notice {
+	position: absolute;
+	top: 1em;
+	left: 50%;
+	z-index: 2;
+	transform: translateX(-50%);
+	background: rgb(0 0 0 / .5);
+	padding: 1em;
+	border-radius: .2em;
+	font-weight: bold;
+	color: white;
+	backdrop-filter: blur(5px);
+	text-align: center;
+}
+
+	.play-notice + .play-notice {
+		display: none;
+	}
+
+	.play-notice::before {
+		content: "▶";
+		display: block;
+		font-size: 300%;
+	}
+
+	.play-notice.not-playing::before {
+		content: "⏸";
+	}
+
+.instruction {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	animation: fade 1s 1s both;
+}
+
+	.play-notice + .instruction {
+		display: none;
+	}
+
+.circle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	top: var(--x);
+	left: var(--y);
+	transform: translate(-50%, -50%);
+	width: 0;
+	height: 0;
+	border-radius: 50%;
+	transition: .5s;
+	background: var(--color, red);
+
+}
+
+.circle.open {
+	--size: max(12px, 150px - var(--i) * 4px);
+	width: var(--size);
+	height: var(--size);
+	box-shadow: 0px 0px gold;
+}
+
+.circle:not(.open),
+.circle:hover {
+	box-shadow: 0 0 .5em .5em gold;
+}
+
+#score {
+	position: absolute;
+	top: 1em;
+	right: 1em;
+}
