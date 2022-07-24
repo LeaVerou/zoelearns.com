@@ -71,7 +71,7 @@ buffer.oninput = evt => {
 	}
 
 	if (style) {
-		let colorStr = color.toString({fallback: true});
+		let colorStr = color.display();
 
 		$.create("span", {
 			className: classes,
