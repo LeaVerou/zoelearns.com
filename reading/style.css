@@ -1,0 +1,107 @@
+@property --extrude-height {
+	syntax: '<length>';
+	inherits: true;
+	initial-value: 0;
+}
+
+@property --progress {
+	syntax: '<percentage>';
+	inherits: true;
+	initial-value: 0%;
+}
+
+
+@media (pointer: coarse) {
+	* {
+		-webkit-user-select: none;
+		user-select: none;
+	}
+
+	:root {
+		padding-bottom: 1px;
+	}
+}
+
+:root {
+	--font-emoji: Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, emoji;
+
+	--vw: var(--innerwidth, 1vw);
+	--vh: var(--innerheight, 1vh);
+
+	--vmin: var(--vh);
+
+	--extrude-height: .3em;
+}
+
+body {
+	font: 230%/1.5 system-ui, sans-serif;
+}
+
+body {
+	display: flex;
+	flex-flow: column;
+	margin: 0;
+	padding: 1.4rem;
+	background: hsl(220 10% 60%);
+	box-sizing: border-box;
+	height: 100vh;
+}
+
+button {
+	position: relative;
+	background: white;
+	font: inherit;
+	box-shadow: 0 var(--extrude-height) hsl(220 10% 80%), 0 var(--extrude-height) 1rem rgb(0 0 0 / .4);
+	border-radius: .3em;
+	border: none;
+	cursor: pointer;
+	font: inherit;
+	transform: translateY(calc(-1 * var(--extrude-height)));
+	border: 2px solid white;
+}
+
+	button:active {
+		--extrude-height: 0;
+	}
+
+	button:focus {
+		border-color: yellow;
+		outline: none;
+	}
+
+button[data-letter] {
+	display: inline-flex;
+	align-items: center;
+	justify-content: space-around;
+	xcolor: white;
+	--color: oklch(50% .3 calc(var(--index) * (360 / 24)));
+	background: linear-gradient(to right, white 50%, var(--color) 0);
+}
+
+button[data-letter] .lower {
+	color: white;
+}
+
+button[data-letter] .upper {
+	color: var(--color);
+}
+
+
+
+#letters_section {
+	display: grid;
+	--columns: 4;
+	grid-template-columns: repeat(var(--columns), minmax(auto, 1fr));
+	gap: .8em .5em;
+	align-items: stretch;
+	justify-content: stretch;
+	flex: 1;
+
+	@media (width < 500px) {
+		--columns: 3;
+	}
+}
+
+.lower {
+	font-weight: bold;
+}
