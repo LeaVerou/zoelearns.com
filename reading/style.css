@@ -34,17 +34,19 @@
 }
 
 body {
-	font: 230%/1.5 system-ui, sans-serif;
-}
-
-body {
 	display: flex;
 	flex-flow: column;
 	margin: 0;
 	padding: 1.4rem;
-	background: hsl(220 10% 60%);
+	background: hsl(220 10% 60%) linear-gradient(rgb(0 0 0 / .2), rgb(0 0 0 / .2)) no-repeat 0 0 / 0 .5em;
 	box-sizing: border-box;
 	height: 100vh;
+	font: 230%/1.5 system-ui, sans-serif;
+}
+
+body.playing {
+	transition: background-size linear 800ms;
+	background-size: 100% .5em;
 }
 
 button {
@@ -97,7 +99,11 @@ button[data-letter] .upper {
 	justify-content: stretch;
 	flex: 1;
 
-	@media (width < 500px) {
+
+}
+
+@media (width < 600px) {
+	#letters_section {
 		--columns: 3;
 	}
 }

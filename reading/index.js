@@ -1,9 +1,12 @@
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+console.log(isSafari);
+let all_letters_audio = new Audio("letters.m4a");
 
 let letters = {
-	"α": 0.8,
+	"α": 0.9,
 	"β": 2,
 	"γ": 3.4,
-	"δ": 4.9,
+	"δ": 4.8,
 	"ε": 6,
 	"ζ": 7.25,
 	"η": 8.7,
@@ -66,7 +69,11 @@ for (let letter in letters) {
 			await new Promise(r => all_letters_audio.addEventListener("pause", r, { once: true }));
 		}
 
+		document.body.classList.remove("playing");
+		await sleep(10);
+
 		letterPlaying = letter;
+
 		// Stop any playing audio
 		// all_letters_audio.pause();
 
@@ -74,12 +81,23 @@ for (let letter in letters) {
 		all_letters_audio.currentTime = start;
 
 		// Play audio until end of clip
-		await all_letters_audio.play();
-		await new Promise(resolve => setTimeout(resolve, 800));
+
+		let started = all_letters_audio.play();
+		if (isSafari) {
+			await sleep(500);
+		}
+		document.body.classList.add("playing");
+		await started;
+		await sleep(800);
 
 		if (letterPlaying === letter) {
+			document.body.classList.remove("playing");
 			all_letters_audio.pause();
 			letterPlaying = null;
 		}
 	}
+}
+
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
 }
