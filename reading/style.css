@@ -25,12 +25,19 @@
 :root {
 	--font-emoji: Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, emoji;
 
-	--vw: var(--innerwidth, 1vw);
-	--vh: var(--innerheight, 1vh);
+	--vw: 1vw;
+	--vh: 1vh;
 
 	--vmin: var(--vh);
 
 	--extrude-height: .3em;
+}
+
+@supports (width: 1dvw) {
+	:root {
+		--vw: 1dvw;
+		--vh: 1dvh;
+	}
 }
 
 body {
@@ -40,8 +47,9 @@ body {
 	padding: 1.4rem;
 	background: hsl(220 10% 60%) linear-gradient(rgb(0 0 0 / .2), rgb(0 0 0 / .2)) no-repeat 0 0 / 0 .5em;
 	box-sizing: border-box;
-	height: 100vh;
+	min-height: calc(100 * var(--vh));
 	font: 230%/1.5 system-ui, sans-serif;
+	font-size: calc(100% + var(--vw) + var(--vh));
 }
 
 body.playing {
@@ -75,20 +83,18 @@ button[data-letter] {
 	display: inline-flex;
 	align-items: center;
 	justify-content: space-around;
-	xcolor: white;
+	padding: .2em .3em;
 	--color: oklch(50% .3 calc(var(--index) * (360 / 24)));
 	background: linear-gradient(to right, white 50%, var(--color) 0);
 }
 
-button[data-letter] .lower {
-	color: white;
-}
+	button[data-letter] .lower {
+		color: white;
+	}
 
-button[data-letter] .upper {
-	color: var(--color);
-}
-
-
+	button[data-letter] .upper {
+		color: var(--color);
+	}
 
 #letters_section {
 	display: grid;
@@ -98,15 +104,13 @@ button[data-letter] .upper {
 	align-items: stretch;
 	justify-content: stretch;
 	flex: 1;
-
-
 }
 
-@media (width < 600px) {
-	#letters_section {
-		--columns: 3;
+	@media (width < 600px) {
+		#letters_section {
+			--columns: 3;
+		}
 	}
-}
 
 .lower {
 	font-weight: bold;
