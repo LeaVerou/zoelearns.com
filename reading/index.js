@@ -2,6 +2,11 @@ const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 console.log(isSafari);
 let all_letters_audio = new Audio("letters.m4a");
 
+await new Promise(r => all_letters_audio.addEventListener("canplaythrough", r, { once: true }));
+
+document.documentElement.classList.remove("loading");
+
+// Letters and start audio positions
 let letters = {
 	"α": 0.9,
 	"β": 2,
@@ -28,6 +33,9 @@ let letters = {
 	"ψ": 32.2,
 	"ω": 33.6
 }
+
+// Letter duration in ms
+const LETTER_DURATION = 800;
 
 // const audioContext = new AudioContext();
 // let allLetters = audioContext.createMediaElementSource(all_letters);
@@ -88,7 +96,7 @@ for (let letter in letters) {
 		}
 		document.body.classList.add("playing");
 		await started;
-		await sleep(800);
+		await sleep(LETTER_DURATION);
 
 		if (letterPlaying === letter) {
 			document.body.classList.remove("playing");

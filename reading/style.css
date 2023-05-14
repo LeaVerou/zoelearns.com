@@ -57,6 +57,26 @@ body.playing {
 	background-size: 100% .5em;
 }
 
+@keyframes spin {
+	to {
+		transform: rotate(1turn);
+	}
+}
+
+.loading body::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 1em;
+	height: 1em;
+	border-radius: 50%;
+	border: 10px solid white;
+	border-top: none;
+	animation: spin 1s linear infinite;
+}
+
 button {
 	position: relative;
 	background: white;
