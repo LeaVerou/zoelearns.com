@@ -59,7 +59,7 @@ body.playing {
 
 @keyframes spin {
 	to {
-		transform: rotate(1turn);
+		rotate: 1turn;
 	}
 }
 
@@ -68,12 +68,12 @@ body.playing {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	margin: -.5em;
 	width: 1em;
 	height: 1em;
 	border-radius: 50%;
 	border: 10px solid white;
-	border-top: none;
+	border-top-color: transparent;
 	animation: spin 1s linear infinite;
 }
 
@@ -124,12 +124,17 @@ button[data-letter] {
 	align-items: stretch;
 	justify-content: stretch;
 	flex: 1;
+	transition: .5s opacity;
 }
 
 	@media (width < 600px) {
 		#letters_section {
 			--columns: 3;
 		}
+	}
+
+	.loading #letters_section {
+		opacity: 0;
 	}
 
 .lower {
