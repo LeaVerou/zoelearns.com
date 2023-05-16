@@ -2,7 +2,7 @@ const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 console.log(isSafari);
 let all_letters_audio = new Audio("letters.m4a");
 
-await new Promise(r => all_letters_audio.addEventListener("canplaythrough", r, { once: true }));
+// await new Promise(r => all_letters_audio.addEventListener("canplaythrough", r, { once: true }));
 
 document.documentElement.classList.remove("loading");
 
