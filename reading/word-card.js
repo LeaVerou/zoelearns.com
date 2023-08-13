@@ -12,8 +12,6 @@ export default {
 	data() {
 		return {
 			current_syllable: -1,
-			status: "",
-			photos: []
 		}
 	},
 
@@ -81,12 +79,12 @@ export default {
 		async correct () {
 			// Remove active syllable, if present
 			this.current_syllable = -1;
-			this.status = "correct";
-			this.photos = (await getPhotos(this.word.en, {per_page: 4})).results;
+			this.word.status = "correct";
+			this.word.photos = (await getPhotos(this.word.en, {per_page: 4})).results;
 		},
 
 		next_word () {
-			this.status ||= "skipped";
+			this.word.status ||= "skipped";
 			this.$emit("next_word");
 		},
 
@@ -130,11 +128,11 @@ export default {
 	},
 
 	template: `
-		<article class="word-card" :class="[status, active? 'active' : '']">
+		<article class="word-card" :class="[word.status, active? 'active' : '']">
 			<div class="toolbar">
 				<button title="Previous syllable" class="previous" @click="previous_syllable">◀</button>
 				<div class="spacer"></div>
-				<button class="correct" @click="correct" v-if="status !== 'correct'">✓</button>
+				<button class="correct" @click="correct" v-if="word.status !== 'correct'">✓</button>
 				<button class="next-word" @click.stop="next_word">▶▶</button>
 				<button class="speak" @click.stop="speak(current_syllable === -1 ? word.word : syllables[current_syllable])">🗣️</button>
 				<div class="spacer"></div>
@@ -147,8 +145,8 @@ export default {
 					:style="{'--index': letter.charCodeAt(0) - 'α'.charCodeAt(0)}">{{ letter }}</span>
 				</span>
 			</h2>
-			<div class="photos" v-if="status === 'correct'" :style="{ '--total-aspect-ratio': photos.reduce((a, c) => a + c.width / c.height, 0) || 4 }">
-				<img v-for="photo in photos" :src="photo.urls.small" :alt="photo.description"
+			<div class="photos" v-if="word.photos && word.status === 'correct'" :style="{ '--total-aspect-ratio': word.photos.reduce((a, c) => a + c.width / c.height, 0) || 4 }">
+				<img v-for="photo in word.photos" :src="photo.urls.small" :alt="photo.description"
 				:style="{ '--color': photo.color, '--aspect-ratio': photo.width / photo.height }" />
 			</div>
 		</article>

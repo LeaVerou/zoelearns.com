@@ -9,8 +9,20 @@
 </head>
 <body>
 
-<word-card v-for="(word, i) in used_words" :word="word" :active="i === used_words.length - 1" :key="word.word"
-@next_word="next_word" @click="i < used_words.length - 1 ? next_word(word) : null"></word-card>
+<word-card :word="activeWord" v-if="activeWord" active @next_word="next_word"></word-card>
+
+<details class="skipped-words" open>
+	<summary>{{ skipped_words.length }} skipped words</summary>
+	<div>
+		<word-card v-for="(word, i) in skipped_words" :word="word" :key="word.word" @click="next_word(word)"></word-card>
+	</div>
+</details>
+<details class="correct-words" open>
+	<summary>{{ correct_words.length }} correct words</summary>
+	<div>
+		<word-card v-for="(word, i) in correct_words" :word="word" :key="word.word"></word-card>
+	</div>
+</details>
 
 </body>
 </html>

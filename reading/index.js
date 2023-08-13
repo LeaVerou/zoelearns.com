@@ -17,6 +17,7 @@ globalThis.app = createApp({
 			all_words: all_words_array,
 			unused_words: all_words_array.slice(),
 			used_words: [],
+			activeWord: null
 		}
 	},
 
@@ -25,13 +26,23 @@ globalThis.app = createApp({
 	},
 
 	computed: {
-		// all_words_array() {
-		// 	return Object.values(this.all_words);
-		// }
+		skipped_words () {
+			return this.used_words.filter(w => w?.status === "skipped");
+		},
+
+		correct_words () {
+			return this.used_words.filter(w => w?.status === "correct");
+		}
 	},
 
 	methods: {
 		next_word (wordOrIndex) {
+			if (this.activeWord) {
+				this.used_words.push(this.activeWord);
+			}
+
+			this.activeWord = null;
+
 			if (this.used_words.length < this.all_words.length) {
 				let i, word;
 
@@ -44,7 +55,7 @@ globalThis.app = createApp({
 					if (i === -1) {
 						// what if the word we want to read is used?
 						i = this.used_words.findIndex(word => word.word === wordOrIndex);
-						word = this.unused_words.splice(i, 1)[0];
+						this.activeWord = this.unused_words.splice(i, 1)[0];
 					}
 				}
 				else {
@@ -52,8 +63,7 @@ globalThis.app = createApp({
 					i = Math.floor(Math.random() * this.unused_words.length);
 				}
 
-				word = word ?? this.unused_words.splice(i, 1)[0];
-				this.used_words.push(word);
+				this.activeWord = this.activeWord ?? this.unused_words.splice(i, 1)[0];
 			}
 			else {
 				// TODO communicate that we ran out of words
