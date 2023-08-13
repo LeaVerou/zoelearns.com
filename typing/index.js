@@ -179,15 +179,10 @@ async function translate(word) {
 	return words[0]?.length > words[1]?.length? words[1] : words[0];
 }
 
+import getPhotos from "../util/get-photos.js";
+
 async function showPhoto(word) {
-	let url = new URL("https://api.unsplash.com/search/photos/");
-	url.searchParams.set("query", word);
-	let response = await fetch(url, {
-		headers: {
-			Authorization: "Client-ID Sxsv-UZ99YLiDi84bRufynBYxDxGVCPb4Os1nI6uZ-c"
-		}
-	});
-	let json = await response.json();
+	let json = await getPhotos(word);
 
 	photos.textContent = "";
 

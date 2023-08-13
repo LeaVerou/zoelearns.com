@@ -1,0 +1,106 @@
+body {
+	display: flex;
+	margin: 0;
+	min-height: 100vh;
+	font: 300%/1.2 system-ui, sans-serif;
+}
+
+.toolbar {
+	display: flex;
+	gap: .2em;
+
+	& button {
+		border-radius: .2em;
+		background: hsl(220 10% 90%);
+		padding: .1em .3em;
+		border: none;
+		font: inherit;
+		cursor: pointer;
+
+		&:not(:focus, :hover) {
+			opacity: .8;
+		}
+
+		&:active {
+			transform: scale(.95);
+		}
+	}
+
+	.spacer {
+		flex: 1;
+	}
+
+	.previous-word,
+	.next-word {
+		letter-spacing: -.3em;
+	}
+
+	.previous-word,
+	.next-word {
+		padding-right: .6em;
+	}
+
+	.correct,
+	.wrong {
+		color: white;
+	}
+
+	.correct {
+		background: oklch(60% .3 120deg);
+	}
+
+	.wrong {
+		background: oklch(60% .3 20deg);
+	}
+}
+
+.word-card {
+	display: flex;
+	flex-flow: column;
+	gap: .4em;
+	margin: auto;
+	align-items: stretch;
+	--card-width: 20em;
+	width: var(--card-width);
+	padding: 1em;
+	border: 1px solid hsl(220 10% 80%);
+	border-radius: .2em;
+}
+
+.word {
+	display: flex;
+	margin: 0;
+	justify-content: center;
+	text-align: center;
+	font-size: 300%;
+}
+
+.syllable {
+	display: flex;
+}
+
+.word:has(.syllable.active) .syllable:not(.active) {
+	opacity: .2;
+}
+
+.letter {
+	--color: oklch(50% .3 calc(var(--index) * (360 / 24)));
+	color: var(--color);
+}
+
+.photos {
+	display: flex;
+	align-items: stretch;
+	justify-content: stretch;
+	align-content: stretch;
+	justify-items: stretch;
+	height: calc(var(--card-width) / var(--total-aspect-ratio));
+
+	& img {
+		height: 100%;
+		--aspect-ratio: calc(var(--width) / var(--height));
+		background: var(--color);
+		flex: var(--aspect-ratio);
+		object-fit: cover;
+	}
+}
