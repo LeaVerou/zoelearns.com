@@ -16,6 +16,10 @@ body {
 	min-height: 100vh;
 	box-sizing: border-box;
 	font: 200%/1.2 system-ui, sans-serif;
+
+	@media (width <= 480px) {
+		font-size: 150%;
+	}
 }
 
 details {
@@ -63,9 +67,14 @@ details {
 	}
 
 	&.active {
+		grid-column: 2;
 		margin: auto;
 		--box-shadow: 0 1em 1em -1em hsl(220 10% 50% / .3);
 		box-shadow: var(--box-shadow);
+
+		@media (width < 1800px) {
+			grid-column: 1;
+		}
 	}
 
 	&:not(.active) {
@@ -106,10 +115,6 @@ details {
 		grid-template-columns: 1fr;
 	}
 
-	.word-card.active {
-		grid-column: 1;
-	}
-
 	.skipped-words,
 	.correct-words {
 		grid-column: 1;
@@ -128,7 +133,10 @@ details {
 .toolbar {
 	display: flex;
 	gap: .2em;
-	font-size: 150%;
+
+	@media (width > 800px) {
+		font-size: 150%;
+	}
 
 	& button {
 		border-radius: .2em;
