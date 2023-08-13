@@ -90,6 +90,13 @@ export default {
 			this.$emit("next_word");
 		},
 
+		speak (word) {
+			let utterance = new SpeechSynthesisUtterance(word);
+			utterance.lang = "el-GR";
+			utterance.rate = .8;
+			speechSynthesis.speak(utterance);
+		},
+
 		handleEvent (evt) {
 			if (evt.key === "ArrowLeft" || evt.key === "ArrowUp") {
 				this.previous_syllable();
@@ -129,13 +136,14 @@ export default {
 				<div class="spacer"></div>
 				<button class="correct" @click="correct" v-if="status !== 'correct'">✓</button>
 				<button class="next-word" @click.stop="next_word">▶▶</button>
+				<button class="speak" @click.stop="speak(current_syllable === -1 ? word.word : syllables[current_syllable])">🗣️</button>
 				<div class="spacer"></div>
 				<button title="Next syllable" class="next">▶</button>
 
 			</div>
 			<h2 class="word">
 				<span class="syllable" v-for="(syllable, i) in syllables" :class="{active: i === current_syllable}">
-					<span v-for="letter in syllable" class="letter"
+					<span v-for="letter in syllable" class="letter" @click="speak(letter)"
 					:style="{'--index': letter.charCodeAt(0) - 'α'.charCodeAt(0)}">{{ letter }}</span>
 				</span>
 			</h2>

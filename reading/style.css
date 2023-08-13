@@ -115,9 +115,11 @@ body {
 .word {
 	display: flex;
 	margin: 0;
+	margin-top: .1em;
 	justify-content: center;
 	text-align: center;
 	font-size: 300%;
+	line-height: .9;
 
 	&:has(.syllable.active) .syllable:not(.active) {
 		opacity: .2;
