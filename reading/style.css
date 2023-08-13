@@ -1,8 +1,65 @@
+:root {
+	--color-green: oklch(60% .3 120deg);
+	--color-red: oklch(60% .3 20deg);
+	--color-green-light: color-mix(in oklab, var(--color-green), white 85%);
+	--color-red-light: color-mix(in oklab, var(--color-red), white 85%);
+}
+
 body {
-	display: flex;
+	display: grid;
+	grid-template-columns: auto 1fr auto;
+	gap: .5em;
+	grid-auto-flow: dense;
+	align-content: start;
 	margin: 0;
+	padding: .5em;
 	min-height: 100vh;
+	box-sizing: border-box;
 	font: 300%/1.2 system-ui, sans-serif;
+	background: linear-gradient(to right, var(--color-green-light) 10%, transparent 0 90%, var(--color-red-light) 0);
+}
+
+.word-card {
+	display: flex;
+	flex-flow: column;
+	gap: .4em;
+	margin: auto;
+	align-items: stretch;
+	--card-width: 20em;
+	width: var(--card-width);
+	padding: 1em;
+	border: 1px solid hsl(220 10% 80%);
+	border-radius: .2em;
+	background: white;
+
+	&.correct {
+		box-shadow: 0 .1em var(--color-green) inset, var(--box-shadow);
+	}
+
+	&.active {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		--box-shadow: 0 1em 1em -1em hsl(220 10% 50% / .3);
+		box-shadow: var(--box-shadow);
+	}
+
+	&:not(.active) {
+		font-size: 30%;
+
+		&.correct {
+			grid-column: 1;
+		}
+
+		&:not(.correct) {
+			grid-column: 3;
+		}
+
+		.toolbar {
+			display: none;
+		}
+	}
 }
 
 .toolbar {
@@ -41,30 +98,18 @@ body {
 	}
 
 	.correct,
-	.wrong {
+	.next-word {
 		color: white;
 	}
 
-	.correct {
-		background: oklch(60% .3 120deg);
+	.correct,
+	.next-word:is(.correct *) {
+		background: var(--color-green);
 	}
 
-	.wrong {
-		background: oklch(60% .3 20deg);
+	.next-word:not(.correct *) {
+		background: var(--color-red);
 	}
-}
-
-.word-card {
-	display: flex;
-	flex-flow: column;
-	gap: .4em;
-	margin: auto;
-	align-items: stretch;
-	--card-width: 20em;
-	width: var(--card-width);
-	padding: 1em;
-	border: 1px solid hsl(220 10% 80%);
-	border-radius: .2em;
 }
 
 .word {
@@ -73,14 +118,14 @@ body {
 	justify-content: center;
 	text-align: center;
 	font-size: 300%;
+
+	&:has(.syllable.active) .syllable:not(.active) {
+		opacity: .2;
+	}
 }
 
 .syllable {
 	display: flex;
-}
-
-.word:has(.syllable.active) .syllable:not(.active) {
-	opacity: .2;
 }
 
 .letter {
@@ -94,11 +139,10 @@ body {
 	justify-content: stretch;
 	align-content: stretch;
 	justify-items: stretch;
-	height: calc(var(--card-width) / var(--total-aspect-ratio));
+	height: min(var(--card-width) / var(--total-aspect-ratio), 40vh);
 
 	& img {
 		height: 100%;
-		--aspect-ratio: calc(var(--width) / var(--height));
 		background: var(--color);
 		flex: var(--aspect-ratio);
 		object-fit: cover;

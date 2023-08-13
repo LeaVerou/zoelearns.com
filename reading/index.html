@@ -9,7 +9,8 @@
 </head>
 <body>
 
-
+<word-card v-for="(word, i) in used_words" :word="word" :active="i === used_words.length - 1" :key="word.word"
+@next_word="next_word" @click="i < used_words.length - 1 ? next_word(word) : null"></word-card>
 
 </body>
 </html>
