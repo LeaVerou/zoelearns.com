@@ -17,7 +17,8 @@ globalThis.app = createApp({
 			all_words: all_words_array,
 			unused_words: all_words_array.slice(),
 			used_words: [],
-			activeWord: null
+			activeWord: null,
+			ui: {}
 		}
 	},
 
@@ -44,7 +45,6 @@ globalThis.app = createApp({
 
 	methods: {
 		next_word (wordOrIndex) {
-			console.log(wordOrIndex)
 			if (this.activeWord) {
 				this.used_words.push(this.activeWord);
 			}
@@ -58,12 +58,18 @@ globalThis.app = createApp({
 					i = wordOrIndex;
 				}
 				else if (wordOrIndex) {
-					i = this.unused_words.findIndex(word => word.word === wordOrIndex);
+					i = this.unused_words.findIndex(word => word.word === wordOrIndex || word === wordOrIndex);
 
-					if (i === -1) {
-						// what if the word we want to read is used?
-						i = this.used_words.findIndex(word => word.word === wordOrIndex);
+					if (i > -1) {
 						this.activeWord = this.unused_words.splice(i, 1)[0];
+					}
+					else {
+						// what if the word we want to read is used?
+						i = this.used_words.findIndex(word => word.word === wordOrIndex || word === wordOrIndex);
+
+						if (i > -1) {
+							this.activeWord = this.used_words.splice(i, 1)[0];
+						}
 					}
 				}
 				else {
@@ -87,3 +93,10 @@ globalThis.app = createApp({
 		return !(tag in this.components)
 	}
 }).mount(document.body);
+
+addEventListener("hashchange", () => {
+	if (location.hash) {
+		let word = decodeURIComponent(location.hash.slice(1));
+		app.next_word(word);
+	}
+});

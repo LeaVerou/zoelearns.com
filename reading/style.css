@@ -8,11 +8,11 @@
 body {
 	display: grid;
 	grid-template-columns: auto 1fr auto;
+	--columns: 3;
 	gap: .5em;
 	grid-auto-flow: dense;
 	align-content: start;
 	margin: 0;
-	padding: .3em;
 	min-height: 100vh;
 	box-sizing: border-box;
 	font: 200%/1.2 system-ui, sans-serif;
@@ -20,6 +20,15 @@ body {
 	@media (width <= 480px) {
 		font-size: 150%;
 	}
+}
+
+nav {
+	display: flex;
+	justify-content: space-between;
+	gap: .4em;
+	grid-column-end: span var(--columns);
+	padding: .4em;
+	background: hsl(220 10% 95%);
 }
 
 details {
@@ -80,6 +89,10 @@ details {
 	&:not(.active) {
 		font-size: 30%;
 
+		> * {
+			pointer-events: none;
+		}
+
 		.toolbar {
 			display: none;
 		}
@@ -89,6 +102,7 @@ details {
 @media (width < 1800px) and (width >= 1200px) {
 	body {
 		grid-template-columns: 1fr 12em;
+		--columns: 2;
 	}
 
 	.skipped-words {
@@ -113,6 +127,7 @@ details {
 @media (width < 1200px) {
 	body {
 		grid-template-columns: 1fr;
+		--columns: 1;
 	}
 
 	.skipped-words,
@@ -242,5 +257,37 @@ h2 {
 		background: var(--color);
 		flex: var(--aspect-ratio);
 		object-fit: cover;
+	}
+}
+
+dialog {
+	margin-top: 1em;
+
+	& h2 {
+		position: absolute;
+		inset: 0;
+		bottom: auto;
+		text-align: left;
+		padding: .2em .5em;
+		background: hsl(220 10% 95%);
+	}
+
+	.close {
+		position: absolute;
+		z-index: 1;
+		top: .5em;
+		right: .5em;
+	}
+}
+
+dialog[id=index] {
+	& ul {
+		columns: 3 8ch;
+	}
+
+	.used {
+		opacity: .8;
+		font-style: italic;
+		text-decoration: line-through;
 	}
 }

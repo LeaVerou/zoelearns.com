@@ -10,6 +10,9 @@
 </head>
 <body>
 
+<nav>
+	<button @click="ui.showIndex = true">All words</button>
+</nav>
 <word-card :word="activeWord" v-if="activeWord" active @next_word="next_word"></word-card>
 
 <details class="skipped-words" open>
@@ -21,9 +24,20 @@
 <details class="correct-words" open>
 	<summary>{{ correct_words.length }} correct words</summary>
 	<div>
-		<word-card v-for="(word, i) in correct_words" :word="word" :key="word.word"></word-card>
+		<word-card v-for="(word, i) in correct_words" :word="word" :key="word.word" @click="next_word(word)"></word-card>
 	</div>
 </details>
+
+<dialog id="index" :open="ui.showIndex" @keyup.esc="ui.showIndex = false" @click="ui.showIndex = false">
+	<button class="close" @click="ui.showIndex = false">❌</button>
+	<h2>All {{ all_words.length }} words</h2>
+	<ul>
+		<li v-for="word in all_words">
+			<a :href="`#${word.word}`" :class="{used: used_words.includes(word)}">{{ word.word }}</a>
+		</li>
+	</ul>
+
+</dialog>
 
 </body>
 </html>
