@@ -124,6 +124,12 @@ export default {
 				}
 			},
 			immediate: true
+		},
+
+		word: {
+			handler (word) {
+				this.current_syllable = -1;
+			}
 		}
 	},
 
@@ -137,13 +143,15 @@ export default {
 				<button class="speak" @click.stop="speak(current_syllable === -1 ? word.word : syllables[current_syllable])">🗣️</button>
 				<div class="spacer"></div>
 				<button title="Next syllable (→)" class="next" @click="next_syllable">▶</button>
-
 			</div>
-			<h2 class="word">
-				<span class="syllable" v-for="(syllable, i) in syllables" :class="{active: i === current_syllable}">
-					<span v-for="letter in syllable" class="letter" @click="speak(letter)"
-					:style="{'--index': letter.charCodeAt(0) - 'α'.charCodeAt(0)}">{{ letter }}</span>
-				</span>
+			<h2>
+				<div class="word">
+					<span class="syllable" v-for="(syllable, i) in syllables" :class="{active: i === current_syllable}">
+						<span v-for="letter in syllable" class="letter" @click="speak(letter)"
+						:style="{'--index': letter.charCodeAt(0) - 'α'.charCodeAt(0)}">{{ letter }}</span>
+					</span>
+				</div>
+				<div class="word en" v-if="word.status == 'correct'">{{ word.en }}</div>
 			</h2>
 			<div class="photos" v-if="word.photos && word.status === 'correct'" :style="{ '--total-aspect-ratio': word.photos.reduce((a, c) => a + c.width / c.height, 0) || 4 }">
 				<img v-for="photo in word.photos" :src="photo.urls.small" :alt="photo.description"

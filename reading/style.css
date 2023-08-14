@@ -184,8 +184,15 @@ details {
 	}
 }
 
+h2 {
+	position: relative;
+	margin: 0;
+	font-size: inherit;
+	text-align: center;
+}
+
 .word {
-	display: flex;
+	display: inline-flex;
 	margin: 0;
 	margin-top: .1em;
 	margin-bottom: .15em;
@@ -196,6 +203,16 @@ details {
 
 	&:has(.syllable.active) .syllable:not(.active) {
 		opacity: .2;
+	}
+}
+
+.word.en {
+	position: absolute;
+
+	font-size: 150%;
+
+	&::before {
+		content: "🇬🇧 ";
 	}
 }
 
