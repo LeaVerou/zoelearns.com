@@ -22,7 +22,14 @@ globalThis.app = createApp({
 	},
 
 	mounted () {
-		this.next_word();
+		if (location.hash) {
+			let word = decodeURIComponent(location.hash.slice(1));
+			this.next_word(word);
+		}
+		else {
+			this.next_word();
+		}
+
 	},
 
 	computed: {
@@ -37,6 +44,7 @@ globalThis.app = createApp({
 
 	methods: {
 		next_word (wordOrIndex) {
+			console.log(wordOrIndex)
 			if (this.activeWord) {
 				this.used_words.push(this.activeWord);
 			}
