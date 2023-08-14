@@ -130,13 +130,13 @@ export default {
 	template: `
 		<article class="word-card" :class="[word.status, active? 'active' : '']">
 			<div class="toolbar">
-				<button title="Previous syllable" class="previous" @click="previous_syllable">◀</button>
+				<button title="Previous syllable (←)" class="previous" @click="previous_syllable">◀</button>
 				<div class="spacer"></div>
-				<button class="correct" @click="correct" v-if="word.status !== 'correct'">✓</button>
-				<button class="next-word" @click.stop="next_word">▶▶</button>
+				<button class="correct" @click="correct" v-if="word.status !== 'correct'" title="Read correctly! (⏎)">✓</button>
+				<button class="next-word" @click.stop="next_word" title="Next word (⇧→)">▶▶</button>
 				<button class="speak" @click.stop="speak(current_syllable === -1 ? word.word : syllables[current_syllable])">🗣️</button>
 				<div class="spacer"></div>
-				<button title="Next syllable" class="next" @click="next_syllable">▶</button>
+				<button title="Next syllable (→)" class="next" @click="next_syllable">▶</button>
 
 			</div>
 			<h2 class="word">
