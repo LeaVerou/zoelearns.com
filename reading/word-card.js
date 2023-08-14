@@ -136,7 +136,7 @@ export default {
 				<button class="next-word" @click.stop="next_word">▶▶</button>
 				<button class="speak" @click.stop="speak(current_syllable === -1 ? word.word : syllables[current_syllable])">🗣️</button>
 				<div class="spacer"></div>
-				<button title="Next syllable" class="next">▶</button>
+				<button title="Next syllable" class="next" @click="next_syllable">▶</button>
 
 			</div>
 			<h2 class="word">
