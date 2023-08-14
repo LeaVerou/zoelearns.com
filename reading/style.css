@@ -62,10 +62,6 @@ details {
 	container-name: word-card;
 	container-type: inline-size;
 
-	&.correct {
-		box-shadow: 0 .1em var(--color-green) inset, var(--box-shadow);
-	}
-
 	&.active {
 		grid-column: 2;
 		margin: auto;
@@ -75,6 +71,10 @@ details {
 		@media (width < 1800px) {
 			grid-column: 1;
 		}
+	}
+
+	&.correct {
+		box-shadow: 0 .15em var(--color-green) inset, var(--box-shadow);
 	}
 
 	&:not(.active) {
