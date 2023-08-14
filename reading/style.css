@@ -280,7 +280,7 @@ dialog {
 
 dialog[id=index] {
 	& ul {
-		columns: 3 8ch;
+		columns: 4 7ch;
 	}
 
 	.used {
