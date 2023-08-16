@@ -22,6 +22,29 @@ body {
 	}
 }
 
+a {
+	&:where(:not(:hover, :focus)) {
+		text-decoration: none;
+	}
+}
+
+button {
+	border-radius: .2em;
+	background: hsl(220 10% 88%);
+	padding: .1em .3em;
+	border: none;
+	font: inherit;
+	cursor: pointer;
+
+	&:not(:focus, :hover) {
+		opacity: .8;
+	}
+
+	&:active {
+		transform: scale(.95);
+	}
+}
+
 nav {
 	display: flex;
 	justify-content: space-between;
@@ -29,6 +52,7 @@ nav {
 	grid-column-end: span var(--columns);
 	padding: .4em;
 	background: hsl(220 10% 95%);
+	font-size: 80%;
 }
 
 details {
@@ -86,6 +110,24 @@ details {
 		box-shadow: 0 .15em var(--color-green) inset, var(--box-shadow);
 	}
 
+	& h2 {
+		display: grid;
+		grid-template-columns: auto 1fr auto;
+		grid-auto-flow: dense;
+
+		.previous-syllable {
+			grid-column: 1;
+		}
+
+		.en {
+			grid-column: 2;
+		}
+
+		.next-syllable {
+			grid-column: 3;
+		}
+	}
+
 	&:not(.active) {
 		font-size: 30%;
 
@@ -93,8 +135,12 @@ details {
 			pointer-events: none;
 		}
 
-		.toolbar, .en {
+		.toolbar, .en, button {
 			display: none;
+		}
+
+		& h2 {
+			grid-template-columns: 1fr;
 		}
 	}
 }
@@ -151,23 +197,6 @@ details {
 
 	@media (width > 800px) {
 		font-size: 150%;
-	}
-
-	& button {
-		border-radius: .2em;
-		background: hsl(220 10% 90%);
-		padding: .1em .3em;
-		border: none;
-		font: inherit;
-		cursor: pointer;
-
-		&:not(:focus, :hover) {
-			opacity: .8;
-		}
-
-		&:active {
-			transform: scale(.95);
-		}
 	}
 
 	.spacer {
