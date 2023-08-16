@@ -28,7 +28,7 @@
 	</div>
 </details>
 
-<dialog id="index" :open="ui.showIndex" @keyup.esc="ui.showIndex = false" @click="ui.showIndex = false">
+<dialog id="index" @keyup.esc="ui.showIndex = false" @click="ui.showIndex = false">
 	<button class="close" @click="ui.showIndex = false">❌</button>
 	<h2>All {{ all_words.length }} words</h2>
 	<ul>

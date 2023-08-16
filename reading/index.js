@@ -83,6 +83,19 @@ globalThis.app = createApp({
 				// TODO communicate that we ran out of words
 			}
 		},
+
+		showIndex() {
+
+		}
+	},
+
+	watch: {
+		"ui.showIndex": {
+			handler(show) {
+				console.log(show)
+				document.getElementById("index")?.[show? 'showModal' : 'close']();
+			}
+		}
 	},
 
 	components: {
