@@ -1,0 +1,13 @@
+body {
+	font: 120%/1.5 system-ui, sans-serif;
+	padding: 1em;
+	max-width: 40em;
+	margin: auto;
+}
+
+h1 {
+	font-size: 280%;
+	letter-spacing: -.04em;
+	font-family: ui-rounded, system-ui, sans-serif;
+	margin: 0;
+}
