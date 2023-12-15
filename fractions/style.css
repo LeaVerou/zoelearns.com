@@ -1,0 +1,108 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+:root {
+	--π: 3.1415926535;
+	--color-on: oklch(.55 .2 340);
+	--color-off: oklch(.8 .1 340);
+	--fraction: calc(var(--numerator) / var(--denominator));
+	--increment: calc(100% / var(--denominator));
+
+	--container-padding-inline: 3rem;
+	--max-diameter: min(30rem, 48vw - var(--container-padding-inline));
+	--max-fraction-font-size: 15rem;
+	--diameter: clamp(0rem, 80vmin, var(--max-diameter));
+	--circumference: calc(var(--π) * var(--diameter));
+	--stroke-width-arc: clamp(0, .007, 1 / var(--denominator) / 3);
+	--stroke-width: calc(var(--circumference) * var(--stroke-width-arc));
+}
+
+html {
+	font: 150%/1 system-ui, sans-serif;
+}
+
+body {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	margin: auto;
+	min-height: 100vh;
+}
+
+.container {
+	display: flex;
+	flex-flow: column;
+	justify-content: center;
+	flex: 1;
+	padding-inline: var(--container-padding-inline);
+
+	&.fraction {
+		align-items: end;
+	}
+
+	&.pie {
+		align-items: start;
+		background: gold;
+	}
+}
+
+#pie {
+	width: var(--diameter);
+	aspect-ratio: 1;
+	box-sizing: border-box;
+	background:
+		repeating-conic-gradient(black 0 calc(var(--stroke-width-arc) * 100%), transparent 0 var(--increment)),
+		conic-gradient(var(--color-on) calc(var(--fraction) * 100%), transparent 0)
+		var(--color-off);
+	border-radius: 50%;
+	border: var(--stroke-width) solid black;
+}
+
+#fraction {
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+	font-size: clamp(2rem, var(--diameter) / 2 - 1rem - 2em, var(--max-fraction-font-size));
+}
+
+input {
+	min-width: 1em;
+	width: auto;
+	form-sizing: normal;
+	text-align: center;
+	border: 0;
+	padding-inline: .3em;
+	font: inherit;
+
+	&:hover {
+		background: hsl(220 10% 96%);
+	}
+}
+
+#numerator {
+	padding-bottom: .05em;
+	border-bottom: .05em solid;
+}
+
+@media (aspect-ratio < .65) {
+	:root {
+		--max-diameter: min(30rem, 90vmin - 2 * var(--container-padding-inline));
+		--max-fraction-font-size: 25vh - var(--container-padding-inline) - 2rem;
+	}
+
+	body {
+		grid-template-columns: 1fr;
+		grid-template-rows: auto 1fr;
+	}
+
+	.container {
+		flex-flow: row;
+		flex: none;
+		padding-block: var(--container-padding-inline);
+
+		&.pie {
+			flex: 1;
+		}
+	}
+}
