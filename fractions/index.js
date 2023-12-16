@@ -1,11 +1,12 @@
-function render() {
-	for (let control of document.querySelectorAll("input")) {
-		document.documentElement.style.setProperty("--" + control.id, control.value);
+import Vue from "../common/vue.js";
+
+let { createApp } = Vue;
+
+globalThis.app = createApp({
+	data () {
+		return {
+			numerator: 2,
+			denominator: 3
+		}
 	}
-
-	// We don't handle fractions > 1 yet
-	numerator.max = denominator.value;
-}
-
-render();
-document.documentElement.addEventListener("input", render);
+}).mount(document.body);

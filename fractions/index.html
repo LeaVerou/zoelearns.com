@@ -12,14 +12,14 @@
 	<meta name="twitter:image" content="https://zoelearns.com/fractions/fractions.gif" />
 	<meta name="twitter:card" content="summary_large_image">
 </head>
-<body>
-	<div class="fraction-container container">
+<body v-cloak>
+	<div class="fraction-container container" :style="`--numerator: ${numerator}; --denominator: ${denominator}`">
 		<div class="fraction">
-			<input type="number" id="numerator" min="0" step="1" value="2">
-			<input type="number" id="denominator" min="1" step="1" value="3">
+			<input type="number" v-model="numerator" id="numerator" min="0" step="1" value="2" :max="denominator">
+			<input type="number" v-model="denominator" id="denominator" min="1" step="1" value="3">
 		</div>
 	</div>
-	<div class="pie-container container">
+	<div class="pie-container container" :style="`--numerator: ${numerator}; --denominator: ${denominator}`">
 		<output class="pie"></output>
 	</div>
 </body>
