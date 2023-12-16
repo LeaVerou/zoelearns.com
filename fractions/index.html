@@ -12,15 +12,20 @@
 	<meta name="twitter:image" content="https://zoelearns.com/fractions/fractions.gif" />
 	<meta name="twitter:card" content="summary_large_image">
 </head>
-<body v-cloak>
-	<div class="fraction-container container" :style="`--numerator: ${numerator}; --denominator: ${denominator}`">
-		<div class="fraction">
-			<input type="number" v-model="numerator" id="numerator" min="0" step="1" value="2" :max="denominator">
-			<input type="number" v-model="denominator" id="denominator" min="1" step="1" value="3">
+<body>
+	<div id="app" v-cloak :style="app_styles">
+		<div class="fraction-container container">
+			<div class="fraction">
+				<input type="number" v-model="numerator" id="numerator" min="0" step="1">
+				<input type="number" v-model="denominator" id="denominator" min="1" step="1">
+			</div>
 		</div>
-	</div>
-	<div class="pie-container container" :style="`--numerator: ${numerator}; --denominator: ${denominator}`">
-		<output class="pie"></output>
+		<div class="pie-container container">
+			<output class="pie" v-if="numerator % denominator !== 0" :style="`--numerator: ${ numerator > denominator ? numerator % denominator : numerator };`"></output>
+			<template v-if="full_pies > 0">
+				<output class="pie" v-for="i in full_pies"></output>
+			</template>
+		</div>
 	</div>
 </body>
 </html>

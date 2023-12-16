@@ -1,6 +1,7 @@
 * {
 	margin: 0;
 	padding: 0;
+	box-sizing: border-box;
 }
 
 :root {
@@ -14,43 +15,72 @@ html {
 }
 
 body {
+	height: 100vh;
+}
+
+#app {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	margin: auto;
-	min-height: 100vh;
+	--pie-fr: 2;
+	grid-template-columns: 1fr 2fr; /* calc(1fr * var(--pie-fr)) won't work due to browser bug */
+	grid-template-rows: 1fr;
+
+	--pies-min: min(var(--pies-x), var(--pies-y));
+	--pies-max: max(var(--pies-x), var(--pies-y));
 }
 
 .container {
 	--container-padding-inline: 3rem;
-
 	display: flex;
+
+	flex: 1;
+	padding: var(--container-padding-inline);
+}
+
+.fraction-container {
 	flex-flow: column;
 	justify-content: center;
-	flex: 1;
-	padding-inline: var(--container-padding-inline);
+	align-items: end;
+}
 
-	&.fraction-container {
-		align-items: end;
-	}
+@property --diameter {
+	syntax: '<length>';
+	initial-value: 0em;
+	inherits: true;
+}
 
-	&.pie-container {
-		align-items: start;
-		background: gold;
-	}
+.pie-container {
+	position: relative;
+	--space-x: calc(var(--pie-fr) * 100vw / (1 + var(--pie-fr)) - 2 * var(--container-padding-inline));
+	--space-y: calc(100vh - 2 * var(--container-padding-inline));
+	--space-min: min(var(--space-x), var(--space-y));
+
+	display: grid;
+	grid-template-columns: repeat(var(--pies-x), auto);
+	justify-content: start;
+	justify-items: start;
+	align-items: start;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: calc(var(--container-padding-inline) / 2);
+	background: gold;
+	height: 100vh;
+	overflow: auto;
 }
 
 .pie {
-	--fraction: calc(var(--numerator) / var(--denominator));
-	--increment: calc(100% / var(--denominator));
-	--max-diameter: min(30rem, 48vw - var(--container-padding-inline));
-	--diameter: clamp(0rem, 80vmin, var(--max-diameter));
+	--_numerator: var(--numerator, 1);
+	--_denominator: var(--denominator, 1);
+
+	--fraction: calc(var(--_numerator) / var(--_denominator));
+	--increment: calc(100% / var(--_denominator));
+	--max-diameter: 30rem;
+	--diameter: clamp(1rem, min(var(--space-x) / var(--pies-x), var(--space-y) / var(--pies-y)), var(--max-diameter));
 	--circumference: calc(var(--π) * var(--diameter));
-	--stroke-width-arc: clamp(0, .007, 1 / var(--denominator) / 3);
-	--stroke-width: calc(var(--circumference) * var(--stroke-width-arc));
+	--stroke-width-arc: clamp(0, .007, 1 / var(--_denominator) / 3);
+	--stroke-width: calc(var(--circumference) * var(--stroke-width-arc) * .85);
 
 	width: var(--diameter);
 	aspect-ratio: 1;
-	box-sizing: border-box;
 	background:
 		repeating-conic-gradient(black 0 calc(var(--stroke-width-arc) * 50%), transparent 0 calc(var(--increment) - var(--stroke-width-arc) * 50%), black 0 var(--increment)),
 		conic-gradient(var(--color-on) calc(var(--fraction) * 100%), transparent 0)
@@ -74,6 +104,7 @@ input {
 	max-width: 48vw;
 	form-sizing: normal; /* older version */
 	field-sizing: content;
+	box-sizing: content-box;
 	text-align: center;
 	border: 0;
 	padding-inline: .3em;
@@ -95,22 +126,30 @@ input {
 		grid-template-rows: auto 1fr;
 	}
 
+	#app {
+		display: grid;
+		grid-template-columns: 1fr;
+		grid-template-rows: 1fr 1fr;
+
+		--pies-min: min(var(--pies-x), var(--pies-y));
+		--pies-max: max(var(--pies-x), var(--pies-y));
+	}
+
 	.container {
 		flex-flow: row;
 		flex: none;
 		padding-block: var(--container-padding-inline);
+	}
 
-		&.pie-container {
-			flex: 1;
-		}
+	.pie-container {
+		--space-x: 100vw - 2 * var(--container-padding-inline);
+		--space-y: 50vh - 2 * var(--container-padding-inline);
+		flex: 1;
+		height: 50vh;
 	}
 
 	.fraction {
 		--max-fraction-font-size: 25vh - var(--container-padding-inline) - 2rem;
-	}
-
-	.pie {
-		--max-diameter: min(30rem, 90vmin - 2 * var(--container-padding-inline));
 	}
 
 	input {
