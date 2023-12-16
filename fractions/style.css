@@ -52,7 +52,7 @@ body {
 	aspect-ratio: 1;
 	box-sizing: border-box;
 	background:
-		repeating-conic-gradient(black 0 calc(var(--stroke-width-arc) * 100%), transparent 0 var(--increment)),
+		repeating-conic-gradient(black 0 calc(var(--stroke-width-arc) * 50%), transparent 0 calc(var(--increment) - var(--stroke-width-arc) * 50%), black 0 var(--increment)),
 		conic-gradient(var(--color-on) calc(var(--fraction) * 100%), transparent 0)
 		var(--color-off);
 	border-radius: 50%;
