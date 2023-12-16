@@ -7,16 +7,6 @@
 	--π: 3.1415926535;
 	--color-on: oklch(.55 .2 340);
 	--color-off: oklch(.8 .1 340);
-	--fraction: calc(var(--numerator) / var(--denominator));
-	--increment: calc(100% / var(--denominator));
-
-	--container-padding-inline: 3rem;
-	--max-diameter: min(30rem, 48vw - var(--container-padding-inline));
-	--max-fraction-font-size: 15rem;
-	--diameter: clamp(0rem, 80vmin, var(--max-diameter));
-	--circumference: calc(var(--π) * var(--diameter));
-	--stroke-width-arc: clamp(0, .007, 1 / var(--denominator) / 3);
-	--stroke-width: calc(var(--circumference) * var(--stroke-width-arc));
 }
 
 html {
@@ -31,6 +21,8 @@ body {
 }
 
 .container {
+	--container-padding-inline: 3rem;
+
 	display: flex;
 	flex-flow: column;
 	justify-content: center;
@@ -48,6 +40,14 @@ body {
 }
 
 .pie {
+	--fraction: calc(var(--numerator) / var(--denominator));
+	--increment: calc(100% / var(--denominator));
+	--max-diameter: min(30rem, 48vw - var(--container-padding-inline));
+	--diameter: clamp(0rem, 80vmin, var(--max-diameter));
+	--circumference: calc(var(--π) * var(--diameter));
+	--stroke-width-arc: clamp(0, .007, 1 / var(--denominator) / 3);
+	--stroke-width: calc(var(--circumference) * var(--stroke-width-arc));
+
 	width: var(--diameter);
 	aspect-ratio: 1;
 	box-sizing: border-box;
@@ -60,10 +60,12 @@ body {
 }
 
 .fraction {
+	--max-fraction-font-size: 15rem;
+
 	display: flex;
 	flex-flow: column;
 	align-items: center;
-	font-size: clamp(2rem, var(--diameter) / 2 - 1rem - 2em, var(--max-fraction-font-size));
+	font-size: clamp(2rem, 40vh - 1rem - 2em, var(--max-fraction-font-size));
 }
 
 input {
@@ -88,11 +90,6 @@ input {
 }
 
 @media (aspect-ratio < .65) {
-	:root {
-		--max-diameter: min(30rem, 90vmin - 2 * var(--container-padding-inline));
-		--max-fraction-font-size: 25vh - var(--container-padding-inline) - 2rem;
-	}
-
 	body {
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr;
@@ -106,6 +103,14 @@ input {
 		&.pie-container {
 			flex: 1;
 		}
+	}
+
+	.fraction {
+		--max-fraction-font-size: 25vh - var(--container-padding-inline) - 2rem;
+	}
+
+	.pie {
+		--max-diameter: min(30rem, 90vmin - 2 * var(--container-padding-inline));
 	}
 
 	input {
