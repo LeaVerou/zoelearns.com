@@ -37,17 +37,17 @@ body {
 	flex: 1;
 	padding-inline: var(--container-padding-inline);
 
-	&.fraction {
+	&.fraction-container {
 		align-items: end;
 	}
 
-	&.pie {
+	&.pie-container {
 		align-items: start;
 		background: gold;
 	}
 }
 
-#pie {
+.pie {
 	width: var(--diameter);
 	aspect-ratio: 1;
 	box-sizing: border-box;
@@ -59,7 +59,7 @@ body {
 	border: var(--stroke-width) solid black;
 }
 
-#fraction {
+.fraction {
 	display: flex;
 	flex-flow: column;
 	align-items: center;
@@ -69,7 +69,9 @@ body {
 input {
 	min-width: 1em;
 	width: auto;
-	form-sizing: normal;
+	max-width: 48vw;
+	form-sizing: normal; /* older version */
+	field-sizing: content;
 	text-align: center;
 	border: 0;
 	padding-inline: .3em;
@@ -101,8 +103,12 @@ input {
 		flex: none;
 		padding-block: var(--container-padding-inline);
 
-		&.pie {
+		&.pie-container {
 			flex: 1;
 		}
+	}
+
+	input {
+		max-width: 98vw;
 	}
 }
