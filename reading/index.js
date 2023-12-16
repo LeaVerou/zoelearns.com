@@ -1,15 +1,7 @@
-let Vue;
-
-try {
-	Vue = await import("../node_modules/vue/dist/vue.esm-browser.js");
-}
-catch (e) {
-	console.info("Importing Vue from node_modules failed, loading from CDN…")
-	Vue = await import("https://unpkg.com/vue@3/dist/vue.esm-browser.js");
-}
+import Vue from "../common/vue.js";
+import WordCard from "./word-card.js";
 
 let { createApp } = Vue;
-import WordCard from "./word-card.js";
 
 const vowels = "αεηιουω";
 const consonants = "βγδζθκλμνξπρσςτφχψ";
