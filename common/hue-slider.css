@@ -1,0 +1,62 @@
+
+:root {
+	--in-oklch: ;
+	--checkerboard: repeating-conic-gradient(#eee 0 25%, #ddd 0 50%) 0 0 / .6em .6em;
+}
+
+@supports (background: linear-gradient(in oklch, tan, red)) {
+	:root {
+		--in-oklch: in oklch;
+	}
+}
+
+.hue-slider {
+	--_color: var(--color, oklch(.55, .15 0));
+
+	--slider-height: 2em;
+	--thumb-height: calc(var(--slider-height) + 2px);
+	--thumb-width: 1em;
+	--thumb-radius: .15em;
+	--thumb-border: 1px solid white;
+	--thumb-shadow: 0 0 0 1px black;
+
+	display: block;
+	margin: 0 1em auto 0;
+	width: 100%;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	height: var(--slider-height);
+	border-radius: 0.3em;
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+	background: linear-gradient(to right var(--in-oklch),
+		color-mix(in oklch, var(--_color) 0%, oklch(none none 0)),
+		color-mix(in oklch, var(--_color) 0%, oklch(none none 90)),
+		color-mix(in oklch, var(--_color) 0%, oklch(none none 180)) 50%,
+		color-mix(in oklch, var(--_color) 0%, oklch(none none 270)),
+		color-mix(in oklch, var(--_color) 0%, oklch(none none 359.9999))
+	);
+
+
+
+	&::-webkit-slider-thumb {
+		width: var(--thumb-width);
+		height: var(--thumb-height);
+		-webkit-appearance: none;
+		border-radius: var(--thumb-radius);
+		border: var(--thumb-border);
+		box-shadow: var(--thumb-shadow);
+	}
+
+	&::-moz-range-thumb {
+		width: var(--thumb-width);
+		height: var(--thumb-height);
+		border-radius: var(--thumb-radius);
+		border: var(--thumb-border);
+		box-shadow: var(--thumb-shadow);
+		background: transparent;
+	}
+
+	&::-moz-range-track {
+		background: none;
+	}
+}

@@ -7,6 +7,8 @@ globalThis.app = createApp({
 		return {
 			numerator: 2,
 			denominator: 3,
+			pie_hue: 340,
+			show_settings: false,
 		}
 	},
 
@@ -30,11 +32,18 @@ globalThis.app = createApp({
 		app_styles () {
 			return {
 				"--numerator": this.numerator,
+				"--numerator-digits": this.numerator.toString().length,
 				"--denominator": this.denominator,
+				"--denominator-digits": this.denominator.toString().length,
 				"--pies": this.pies,
 				"--pies-x": this.pies_x,
 				"--pies-y": Math.ceil(this.pies / this.pies_x),
+				"--pie-hue": this.pie_hue,
 			}
 		}
 	},
+
+	watch: {
+
+	}
 }).mount(document.body);

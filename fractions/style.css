@@ -1,3 +1,5 @@
+@import url("../common/hue-slider.css");
+
 * {
 	margin: 0;
 	padding: 0;
@@ -5,9 +7,7 @@
 }
 
 :root {
-	--π: 3.1415926535;
-	--color-on: oklch(.55 .2 340);
-	--color-off: oklch(.8 .1 340);
+	--pi: 3.1415926535;
 }
 
 html {
@@ -19,27 +19,41 @@ body {
 }
 
 #app {
-	display: grid;
-	--pie-fr: 2;
-	grid-template-columns: 1fr 2fr; /* calc(1fr * var(--pie-fr)) won't work due to browser bug */
-	grid-template-rows: 1fr;
-
+	--color-on: oklch(.55 .2 var(--pie-hue));
+	--color-off: oklch(.8 .1 var(--pie-hue));
 	--pies-min: min(var(--pies-x), var(--pies-y));
 	--pies-max: max(var(--pies-x), var(--pies-y));
+
+	display: grid;
+	--pie-fr: 1.5;
+	grid-template-columns: 1fr 1.5fr; /* calc(1fr * var(--pie-fr)) won't work due to browser bug */
+	--space-x-pie: calc(100vw * var(--pie-fr) / (1 + var(--pie-fr)));
+	--space-x-fraction: calc(100vw - var(--space-x-pie));
+
+	grid-template-rows: 1fr;
+}
+
+.show-settings {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
 }
 
 .container {
 	--container-padding-inline: 3rem;
-	display: flex;
 
+	display: flex;
 	flex: 1;
+	contain: inline-size;
 	padding: var(--container-padding-inline);
 }
 
 .fraction-container {
 	flex-flow: column;
 	justify-content: center;
-	align-items: end;
+	align-items: center;
+	--max-fraction-font-size: 15rem;
+	font-size: calc( clamp(2rem, 40vh - 1rem - 2em, var(--max-fraction-font-size)) / max(var(--numerator-digits, 1), var(--denominator-digits, 1)) );
 }
 
 @property --diameter {
@@ -50,7 +64,7 @@ body {
 
 .pie-container {
 	position: relative;
-	--space-x: calc(var(--pie-fr) * 100vw / (1 + var(--pie-fr)) - 2 * var(--container-padding-inline));
+	--space-x: calc(var(--space-x-pie) - 2 * var(--container-padding-inline));
 	--space-y: calc(100vh - 2 * var(--container-padding-inline));
 	--space-min: min(var(--space-x), var(--space-y));
 
@@ -62,20 +76,28 @@ body {
 	align-items: center;
 	flex-wrap: wrap;
 	gap: calc(var(--container-padding-inline) / 2);
-	background: gold;
+	background: gold no-repeat linear-gradient(red, red) top center / calc(100cqw - 2px) 1em;
 	height: 100vh;
 	overflow: auto;
+	container-name: pie-container;
+	container-type: inline-size;
 }
 
 .pie {
 	--_numerator: var(--numerator, 1);
 	--_denominator: var(--denominator, 1);
 
+	@supports (width: 1cqw) {
+		--space-x: 100cqw;
+		--space-y: 100cqh;
+		--space-min: min(var(--space-x), var(--space-y));
+	}
+
 	--fraction: calc(var(--_numerator) / var(--_denominator));
 	--increment: calc(100% / var(--_denominator));
 	--max-diameter: 30rem;
 	--diameter: clamp(1rem, min(var(--space-x) / var(--pies-x), var(--space-y) / var(--pies-y)), var(--max-diameter));
-	--circumference: calc(var(--π) * var(--diameter));
+	--circumference: calc(var(--pi) * var(--diameter));
 	--stroke-width-arc: clamp(0, .007, 1 / var(--_denominator) / 3);
 	--stroke-width: calc(var(--circumference) * var(--stroke-width-arc) * .85);
 
@@ -90,37 +112,40 @@ body {
 }
 
 .fraction {
-	--max-fraction-font-size: 15rem;
-
 	display: flex;
 	flex-flow: column;
 	align-items: center;
-	font-size: clamp(2rem, 40vh - 1rem - 2em, var(--max-fraction-font-size));
-}
 
-input {
-	min-width: 1em;
-	width: auto;
-	max-width: 48vw;
-	form-sizing: normal; /* older version */
-	field-sizing: content;
-	box-sizing: content-box;
-	text-align: center;
-	border: 0;
-	padding-inline: .3em;
-	font: inherit;
+	& input {
+		min-width: 1ch;
+		width: auto;
+		max-width: calc(var(--space-x-fraction) - 2 * var(--container-padding-inline) - .4em);
+		padding-inline: .2em;
+		form-sizing: normal; /* older version */
+		field-sizing: content;
+		box-sizing: content-box;
+		text-align: center;
+		border: 0;
+		font: inherit;
 
-	&:hover {
-		background: hsl(220 10% 96%);
+		&:hover {
+			background: hsl(220 10% 96%);
+		}
+
+		&:focus {
+			outline: none;
+			background: oklch(.97 .03 var(--pie-hue));
+		}
 	}
 }
 
 #numerator {
 	padding-bottom: .05em;
-	border-bottom: .05em solid;
+	border-bottom: .05em solid black;
+	color: var(--color-on);
 }
 
-@media (aspect-ratio < .65) {
+@media (aspect-ratio < 1) {
 	body {
 		grid-template-columns: 1fr;
 		grid-template-rows: auto 1fr;
@@ -148,11 +173,21 @@ input {
 		height: 50vh;
 	}
 
-	.fraction {
+	.fraction-container {
 		--max-fraction-font-size: 25vh - var(--container-padding-inline) - 2rem;
 	}
 
-	input {
-		max-width: 98vw;
+	.fraction {
+		input {
+			max-width: 98vw;
+		}
 	}
+}
+
+dialog {
+	top: 50%;
+	transform: translateY(-50%);
+	margin: auto;
+	padding: 1em;
+	min-width: 25vw;
 }
