@@ -17,6 +17,8 @@ html {
 
 body {
 	height: 100vh;
+	display: flex;
+	flex-flow: column;
 }
 
 #app {
@@ -30,8 +32,8 @@ body {
 	grid-template-columns: 1fr 1.5fr; /* calc(1fr * var(--pie-fr)) won't work due to browser bug */
 	--space-x-pie: calc(100vw * var(--pie-fr) / (1 + var(--pie-fr)));
 	--space-x-fraction: calc(100vw - var(--space-x-pie));
-
 	grid-template-rows: 1fr;
+	flex: 1;
 }
 
 .show-settings {
@@ -45,7 +47,7 @@ body {
 
 	display: flex;
 	flex: 1;
-	contain: inline-size;
+	contain: size;
 	padding: var(--container-padding-inline);
 }
 
@@ -71,17 +73,13 @@ body {
 
 	display: grid;
 	grid-template-columns: repeat(var(--pies-x), auto);
-	justify-content: start;
-	justify-items: start;
-	align-items: start;
 	align-items: center;
 	flex-wrap: wrap;
 	gap: calc(var(--container-padding-inline) / 2);
 	background: gold;
-	height: 100vh;
 	overflow: auto;
 	container-name: pie-container;
-	container-type: inline-size;
+	container-type: size;
 }
 
 .pie {
@@ -90,9 +88,7 @@ body {
 
 	--fraction: calc(var(--_numerator) / var(--_denominator));
 	--increment: calc(100% / var(--_denominator));
-	--max-diameter: 30rem;
-	--diameter: clamp(1rem, min(var(--space-x) / var(--pies-x), var(--space-y) / var(--pies-y)), var(--max-diameter));
-
+	--diameter: min(var(--space-x) / var(--pies-x), var(--space-y) / var(--pies-y));
 	--circumference: calc(var(--pi) * var(--diameter));
 	--stroke-width-arc: clamp(0, .007, 1 / var(--_denominator) / 3);
 	--stroke-width: calc(var(--circumference) * var(--stroke-width-arc) * .85);
@@ -105,14 +101,6 @@ body {
 		var(--color-off);
 	border-radius: 50%;
 	border: var(--stroke-width) solid black;
-}
-
-@supports (width: 1cqw) {
-	.pie {
-		--space-x: 100cqw;
-		--space-y: 100cqh;
-		--space-min: min(var(--space-x), var(--space-y));
-	}
 }
 
 .fraction {
@@ -141,27 +129,24 @@ body {
 			background: oklch(.97 .03 var(--pie-hue));
 		}
 	}
-}
 
-#numerator {
-	padding-bottom: .05em;
-	border-bottom: .05em solid black;
-	color: var(--color-on);
+	.numerator {
+		padding-bottom: .05em;
+		border-bottom: .05em solid black;
+		color: var(--color-on);
+	}
 }
 
 @media (aspect-ratio < 1) {
-	body {
-		grid-template-columns: 1fr;
-		grid-template-rows: auto 1fr;
-	}
-
 	#app {
-		display: grid;
 		grid-template-columns: 1fr;
-		grid-template-rows: 1fr 1fr;
+		--pie-fr: 1.5;
+		grid-template-rows: 1fr 1.5fr;
 
 		--pies-min: min(var(--pies-x), var(--pies-y));
 		--pies-max: max(var(--pies-x), var(--pies-y));
+		--space-y-pie: calc(100vh * var(--pie-fr) / (1 + var(--pie-fr)));
+		--space-y-fraction: calc(100vh - var(--space-x-pie));
 	}
 
 	.container {
@@ -171,19 +156,31 @@ body {
 	}
 
 	.pie-container {
-		--space-x: 100vw - 2 * var(--container-padding-inline);
-		--space-y: 50vh - 2 * var(--container-padding-inline);
-		flex: 1;
-		height: 50vh;
+		--space-x: calc(100vw - 2 * var(--container-padding-inline));
+		--space-y: calc(50vh - 2 * var(--container-padding-inline));
+		align-items: start;
+		justify-content: center;
 	}
 
 	.fraction-container {
-		--max-fraction-font-size: 25vh - var(--container-padding-inline) - 2rem;
+		--space-y: calc(var(--space-y-fraction) - 2 * var(--container-padding-inline));
+		font-size: 1em;
 	}
 
 	.fraction {
+		/* font-size: calc( var(--space-y) / 2 - .1em); */
+		font-size: calc( .2 * var(--space-y) / 2 - .1em);
+
 		input {
 			max-width: 98vw;
 		}
+	}
+}
+
+@supports (width: 1cqw) {
+	.pie, .fraction {
+		--space-x: 100cqw;
+		--space-y: 100cqh;
+		--space-min: min(var(--space-x), var(--space-y));
 	}
 }
