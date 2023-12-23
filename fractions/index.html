@@ -22,7 +22,7 @@
 			</div>
 		</div>
 		<div class="pie-container container">
-			<output class="pie" v-if="numerator % denominator !== 0" :style="`--numerator: ${ numerator > denominator ? numerator % denominator : numerator };`"></output>
+			<output class="pie" v-if="numerator % denominator !== 0 || full_pies === 0" :style="`--numerator: ${ numerator > denominator ? numerator % denominator : numerator };`"></output>
 			<template v-if="full_pies > 0">
 				<output class="pie" v-for="i in full_pies"></output>
 			</template>

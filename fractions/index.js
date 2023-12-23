@@ -18,7 +18,7 @@ globalThis.app = createApp({
 		},
 
 		pies () {
-			return Math.ceil(this.fraction);
+			return Math.max(1, Math.ceil(this.fraction));
 		},
 
 		full_pies () {
@@ -26,7 +26,7 @@ globalThis.app = createApp({
 		},
 
 		pies_x () {
-			return Math.ceil(Math.sqrt(this.pies));
+			return Math.max(1, Math.ceil(Math.sqrt(this.pies)));
 		},
 
 		app_styles () {
