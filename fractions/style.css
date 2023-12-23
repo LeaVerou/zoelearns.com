@@ -145,8 +145,8 @@ body {
 
 		--pies-min: min(var(--pies-x), var(--pies-y));
 		--pies-max: max(var(--pies-x), var(--pies-y));
-		--space-y-pie: calc(100vh * var(--pie-fr) / (1 + var(--pie-fr)));
-		--space-y-fraction: calc(100vh - var(--space-x-pie));
+		--space-y-pie: calc(100dvh * var(--pie-fr) / (1 + var(--pie-fr)));
+		--space-y-fraction: calc(100dvh - var(--space-x-pie));
 	}
 
 	.container {
@@ -156,8 +156,8 @@ body {
 	}
 
 	.pie-container {
-		--space-x: calc(100vw - 2 * var(--container-padding-inline));
-		--space-y: calc(50vh - 2 * var(--container-padding-inline));
+		--space-x: calc(100dvw - 2 * var(--container-padding-inline));
+		--space-y: calc(50dvh - 2 * var(--container-padding-inline));
 		align-items: start;
 		justify-content: center;
 	}
@@ -172,7 +172,7 @@ body {
 		font-size: calc( .2 * var(--space-y) / 2 - .1em);
 
 		input {
-			max-width: 98vw;
+			max-width: 98dvw;
 		}
 	}
 }
