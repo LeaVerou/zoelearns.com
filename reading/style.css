@@ -1,3 +1,5 @@
+@import url("../common/dialog.css");
+
 :root {
 	--color-green: oklch(60% .3 120deg);
 	--color-red: oklch(60% .3 20deg);
@@ -284,26 +286,6 @@ h2 {
 		background: var(--color);
 		flex: var(--aspect-ratio);
 		object-fit: cover;
-	}
-}
-
-dialog {
-	margin-top: 1em;
-
-	& h2 {
-		position: absolute;
-		inset: 0;
-		bottom: auto;
-		text-align: left;
-		padding: .2em .5em;
-		background: hsl(220 10% 95%);
-	}
-
-	.close {
-		position: absolute;
-		z-index: 1;
-		top: .5em;
-		right: .5em;
 	}
 }
 

@@ -1,0 +1,7 @@
+:root {
+	--color-red: oklch(.55 .16 20);
+}
+
+button {
+	cursor: pointer;
+}
