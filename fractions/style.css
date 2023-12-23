@@ -77,7 +77,7 @@ body {
 	align-items: center;
 	flex-wrap: wrap;
 	gap: calc(var(--container-padding-inline) / 2);
-	background: gold no-repeat linear-gradient(red, red) top center / calc(100cqw - 2px) 1em;
+	background: gold;
 	height: 100vh;
 	overflow: auto;
 	container-name: pie-container;
