@@ -21,6 +21,12 @@ body {
 	flex-flow: column;
 }
 
+input[type=number] {
+	&::-webkit-inner-spin-button {
+		display: none;
+	}
+}
+
 #app {
 	--color-on: oklch(.55 .2 var(--pie-hue));
 	--color-off: oklch(.8 .1 var(--pie-hue));
