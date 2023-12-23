@@ -88,16 +88,11 @@ body {
 	--_numerator: var(--numerator, 1);
 	--_denominator: var(--denominator, 1);
 
-	@supports (width: 1cqw) {
-		--space-x: 100cqw;
-		--space-y: 100cqh;
-		--space-min: min(var(--space-x), var(--space-y));
-	}
-
 	--fraction: calc(var(--_numerator) / var(--_denominator));
 	--increment: calc(100% / var(--_denominator));
 	--max-diameter: 30rem;
 	--diameter: clamp(1rem, min(var(--space-x) / var(--pies-x), var(--space-y) / var(--pies-y)), var(--max-diameter));
+
 	--circumference: calc(var(--pi) * var(--diameter));
 	--stroke-width-arc: clamp(0, .007, 1 / var(--_denominator) / 3);
 	--stroke-width: calc(var(--circumference) * var(--stroke-width-arc) * .85);
@@ -110,6 +105,17 @@ body {
 		var(--color-off);
 	border-radius: 50%;
 	border: var(--stroke-width) solid black;
+
+	xbackground: conic-gradient(var(--color-on) calc(calc(var(--numerator, 1) / var(--denominator, 1)) * 100%), transparent 0)
+	var(--color-off);
+}
+
+@supports (width: 1cqw) {
+	.pie {
+		--space-x: 100cqw;
+		--space-y: 100cqh;
+		--space-min: min(var(--space-x), var(--space-y));
+	}
 }
 
 .fraction {
