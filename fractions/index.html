@@ -28,13 +28,16 @@
 			</template>
 		</div>
 		<dialog id="settings" :open="show_settings">
-
 			<h2>Settings
 				<button class="close" @click="show_settings = false"></button>
 			</h2>
-			<label>
-				Pie color:
+			<label class="side">
+				<div class="pie-icon with-background" style="--color-background: var(--color-background-gray)" title="Pie color"></div>
 				<input type="range" min="0" step="1" max="360" v-model="settings.pie_hue" class="hue-slider" style="--color: var(--color-on)">
+			</label>
+			<label class="side">
+				<div class="pie-icon with-background" style="--color-on: var(--color-on-gray); --color-off: var(--color-off-gray);" title="Pie background"></div>
+				<input type="range" min="0" step="1" max="360" v-model="settings.pie_background_hue" class="hue-slider" style="--color: var(--color-background)">
 			</label>
 		</dialog>
 	</div>

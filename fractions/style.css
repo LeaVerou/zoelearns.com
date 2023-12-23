@@ -31,6 +31,12 @@ input[type=number] {
 #app {
 	--color-on: oklch(.55 .2 var(--pie-hue));
 	--color-off: oklch(.8 .1 var(--pie-hue));
+	--color-background: oklch(0.85 0.19 var(--pie-background-hue));
+
+	--color-on-gray: color-mix(in oklch, var(--color-on) 0%, oklch(none 0 none));
+	--color-off-gray: color-mix(in oklch, var(--color-off) 0%, oklch(none 0 none));
+	--color-background-gray: color-mix(in oklch, var(--color-background) 0%, oklch(none 0 none));
+
 	--pies-min: min(var(--pies-x), var(--pies-y));
 	--pies-max: max(var(--pies-x), var(--pies-y));
 
@@ -87,7 +93,7 @@ input[type=number] {
 	flex-wrap: wrap;
 
 	gap: var(--gap);
-	background: gold;
+	background: var(--color-background);
 	overflow: auto;
 	container-name: pie-container;
 	container-type: size;
@@ -153,6 +159,29 @@ input[type=number] {
 	}
 }
 
+label.side {
+	display: flex;
+	gap: .4em;
+
+	& > :not(div, span) {
+		flex: 1;
+	}
+}
+
+.pie-icon {
+	height: 2em;
+	aspect-ratio: 1;
+	background: conic-gradient(var(--color-on) calc(var(--fraction, .66) * 100%), var(--color-off) 0);
+	border-radius: 50%;
+
+	&.with-background {
+		background-image:
+			radial-gradient(circle closest-side, transparent 90%, var(--color-background) 91%),
+			conic-gradient(var(--color-on) calc(var(--fraction, .66) * 100%), var(--color-off) 0);
+		border-radius: 0;
+	}
+}
+
 @media (aspect-ratio < 1) {
 	#app {
 		grid-template-columns: 1fr;
@@ -199,5 +228,11 @@ input[type=number] {
 		--space-x: 100cqw;
 		--space-y: 100cqh;
 		--space-min: min(var(--space-x), var(--space-y));
+	}
+}
+
+dialog[id=settings] {
+	& label {
+		font-size: 150%;
 	}
 }

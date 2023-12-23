@@ -1,13 +1,23 @@
 @import url("base.css");
 @import url("icons.css");
 
-dialog {
+dialog:where([open]) {
+	/* Center the dialog */
 	top: 50%;
 	transform: translateY(-50%);
 	margin: 1em auto;
-	padding: 1em;
-	padding-top: 2em;
+
+	/* Layout */
+	display: flex;
+	flex-flow: column;
+	gap: 1em;
+	--padding-block: 1em;
+	--padding-inline: 1em;
+	padding-block: var(--padding-block, 0);
+	padding-inline: var(--padding-inline, 0);
 	min-width: 25vw;
+
+	/* Style */
 	border: none;
 	box-shadow: 0 .5rem 1rem hsla(0 0% 0% / 20%);
 	border-radius: .3rem;
@@ -39,10 +49,22 @@ dialog {
 		}
 	}
 
-	& h2 {
-		position: absolute;
-		inset: 0;
-		bottom: auto;
+	& > :where(h2, header, .full-width, footer) {
+		margin-inline: calc(-1 * var(--padding-inline));
+		padding-inline: var(--padding-inline);
+
+		&:where(:first-child) {
+			margin-block-start: calc(-1 * var(--padding-block));
+			padding-block-start: calc(1 * var(--padding-block));
+		}
+
+		&:where(:last-child) {
+			margin-block-end: calc(-1 * var(--padding-block));
+			padding-block-end: calc(1 * var(--padding-block));
+		}
+	}
+
+	& > h2 {
 		display: flex;
 		align-items: center;
 		text-align: left;
@@ -57,6 +79,4 @@ dialog {
 			margin-left: auto;
 		}
 	}
-
-
 }

@@ -8,8 +8,10 @@ globalThis.app = createApp({
 		return {
 			numerator: 2,
 			denominator: 3,
+			show_settings: false,
 			default_settings: {
 				pie_hue: 340,
+				pie_background_hue: 90,
 			},
 		}
 	},
@@ -45,6 +47,7 @@ globalThis.app = createApp({
 				"--pies-x": this.pies_x,
 				"--pies-y": Math.ceil(this.pies / this.pies_x),
 				"--pie-hue": this.settings.pie_hue,
+				"--pie-background-hue": this.settings.pie_background_hue,
 			}
 		}
 	},

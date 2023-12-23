@@ -21,3 +21,8 @@ button.show-settings {
 		background: var(--color-neutral-90a);
 	}
 }
+
+dialog[id=settings] {
+	width: 80vw;
+	max-width: 35rem;
+}
