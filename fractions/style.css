@@ -105,9 +105,6 @@ body {
 		var(--color-off);
 	border-radius: 50%;
 	border: var(--stroke-width) solid black;
-
-	xbackground: conic-gradient(var(--color-on) calc(calc(var(--numerator, 1) / var(--denominator, 1)) * 100%), transparent 0)
-	var(--color-off);
 }
 
 @supports (width: 1cqw) {
