@@ -14,7 +14,7 @@
 </head>
 <body>
 	<div id="app" v-cloak :style="app_styles">
-		<button class="show-settings" @click="show_settings = true">⚙️</button>
+		<button class="show-settings" @click="show_settings = true"></button>
 		<div class="fraction-container container">
 			<div class="fraction">
 				<input type="number" v-model="numerator" class="numerator" id="numerator" min="0" step="1">
@@ -34,7 +34,7 @@
 			</h2>
 			<label>
 				Pie color:
-				<input type="range" min="0" step="1" max="360" v-model="pie_hue" class="hue-slider" style="--color: var(--color-on)">
+				<input type="range" min="0" step="1" max="360" v-model="settings.pie_hue" class="hue-slider" style="--color: var(--color-on)">
 			</label>
 		</dialog>
 	</div>

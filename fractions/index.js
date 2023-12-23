@@ -1,4 +1,5 @@
 import Vue from "../common/vue.js";
+import settings from "../common/settings.js";
 
 let { createApp } = Vue;
 
@@ -7,10 +8,15 @@ globalThis.app = createApp({
 		return {
 			numerator: 2,
 			denominator: 3,
-			pie_hue: 340,
-			show_settings: false,
+			default_settings: {
+				pie_hue: 340,
+			},
 		}
 	},
+
+	mixins: [
+		settings
+	],
 
 	computed: {
 		fraction () {
@@ -38,7 +44,7 @@ globalThis.app = createApp({
 				"--pies": this.pies,
 				"--pies-x": this.pies_x,
 				"--pies-y": Math.ceil(this.pies / this.pies_x),
-				"--pie-hue": this.pie_hue,
+				"--pie-hue": this.settings.pie_hue,
 			}
 		}
 	},

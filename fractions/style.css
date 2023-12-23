@@ -1,5 +1,6 @@
-@import url("../common/hue-slider.css");
 @import url("../common/dialog.css");
+@import url("../common/settings.css");
+@import url("../common/hue-slider.css");
 
 * {
 	margin: 0;
