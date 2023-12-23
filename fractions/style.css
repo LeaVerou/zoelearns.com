@@ -118,6 +118,7 @@ body {
 		box-sizing: content-box;
 		text-align: center;
 		border: 0;
+		border-radius: 0;
 		font: inherit;
 
 		&:hover {
