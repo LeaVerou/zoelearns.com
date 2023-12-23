@@ -43,7 +43,7 @@ body {
 }
 
 .container {
-	--container-padding-inline: 3rem;
+	--container-padding-inline: clamp(0em, 3rem, 10vmin);
 
 	display: flex;
 	flex: 1;
@@ -70,12 +70,16 @@ body {
 	--space-x: calc(var(--space-x-pie) - 2 * var(--container-padding-inline));
 	--space-y: calc(100vh - 2 * var(--container-padding-inline));
 	--space-min: min(var(--space-x), var(--space-y));
+	--gap: calc(var(--container-padding-inline) / 2);
 
 	display: grid;
 	grid-template-columns: repeat(var(--pies-x), auto);
 	align-items: center;
+	align-content: center;
+	justify-content: start;
 	flex-wrap: wrap;
-	gap: calc(var(--container-padding-inline) / 2);
+
+	gap: var(--gap);
 	background: gold;
 	overflow: auto;
 	container-name: pie-container;
@@ -88,7 +92,11 @@ body {
 
 	--fraction: calc(var(--_numerator) / var(--_denominator));
 	--increment: calc(100% / var(--_denominator));
-	--diameter: min(var(--space-x) / var(--pies-x), var(--space-y) / var(--pies-y));
+	--diameter: calc( min(var(--space-x) / var(--pies-x), var(--space-y) / var(--pies-y)) - var(--gap) );
+	--diameter: min(
+		(var(--space-x) - var(--gap) * (var(--pies-x) - 1)) / var(--pies-x),
+		(var(--space-y) - var(--gap) * (var(--pies-y) - 1)) / var(--pies-y)
+	);
 	--circumference: calc(var(--pi) * var(--diameter));
 	--stroke-width-arc: clamp(0, .007, 1 / var(--_denominator) / 3);
 	--stroke-width: calc(var(--circumference) * var(--stroke-width-arc) * .85);
@@ -160,6 +168,7 @@ body {
 		--space-x: calc(100dvw - 2 * var(--container-padding-inline));
 		--space-y: calc(50dvh - 2 * var(--container-padding-inline));
 		align-items: start;
+		align-content: start;
 		justify-content: center;
 	}
 
