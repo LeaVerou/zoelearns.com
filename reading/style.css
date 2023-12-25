@@ -5,6 +5,9 @@
 	--color-red: oklch(60% .3 20deg);
 	--color-green-light: color-mix(in oklab, var(--color-green), white 85%);
 	--color-red-light: color-mix(in oklab, var(--color-red), white 85%);
+
+	--color-vowel: oklch(60% .17 250deg);
+	--color-consonant: oklch(60% .17 345deg);
 }
 
 body {
@@ -265,8 +268,11 @@ h2 {
 }
 
 .letter {
-	--color: oklch(50% .3 calc(var(--index) * (360 / 24)));
-	color: var(--color);
+	color: var(--color-consonant);
+
+	&.vowel {
+		color: var(--color-vowel);
+	}
 }
 
 .photos {

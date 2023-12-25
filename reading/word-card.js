@@ -3,6 +3,9 @@ import getPhotos from "../util/get-photos.js";
 const vowels = "αεηιουω";
 const consonants = "βγδζθκλμνξπρσςτφχψ";
 
+// Λοιπόν το ευ προφέρεται εφ όταν ακολουθεί θ,κ,ξ,π,σ,τ,φ,χ
+// Ενώ προφέρεται εβ όταν ακολουθεί α,ε,η,ο,ω,γ,δ,ζ,λ,μ,ν,ρ
+
 export default {
 	props: {
 		word: Object,
@@ -19,15 +22,24 @@ export default {
 		syllables () {
 			return this.word.syllables ?? this.syllabize(this.word.word);
 		},
-
-		normalizedWord () {
-			return this.dropAccents(this.word.word);
-		}
 	},
 
 	methods: {
-		dropAccents (word = this.word.word) {
-			return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+		is_vowel (letter, {previous} = {}) {
+			let letterS = dropAccents(letter.toLowerCase());
+
+			if (letterS === "υ" && letter !== "­ϋ") {
+				// this can be either a vowel or a consonant
+				if (previous) {
+					let previousS = dropAccents(previous.toLowerCase());
+
+					if (previousS === "α" || previousS === "ε") {
+						return false;
+					}
+				}
+			}
+
+			return vowels.includes(letter);
 		},
 
 		syllabize (word = this.word.word) {
@@ -35,14 +47,14 @@ export default {
 			let syllable = "";
 
 			// Drop accents
-			let normalizedWord = this.dropAccents(word);
+			let normalizedWord = dropAccents(word);
 
 			for (let i = 0; i < normalizedWord.length; i++) {
 				let letter = normalizedWord[i];
 				let originalLetter = word[i];
 				syllable += originalLetter;
 
-				if (vowels.includes(letter)) {
+				if (this.is_vowel(letter)) {
 					syllables.push(syllable);
 					syllable = "";
 				}
@@ -146,8 +158,7 @@ export default {
 				<button title="Previous syllable (←)" class="previous-syllable" @click="previous_syllable">◀</button>
 				<div class="word">
 					<span class="syllable" v-for="(syllable, i) in syllables" :class="{active: i === current_syllable}">
-						<span v-for="letter in syllable" class="letter" @click="speak(letter)"
-						:style="{'--index': letter.charCodeAt(0) - 'α'.charCodeAt(0)}">{{ letter }}</span>
+						<span v-for="(letter, j) in syllable" class="letter" :class="{vowel: is_vowel(letter, {previous: syllable[j - 1] ?? syllables[i - 1]?.at(-1) })}" @click="speak(letter)">{{ letter }}</span>
 					</span>
 				</div>
 				<div class="word en" v-if="word.status == 'correct'">{{ word.en }}</div>
@@ -159,4 +170,8 @@ export default {
 			</div>
 		</article>
 	`
+}
+
+function dropAccents (word = this.word.word) {
+	return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }

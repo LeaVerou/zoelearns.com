@@ -2,9 +2,6 @@ import Vue from "../common/vue.js";
 import WordCard from "./word-card.js";
 
 let { createApp } = Vue;
-
-const vowels = "αεηιουω";
-const consonants = "βγδζθκλμνξπρσςτφχψ";
 const all_words = await (await fetch("words.json")).json();
 
 for (let word in all_words) {
