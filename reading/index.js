@@ -1,8 +1,14 @@
 import Vue from "../common/vue.js";
 import WordCard from "./word-card.js";
 
+let params = new URLSearchParams(location.search);
+let lang_code = params.get("lang") ?? "el";
+const Lang = await import(`./langs/${ lang_code }/lang.js`);
+
+const all_words = Lang.words ?? (await (await fetch(`./langs/${ lang_code }/words.json`)).json());
+
 let { createApp } = Vue;
-const all_words = await (await fetch("words.json")).json();
+
 
 for (let word in all_words) {
 	all_words[word].word = word;
@@ -13,6 +19,7 @@ globalThis.app = createApp({
 		let all_words_array = Object.values(all_words);
 
 		return {
+			code: Lang.code,
 			all_words: all_words_array,
 			unused_words: all_words_array.slice(),
 			used_words: [],
@@ -29,7 +36,6 @@ globalThis.app = createApp({
 		else {
 			this.next_word();
 		}
-
 	},
 
 	computed: {
@@ -82,16 +88,11 @@ globalThis.app = createApp({
 				// TODO communicate that we ran out of words
 			}
 		},
-
-		showIndex() {
-
-		}
 	},
 
 	watch: {
 		"ui.showIndex": {
 			handler(show) {
-				console.log(show)
 				document.getElementById("index")?.[show? 'showModal' : 'close']();
 			}
 		}

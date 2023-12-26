@@ -1,10 +1,15 @@
 import getPhotos from "../util/get-photos.js";
+import { dropAccents, isVowel, syllabify } from "./util.js";
 
-const vowels = "αεηιουω";
-const consonants = "βγδζθκλμνξπρσςτφχψ";
+let params = new URLSearchParams(location.search);
+let lang_code = params.get("lang") ?? "el";
+const Lang = await import(`./langs/${ lang_code }/lang.js`);
 
-// Λοιπόν το ευ προφέρεται εφ όταν ακολουθεί θ,κ,ξ,π,σ,τ,φ,χ
-// Ενώ προφέρεται εβ όταν ακολουθεί α,ε,η,ο,ω,γ,δ,ζ,λ,μ,ν,ρ
+let segmenter;
+
+if (Lang.READING_GRANULARITY === "grapheme") {
+	segmenter = new Intl.Segmenter(Lang.code, {granularity: "grapheme"});
+}
 
 export default {
 	props: {
@@ -20,47 +25,25 @@ export default {
 
 	computed: {
 		syllables () {
-			return this.word.syllables ?? this.syllabize(this.word.word);
+			if (Lang.READING_GRANULARITY === "grapheme") {
+				return [...segmenter.segment(this.word.word)].map(s => s.segment);
+			}
+			else if (Lang.READING_GRANULARITY === "syllable") {
+				return this.word.syllables ?? this.syllabify(this.word.word);
+			}
+			else { // whole word
+				return [this.word.word];
+			}
 		},
 	},
 
 	methods: {
-		is_vowel (letter, {previous} = {}) {
-			let letterS = dropAccents(letter.toLowerCase());
-
-			if (letterS === "υ" && letter !== "­ϋ") {
-				// υ can be either a vowel or a consonant
-				if (previous === "α" || previous === "ε") {
-					return false;
-				}
-			}
-
-			return vowels.includes(letterS);
+		is_vowel (letter, o) {
+			return isVowel(Lang, letter, o);
 		},
 
-		syllabize (word = this.word.word) {
-			let syllables = [];
-			let syllable = "";
-
-			// Drop accents
-			let normalizedWord = dropAccents(word);
-
-			for (let i = 0; i < normalizedWord.length; i++) {
-				let letter = normalizedWord[i];
-				let originalLetter = word[i];
-				syllable += originalLetter;
-
-				if (this.is_vowel(letter)) {
-					syllables.push(syllable);
-					syllable = "";
-				}
-			}
-
-			if (syllable.length > 0) {
-				syllables.push(syllable);
-			}
-
-			return syllables;
+		syllabify (word = this.word.word) {
+			return syllabify(Lang, word);
 		},
 
 		goto_syllable (offset) {
@@ -166,8 +149,4 @@ export default {
 			</div>
 		</article>
 	`
-}
-
-function dropAccents (word = this.word.word) {
-	return word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
