@@ -133,6 +133,13 @@ details {
 		}
 	}
 
+	&.no-syllables {
+		.previous-syllable,
+		.next-syllable {
+			visibility: hidden;
+		}
+	}
+
 	&:not(.active) {
 		font-size: 30%;
 

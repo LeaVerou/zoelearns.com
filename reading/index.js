@@ -4,11 +4,9 @@ import WordCard from "./word-card.js";
 let params = new URLSearchParams(location.search);
 let lang_code = params.get("lang") ?? "el";
 const Lang = await import(`./langs/${ lang_code }/lang.js`);
-
 const all_words = Lang.words ?? (await (await fetch(`./langs/${ lang_code }/words.json`)).json());
 
 let { createApp } = Vue;
-
 
 for (let word in all_words) {
 	all_words[word].word = word;

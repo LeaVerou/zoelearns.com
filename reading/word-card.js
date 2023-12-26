@@ -125,7 +125,7 @@ export default {
 	},
 
 	template: `
-		<article class="word-card" :class="[word.status, active? 'active' : '']">
+		<article class="word-card" :class="[word.status, active? 'active' : '', syllables.length > 1? '' : 'no-syllables']">
 			<div class="toolbar">
 				<button class="correct" @click="correct" v-if="word.status !== 'correct'" title="Read correctly! (⏎)">✓</button>
 				<div class="spacer"></div>
