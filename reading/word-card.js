@@ -1,5 +1,5 @@
 import getPhotos from "../util/get-photos.js";
-import { dropAccents, isVowel, syllabify } from "./util.js";
+import { isVowel, syllabify } from "./util.js";
 
 let params = new URLSearchParams(location.search);
 let lang_code = params.get("lang") ?? "el";
@@ -25,15 +25,7 @@ export default {
 
 	computed: {
 		syllables () {
-			if (Lang.READING_GRANULARITY === "grapheme") {
-				return [...segmenter.segment(this.word.word)].map(s => s.segment);
-			}
-			else if (Lang.READING_GRANULARITY === "syllable") {
-				return this.word.syllables ?? this.syllabify(this.word.word);
-			}
-			else { // whole word
-				return [this.word.word];
-			}
+			return this.syllabify(this.word);
 		},
 	},
 
@@ -42,8 +34,26 @@ export default {
 			return isVowel(Lang, letter, o);
 		},
 
-		syllabify (word = this.word.word) {
-			return syllabify(Lang, word);
+		syllabify (word = this.word) {
+			if (word?.segments) {
+				return word.segments;
+			}
+
+			word = word?.word ?? word;
+
+			if (Lang.segment) {
+				return Lang.segment(word);
+			}
+
+			if (Lang.READING_GRANULARITY === "grapheme") {
+				return [...segmenter.segment(word)].map(s => s.segment);
+			}
+			else if (Lang.READING_GRANULARITY === "syllable") {
+				return syllabify(Lang, word);
+			}
+			else { // whole word
+				return [word];
+			}
 		},
 
 		goto_syllable (offset) {

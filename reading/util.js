@@ -26,7 +26,6 @@ export function syllabify (Lang, word) {
 	let syllables = [];
 	let syllable = "";
 
-	// Drop accents
 	let letter, previous;
 
 	for (let i = 0; i < word.length; i++) {
@@ -35,6 +34,8 @@ export function syllabify (Lang, word) {
 		syllable += letter;
 
 		if (isVowel(Lang, letter, {previous})) {
+			// FIXME will be wrong for diphthongs
+			// FIXME will be wrong for consonant clusters
 			syllables.push(syllable);
 			syllable = "";
 		}
