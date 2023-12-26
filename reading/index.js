@@ -8,18 +8,12 @@ const all_words = Lang.words ?? (await (await fetch(`./langs/${ lang_code }/word
 
 let { createApp } = Vue;
 
-for (let word in all_words) {
-	all_words[word].word = word;
-}
-
 globalThis.app = createApp({
 	data() {
-		let all_words_array = Object.values(all_words);
-
 		return {
 			code: Lang.code,
-			all_words: all_words_array,
-			unused_words: all_words_array.slice(),
+			all_words,
+			unused_words: all_words.slice(),
 			used_words: [],
 			activeWord: null,
 			ui: {}
