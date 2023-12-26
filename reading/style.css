@@ -6,8 +6,8 @@
 	--color-green-light: color-mix(in oklab, var(--color-green), white 85%);
 	--color-red-light: color-mix(in oklab, var(--color-red), white 85%);
 
-	--color-vowel: oklch(60% .17 250deg);
-	--color-consonant: oklch(60% .17 345deg);
+	--color-vowel: oklch(68% .18 250deg);
+	--color-consonant: oklch(67% .2 350deg);
 }
 
 body {

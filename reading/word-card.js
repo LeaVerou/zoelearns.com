@@ -29,17 +29,13 @@ export default {
 			let letterS = dropAccents(letter.toLowerCase());
 
 			if (letterS === "υ" && letter !== "­ϋ") {
-				// this can be either a vowel or a consonant
-				if (previous) {
-					let previousS = dropAccents(previous.toLowerCase());
-
-					if (previousS === "α" || previousS === "ε") {
-						return false;
-					}
+				// υ can be either a vowel or a consonant
+				if (previous === "α" || previous === "ε") {
+					return false;
 				}
 			}
 
-			return vowels.includes(letter);
+			return vowels.includes(letterS);
 		},
 
 		syllabize (word = this.word.word) {
