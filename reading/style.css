@@ -1,4 +1,5 @@
 @import url("../common/dialog.css");
+@import url("../common/icons.css");
 @import url("../common/settings.css");
 
 :root {
@@ -217,26 +218,24 @@ details {
 	}
 
 	.previous-word,
-	.next-word {
+	.next-word,
+	.skip-word {
 		letter-spacing: -.3em;
-	}
-
-	.previous-word,
-	.next-word {
 		padding-right: .6em;
 	}
 
 	.correct,
-	.next-word {
+	.next-word,
+	.skip-word {
 		color: white;
 	}
 
 	.correct,
-	.next-word:is(.correct *) {
+	.next-word {
 		background: var(--color-green);
 	}
 
-	.next-word:not(.correct *) {
+	.skip-word {
 		background: var(--color-red);
 	}
 }

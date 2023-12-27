@@ -153,10 +153,11 @@ export default {
 		<article class="word-card" :class="[word.status, active? 'active' : '', segments.length > 1? '' : 'no-segments']">
 			<div class="toolbar">
 				<button class="correct" @click="correct" v-if="word.status !== 'correct'" title="Read correctly! (⏎)">✓</button>
+				<button class="next-word" v-if="word.status === 'correct'" @click.stop="next_word" title="Next word (⇧→)">▶▶</button>
 				<div class="spacer"></div>
 				<button class="speak" @click.stop="speak(current_segment === -1 ? word.word : segments[current_segment])">🗣️</button>
 				<div class="spacer"></div>
-				<button class="next-word" @click.stop="next_word" title="Next word (⇧→)">▶▶</button>
+				<button class="skip-word" v-if="word.status !== 'correct'" @click.stop="next_word" title="Skip word">▶▶</button>
 			</div>
 			<h2>
 				<button title="Previous segment (←)" class="previous-segment" @click="previous_segment">◀</button>
