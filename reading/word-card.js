@@ -88,7 +88,7 @@ export default {
 			// Remove active segment, if present
 			this.current_segment = -1;
 			this.word.status = "correct";
-			this.word.photos = (await getPhotos(this.word.en, {per_page: 4})).results;
+			this.word.photos = (await getPhotos(this.word.en ?? this.word.word, {per_page: 4})).results;
 		},
 
 		next_word () {
@@ -157,7 +157,7 @@ export default {
 						<span v-for="(letter, j) in segment" class="letter" :class="{vowel: is_vowel(letter, {previous: segment[j - 1] ?? segments[i - 1]?.at(-1) })}" @click="speak(letter)">{{ letter }}</span>
 					</span>
 				</div>
-				<div class="word en" v-if="word.status == 'correct'">{{ word.en }}</div>
+				<div class="word en" v-if="word.status == 'correct' && word.en">{{ word.en }}</div>
 				<button title="Next segment (→)" class="next-segment" @click="next_segment">▶</button>
 			</h2>
 			<div class="photos" v-if="word.photos && word.status === 'correct'" :style="{ '--total-aspect-ratio': word.photos.reduce((a, c) => a + c.width / c.height, 0) || 4 }">
