@@ -1,5 +1,6 @@
 import Vue from "../common/vue.js";
 import WordCard from "./word-card.js";
+import settings from "../common/settings.js";
 
 let params = new URLSearchParams(location.search);
 let lang_code = params.get("lang") ?? "el";
@@ -9,14 +10,20 @@ const all_words = Lang.words ?? (await (await fetch(`./langs/${ lang_code }/word
 let { createApp } = Vue;
 
 globalThis.app = createApp({
+	mixins: [settings],
+
 	data() {
 		return {
 			code: Lang.code,
+			Lang,
 			all_words,
 			unused_words: all_words.slice(),
 			used_words: [],
 			activeWord: null,
-			ui: {}
+			ui: {},
+			default_settings: {
+				show_en: true,
+			},
 		}
 	},
 
@@ -37,6 +44,14 @@ globalThis.app = createApp({
 
 		correct_words () {
 			return this.used_words.filter(w => w?.status === "correct");
+		},
+
+		// State to pass to child components
+		state () {
+			return {
+				Lang: this.Lang,
+				settings: this.settings,
+			}
 		}
 	},
 

@@ -5,18 +5,11 @@ import {
 	segment_syllables
 } from "./util.js";
 
-let params = new URLSearchParams(location.search);
-let lang_code = params.get("lang") ?? "el";
-const Lang = await import(`./langs/${ lang_code }/lang.js`);
-
 let segmenter;
-
-if (Lang.READING_GRANULARITY === "grapheme") {
-	segmenter = new Intl.Segmenter(Lang.code, {granularity: "grapheme"});
-}
 
 export default {
 	props: {
+		state: Object,
 		word: Object,
 		active: Boolean
 	},
@@ -36,12 +29,20 @@ export default {
 			let aspectRatios = this.word.photos.map(photo => photo.width / photo.height);
 			let ret = Object.fromEntries(aspectRatios.map((ar, i) => [`--aspect-ratio-${ i + 1 }`, ar]));
 			return ret;
+		},
+
+		Lang () {
+			return this.state.Lang;
+		},
+
+		settings () {
+			return this.state.settings;
 		}
 	},
 
 	methods: {
 		is_vowel (letter, o) {
-			return is_vowel(Lang, letter, o);
+			return is_vowel(this.Lang, letter, o);
 		},
 
 		segment (word = this.word) {
@@ -51,18 +52,19 @@ export default {
 
 			word = word?.word ?? word;
 
-			if (Lang.segment) {
-				return Lang.segment(word);
+			if (this.Lang.segment) {
+				return this.Lang.segment(word);
 			}
 
-			if (Lang.READING_GRANULARITY === "grapheme") {
+			if (this.Lang.READING_GRANULARITY === "grapheme") {
+				segmenter ??= new Intl.Segmenter(this.Lang.code, {granularity: "grapheme"});
 				return [...segmenter.segment(word)].map(s => s.segment);
 			}
-			if (Lang.READING_GRANULARITY === "phoneme") {
-				return segment_phonemes(Lang, word);
+			if (this.Lang.READING_GRANULARITY === "phoneme") {
+				return segment_phonemes(this.Lang, word);
 			}
-			else if (Lang.READING_GRANULARITY === "syllable") {
-				return segment_syllables(Lang, word);
+			else if (this.Lang.READING_GRANULARITY === "syllable") {
+				return segment_syllables(this.Lang, word);
 			}
 			else { // whole word
 				return [word];
@@ -104,7 +106,7 @@ export default {
 
 		speak (word) {
 			let utterance = new SpeechSynthesisUtterance(word);
-			utterance.lang = Lang.code;
+			utterance.lang = this.Lang.code;
 			utterance.rate = .8;
 			speechSynthesis.speak(utterance);
 		},
@@ -158,12 +160,13 @@ export default {
 			</div>
 			<h2>
 				<button title="Previous segment (←)" class="previous-segment" @click="previous_segment">◀</button>
-				<div class="word" lang="${ Lang.code }">
+				<div class="word" :lang="Lang.code">
 					<span class="segment" v-for="(segment, i) in segments" :class="{active: i === current_segment}">
-						<span v-for="(letter, j) in segment" class="letter" :class="{vowel: is_vowel(letter, {previous: segment[j - 1] ?? segments[i - 1]?.at(-1) })}" @click="speak(letter)">{{ letter }}</span>
+						<span v-for="(letter, j) in segment" class="letter" :class="{vowel: is_vowel(letter, {previous: segment[j - 1] ?? segments[i - 1]?.at(-1) })}"
+						@click="speak(letter)">{{ letter }}</span>
 					</span>
 				</div>
-				<div class="word en" v-if="word.status == 'correct' && word.en">{{ word.en }}</div>
+				<div class="word en" v-if="settings.show_en && word.status == 'correct' && word.en">{{ word.en }}</div>
 				<button title="Next segment (→)" class="next-segment" @click="next_segment">▶</button>
 			</h2>
 			<div class="photos" v-if="word.photos && word.status === 'correct'" :style="photo_container_styles">
