@@ -5,7 +5,10 @@ import { dropAccents } from "../../util.js";
 
 export const code = "el";
 export const READING_GRANULARITY = "syllable";
+
 export const VOWELS_NOACCENTS = "αεηιουω";
+export const DIGRAPH_VOWELS = ["αυ", "αι", "ει", "ευ", "ηυ", "οι", "ου", "υι"];
+export const DIGRAPH_CONSONANTS = ["μπ", "ντ", "γκ", "τσ", "τζ", "γγ", "γξ", "γχ"];
 
 export function is_vowel (letter, {previous} = {}) {
 	let letterS = dropAccents(letter.toLowerCase());

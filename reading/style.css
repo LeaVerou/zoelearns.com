@@ -120,7 +120,7 @@ details {
 		grid-template-columns: auto 1fr auto;
 		grid-auto-flow: dense;
 
-		.previous-syllable {
+		.previous-segment {
 			grid-column: 1;
 		}
 
@@ -128,14 +128,14 @@ details {
 			grid-column: 2;
 		}
 
-		.next-syllable {
+		.next-segment {
 			grid-column: 3;
 		}
 	}
 
-	&.no-syllables {
-		.previous-syllable,
-		.next-syllable {
+	&.no-segments {
+		.previous-segment,
+		.next-segment {
 			visibility: hidden;
 		}
 	}
@@ -257,7 +257,7 @@ h2 {
 	font-size: 450%;
 	line-height: .9;
 
-	&:has(.syllable.active) .syllable:not(.active) {
+	&:has(.segment.active) .segment:not(.active) {
 		opacity: .2;
 	}
 }
@@ -270,7 +270,7 @@ h2 {
 	}
 }
 
-.syllable {
+.segment {
 	display: flex;
 }
 

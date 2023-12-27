@@ -19,13 +19,13 @@ export default {
 
 	data() {
 		return {
-			current_syllable: -1,
+			current_segment: -1,
 		}
 	},
 
 	computed: {
-		syllables () {
-			return this.syllabify(this.word);
+		segments () {
+			return this.segment(this.word);
 		},
 	},
 
@@ -34,7 +34,7 @@ export default {
 			return isVowel(Lang, letter, o);
 		},
 
-		syllabify (word = this.word) {
+		segment (word = this.word) {
 			if (word?.segments) {
 				return word.segments;
 			}
@@ -56,30 +56,30 @@ export default {
 			}
 		},
 
-		goto_syllable (offset) {
-			let newIndex = this.current_syllable + offset;
+		goto_segment (offset) {
+			let newIndex = this.current_segment + offset;
 
-			if (newIndex === this.syllables.length) {
+			if (newIndex === this.segments.length) {
 				newIndex = -1;
 			}
 			else if (newIndex < 0) {
-				newIndex = this.syllables.length + 1 + newIndex;
+				newIndex = this.segments.length + 1 + newIndex;
 			}
 
-			this.current_syllable = newIndex;
+			this.current_segment = newIndex;
 		},
 
-		previous_syllable () {
-			return this.goto_syllable(-1);
+		previous_segment () {
+			return this.goto_segment(-1);
 		},
 
-		next_syllable () {
-			return this.goto_syllable(1);
+		next_segment () {
+			return this.goto_segment(1);
 		},
 
 		async correct () {
-			// Remove active syllable, if present
-			this.current_syllable = -1;
+			// Remove active segment, if present
+			this.current_segment = -1;
 			this.word.status = "correct";
 			this.word.photos = (await getPhotos(this.word.en, {per_page: 4})).results;
 		},
@@ -98,14 +98,14 @@ export default {
 
 		handleEvent (evt) {
 			if (evt.key === "ArrowLeft" || evt.key === "ArrowUp") {
-				this.previous_syllable();
+				this.previous_segment();
 			}
 			else if (evt.key === "ArrowRight" || evt.key === "ArrowDown") {
 				if (evt.shiftKey) {
 					this.next_word();
 				}
 				else {
-					this.next_syllable();
+					this.next_segment();
 				}
 			}
 			else if (evt.key === "Enter") {
@@ -129,29 +129,29 @@ export default {
 
 		word: {
 			handler (word) {
-				this.current_syllable = -1;
+				this.current_segment = -1;
 			}
 		}
 	},
 
 	template: `
-		<article class="word-card" :class="[word.status, active? 'active' : '', syllables.length > 1? '' : 'no-syllables']">
+		<article class="word-card" :class="[word.status, active? 'active' : '', segments.length > 1? '' : 'no-segments']">
 			<div class="toolbar">
 				<button class="correct" @click="correct" v-if="word.status !== 'correct'" title="Read correctly! (⏎)">✓</button>
 				<div class="spacer"></div>
-				<button class="speak" @click.stop="speak(current_syllable === -1 ? word.word : syllables[current_syllable])">🗣️</button>
+				<button class="speak" @click.stop="speak(current_segment === -1 ? word.word : segments[current_segment])">🗣️</button>
 				<div class="spacer"></div>
 				<button class="next-word" @click.stop="next_word" title="Next word (⇧→)">▶▶</button>
 			</div>
 			<h2>
-				<button title="Previous syllable (←)" class="previous-syllable" @click="previous_syllable">◀</button>
+				<button title="Previous segment (←)" class="previous-segment" @click="previous_segment">◀</button>
 				<div class="word">
-					<span class="syllable" v-for="(syllable, i) in syllables" :class="{active: i === current_syllable}">
-						<span v-for="(letter, j) in syllable" class="letter" :class="{vowel: is_vowel(letter, {previous: syllable[j - 1] ?? syllables[i - 1]?.at(-1) })}" @click="speak(letter)">{{ letter }}</span>
+					<span class="segment" v-for="(segment, i) in segments" :class="{active: i === current_segment}">
+						<span v-for="(letter, j) in segment" class="letter" :class="{vowel: is_vowel(letter, {previous: segment[j - 1] ?? segments[i - 1]?.at(-1) })}" @click="speak(letter)">{{ letter }}</span>
 					</span>
 				</div>
 				<div class="word en" v-if="word.status == 'correct'">{{ word.en }}</div>
-				<button title="Next syllable (→)" class="next-syllable" @click="next_syllable">▶</button>
+				<button title="Next segment (→)" class="next-segment" @click="next_segment">▶</button>
 			</h2>
 			<div class="photos" v-if="word.photos && word.status === 'correct'" :style="{ '--total-aspect-ratio': word.photos.reduce((a, c) => a + c.width / c.height, 0) || 4 }">
 				<img v-for="photo in word.photos" :src="photo.urls.small" :alt="photo.description"

@@ -34,7 +34,7 @@ export function syllabify (Lang, word) {
 		syllable += letter;
 
 		if (isVowel(Lang, letter, {previous})) {
-			// FIXME will be wrong for diphthongs
+			// FIXME will be wrong for digraphs
 			// FIXME will be wrong for consonant clusters
 			syllables.push(syllable);
 			syllable = "";
