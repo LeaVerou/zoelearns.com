@@ -12,6 +12,7 @@
 
 <nav>
 	<button @click="ui.showIndex = true">All words</button>
+	<button class="show-settings" @click="show_settings = true"></button>
 </nav>
 <word-card :word="activeWord" v-if="activeWord" active @next_word="next_word"></word-card>
 
@@ -29,14 +30,24 @@
 </details>
 
 <dialog id="index" @keyup.esc="ui.showIndex = false" @click="ui.showIndex = false">
-	<button class="close" @click="ui.showIndex = false">❌</button>
-	<h2>All {{ all_words.length }} words</h2>
+	<h2>All {{ all_words.length }} words
+		<button class="close" @click="ui.showIndex = false"></button>
+	</h2>
 	<ul>
 		<li v-for="word in all_words">
 			<a :href="`#${word.word}`" :class="{used: used_words.includes(word)}">{{ word.word }}</a>
 		</li>
 	</ul>
+</dialog>
 
+<dialog id="settings" :open="show_settings">
+	<h2>Settings
+		<button class="close" @click="show_settings = false"></button>
+	</h2>
+	<label>
+		<input type="checkbox" v-model="settings.show_en">
+		Show English translation
+	</label>
 </dialog>
 
 </body>

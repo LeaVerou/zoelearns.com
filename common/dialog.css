@@ -1,14 +1,17 @@
 @import url("base.css");
 @import url("icons.css");
 
-dialog:where([open]) {
+dialog[open] {
+	display: flex;
+}
+
+dialog {
 	/* Center the dialog */
 	top: 50%;
 	transform: translateY(-50%);
 	margin: 1em auto;
 
 	/* Layout */
-	display: flex;
 	flex-flow: column;
 	gap: 1em;
 	--padding-block: 1em;
@@ -49,7 +52,7 @@ dialog:where([open]) {
 		}
 	}
 
-	& > :where(h2, header, .full-width, footer) {
+	& > :is(h2, header, :where(.full-width), footer) {
 		margin-inline: calc(-1 * var(--padding-inline));
 		padding-inline: var(--padding-inline);
 
