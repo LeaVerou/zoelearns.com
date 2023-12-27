@@ -289,6 +289,23 @@ h2 {
 	align-content: stretch;
 	justify-items: stretch;
 	height: 20ch; /* Fallback */
+	--total-aspect-ratio: calc(var(--aspect-ratio-1) + var(--aspect-ratio-2) + var(--aspect-ratio-3) + var(--aspect-ratio-4));
+
+	@container word-card (width < 800px) {
+		--aspect-ratio-4: 0 !important;
+
+		& img:nth-child(4) {
+			display: none;
+		}
+
+		@container word-card (width < 600px) {
+			--aspect-ratio-3: 0 !important;
+
+			& img:nth-child(3) {
+				display: none;
+			}
+		}
+	}
 
 	@container word-card (width < 100vw) {
 		height: min(100cqw / var(--total-aspect-ratio), 40vh);

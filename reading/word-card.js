@@ -31,6 +31,12 @@ export default {
 		segments () {
 			return this.segment(this.word);
 		},
+
+		photo_container_styles () {
+			let aspectRatios = this.word.photos.map(photo => photo.width / photo.height);
+			let ret = Object.fromEntries(aspectRatios.map((ar, i) => [`--aspect-ratio-${ i + 1 }`, ar]));
+			return ret;
+		}
 	},
 
 	methods: {
@@ -160,7 +166,7 @@ export default {
 				<div class="word en" v-if="word.status == 'correct' && word.en">{{ word.en }}</div>
 				<button title="Next segment (→)" class="next-segment" @click="next_segment">▶</button>
 			</h2>
-			<div class="photos" v-if="word.photos && word.status === 'correct'" :style="{ '--total-aspect-ratio': word.photos.reduce((a, c) => a + c.width / c.height, 0) || 4 }">
+			<div class="photos" v-if="word.photos && word.status === 'correct'" :style="photo_container_styles">
 				<img v-for="photo in word.photos" :src="photo.urls.small" :alt="photo.description"
 				:style="{ '--color': photo.color, '--aspect-ratio': photo.width / photo.height }" />
 			</div>
