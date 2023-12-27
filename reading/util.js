@@ -2,7 +2,7 @@ export function dropAccents (str) {
 	return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
-export function isVowel (Lang, letter, {previous} = {}) {
+export function is_vowel (Lang, letter, {previous} = {}) {
 	if (Lang.is_vowel) {
 		return Lang.is_vowel(letter, {previous});
 	}
@@ -17,10 +17,13 @@ export function isVowel (Lang, letter, {previous} = {}) {
 	}
 }
 
-export function syllabify (Lang, word) {
+export function segment_syllables (Lang, word) {
 	if (Lang.syllabify) {
 		return Lang.syllabify(word);
 	}
+
+	let DIGRAPH_VOWELS = Lang.DIGRAPH_VOWELS ?? [];
+	let DIGRAPH_CONSONANTS = Lang.DIGRAPH_CONSONANTS ?? [];
 
 	// Fallback into default syllabizer
 	let syllables = [];
@@ -33,7 +36,7 @@ export function syllabify (Lang, word) {
 		letter = word[i];
 		syllable += letter;
 
-		if (isVowel(Lang, letter, {previous})) {
+		if (is_vowel(Lang, letter, {previous})) {
 			// FIXME will be wrong for digraphs
 			// FIXME will be wrong for consonant clusters
 			syllables.push(syllable);
@@ -46,4 +49,11 @@ export function syllabify (Lang, word) {
 	}
 
 	return syllables;
+}
+
+export function segment_phonemes(Lang, word) {
+	let digraphs = [...(Lang.DIGRAPH_VOWELS || []), ...(Lang.DIGRAPH_CONSONANTS || [])];
+
+	let digraphs_re = new RegExp(digraphs.join("|") + "|.", "g");
+	return word.match(digraphs_re);
 }

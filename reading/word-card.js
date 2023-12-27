@@ -1,5 +1,9 @@
 import getPhotos from "../util/get-photos.js";
-import { isVowel, syllabify } from "./util.js";
+import {
+	is_vowel,
+	segment_phonemes,
+	segment_syllables
+} from "./util.js";
 
 let params = new URLSearchParams(location.search);
 let lang_code = params.get("lang") ?? "el";
@@ -31,7 +35,7 @@ export default {
 
 	methods: {
 		is_vowel (letter, o) {
-			return isVowel(Lang, letter, o);
+			return is_vowel(Lang, letter, o);
 		},
 
 		segment (word = this.word) {
@@ -48,8 +52,11 @@ export default {
 			if (Lang.READING_GRANULARITY === "grapheme") {
 				return [...segmenter.segment(word)].map(s => s.segment);
 			}
+			if (Lang.READING_GRANULARITY === "phoneme") {
+				return segment_phonemes(Lang, word);
+			}
 			else if (Lang.READING_GRANULARITY === "syllable") {
-				return syllabify(Lang, word);
+				return segment_syllables(Lang, word);
 			}
 			else { // whole word
 				return [word];
