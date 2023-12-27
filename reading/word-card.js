@@ -1,4 +1,4 @@
-import getPhotos from "../util/get-photos.js";
+import getPhotos from "../common/get-photos.js";
 import {
 	is_vowel,
 	segment_phonemes,

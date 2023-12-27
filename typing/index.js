@@ -179,7 +179,7 @@ async function translate(word) {
 	return words[0]?.length > words[1]?.length? words[1] : words[0];
 }
 
-import getPhotos from "../util/get-photos.js";
+import getPhotos from "../common/get-photos.js";
 
 async function showPhoto(word) {
 	let json = await getPhotos(word);
