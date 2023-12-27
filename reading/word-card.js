@@ -104,7 +104,7 @@ export default {
 
 		speak (word) {
 			let utterance = new SpeechSynthesisUtterance(word);
-			utterance.lang = "el-GR";
+			utterance.lang = Lang.code;
 			utterance.rate = .8;
 			speechSynthesis.speak(utterance);
 		},
@@ -158,7 +158,7 @@ export default {
 			</div>
 			<h2>
 				<button title="Previous segment (←)" class="previous-segment" @click="previous_segment">◀</button>
-				<div class="word">
+				<div class="word" lang="${ Lang.code }">
 					<span class="segment" v-for="(segment, i) in segments" :class="{active: i === current_segment}">
 						<span v-for="(letter, j) in segment" class="letter" :class="{vowel: is_vowel(letter, {previous: segment[j - 1] ?? segments[i - 1]?.at(-1) })}" @click="speak(letter)">{{ letter }}</span>
 					</span>
