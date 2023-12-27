@@ -1,10 +1,9 @@
-@import url("../common/dialog.css");
+@import url("../common/base.css");
 @import url("../common/icons.css");
+@import url("../common/dialog.css");
 @import url("../common/settings.css");
 
 :root {
-	--color-green: oklch(60% .3 120deg);
-	--color-red: oklch(60% .3 20deg);
 	--color-green-light: color-mix(in oklab, var(--color-green), white 85%);
 	--color-red-light: color-mix(in oklab, var(--color-red), white 85%);
 
@@ -122,6 +121,11 @@ details {
 		grid-template-columns: auto 1fr auto;
 		grid-auto-flow: dense;
 
+		.previous-segment,
+		.next-segment {
+			font-size: 148%;
+		}
+
 		.previous-segment {
 			grid-column: 1;
 		}
@@ -155,6 +159,29 @@ details {
 
 		& h2 {
 			grid-template-columns: 1fr;
+		}
+	}
+
+	.word {
+		display: flex;
+		margin: 0;
+		margin-top: .1em;
+		margin-bottom: .15em;
+		justify-content: center;
+		text-align: center;
+		font-size: 450%;
+		line-height: .9;
+
+		&:has(.segment.active) .segment:not(.active) {
+			opacity: .2;
+		}
+	}
+
+	.word.en {
+		font-size: 150%;
+
+		&::before {
+			content: "🇬🇧 ";
 		}
 	}
 }
@@ -247,35 +274,13 @@ h2 {
 	text-align: center;
 }
 
-.word {
-	display: flex;
-	margin: 0;
-	margin-top: .1em;
-	margin-bottom: .15em;
-	justify-content: center;
-	text-align: center;
-	font-size: 450%;
-	line-height: .9;
-
-	&:has(.segment.active) .segment:not(.active) {
-		opacity: .2;
-	}
-}
-
-.word.en {
-	font-size: 150%;
-
-	&::before {
-		content: "🇬🇧 ";
-	}
-}
-
 .segment {
 	display: flex;
 }
 
 .letter {
 	color: var(--color-consonant);
+	cursor: pointer;
 
 	&.vowel {
 		color: var(--color-vowel);
@@ -322,11 +327,37 @@ h2 {
 dialog[id=index] {
 	& ul {
 		columns: 4 7ch;
+
+		& li {
+			--icon: var(--icon-question-circle-fill);
+
+			&::marker {
+				content: var(--icon) "  ";
+				color: var(--color, var(--color-neutral-70));
+				font-family: bootstrap-icons;
+				font-size: 60%;
+			}
+
+			.word {
+				font-weight: 600;
+				text-decoration: none;
+
+				&:not(:hover, :focus) {
+					filter: grayscale(.75);
+				}
+			}
+
+			&.correct {
+				--color: var(--color-green);
+				--icon: var(--icon-check-circle-fill);
+			}
+
+			&.skipped {
+				--color: var(--color-red);
+				--icon: var(--icon-skip-forward-circle-fill);
+			}
+		}
 	}
 
-	.used {
-		opacity: .8;
-		font-style: italic;
-		text-decoration: line-through;
-	}
+
 }

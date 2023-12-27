@@ -1,8 +1,15 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css");
 
 :root {
+	--icon-caret-left-fill: "\F22D";
+	--icon-caret-right-fill: "\F231";
+	--icon-chat-fill: "\F24B";
+	--icon-check-circle-fill: "\F26A";
 	--icon-gear: "\F3E5";
 	--icon-gear-fill: "\F3E2";
+	--icon-skip-end-fill: "\F557";
+	--icon-skip-forward-circle-fill: "\F55B";
+	--icon-question-circle-fill: "\F504";
 	--icon-x: "\F62A";
 	--icon-x-lg: "\F659";
 }

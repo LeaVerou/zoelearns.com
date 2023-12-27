@@ -1,5 +1,6 @@
 import Vue from "../common/vue.js";
 import WordCard from "./word-card.js";
+import Language from "./Language.js";
 import settings from "../common/settings.js";
 
 let params = new URLSearchParams(location.search);
@@ -14,8 +15,7 @@ globalThis.app = createApp({
 
 	data() {
 		return {
-			code: Lang.code,
-			Lang,
+			lang: new Language(Lang),
 			all_words,
 			unused_words: all_words.slice(),
 			used_words: [],
@@ -49,7 +49,7 @@ globalThis.app = createApp({
 		// State to pass to child components
 		state () {
 			return {
-				Lang: this.Lang,
+				lang: this.lang,
 				settings: this.settings,
 			}
 		}

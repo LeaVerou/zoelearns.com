@@ -1,7 +1,5 @@
-// import { dropAccents } from "../../util.js";
-
 export const code = "en-GB";
-export const READING_GRANULARITY = "phoneme";
+export const READING_GRANULARITY = "sound";
 export const VOWELS_NOACCENTS = "aeiou";
 
 // ai,	ay,	ee,	ea,	ie, ei, oo,	ou,	ow,	oe,	oo,	ue,	ey,	ay,	oy,	oi,	au,	aw etc

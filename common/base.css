@@ -1,12 +1,14 @@
 :root {
-	--color-red: oklch(.55 .16 20);
+	--color-red: oklch(55% .2 20);
+	--color-green: oklch(60% .3 120deg);
 
-	--color-neutral-60: oklch(.6 .01 250);
-	--color-neutral-70: oklch(.7 .01 250);
-	--color-neutral-80: oklch(.8 .01 250);
-	--color-neutral-90: oklch(.9 .01 250);
-	--color-neutral-90a: oklch(.5 .01 250 / .1);
-	--color-neutral-95: oklch(.95 .01 250);
+	--color-neutral-50: oklch(50% .01 250);
+	--color-neutral-60: oklch(60% .01 250);
+	--color-neutral-70: oklch(70% .01 250);
+	--color-neutral-80: oklch(80% .01 250);
+	--color-neutral-90: oklch(90% .01 250);
+	--color-neutral-90a: oklch(50% .01 250 / .1);
+	--color-neutral-95: oklch(95% .01 250);
 }
 
 button {

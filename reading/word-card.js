@@ -1,11 +1,4 @@
 import getPhotos from "../common/get-photos.js";
-import {
-	is_vowel,
-	segment_phonemes,
-	segment_syllables
-} from "./util.js";
-
-let segmenter;
 
 export default {
 	props: {
@@ -31,8 +24,8 @@ export default {
 			return ret;
 		},
 
-		Lang () {
-			return this.state.Lang;
+		lang () {
+			return this.state.lang;
 		},
 
 		settings () {
@@ -42,33 +35,11 @@ export default {
 
 	methods: {
 		is_vowel (letter, o) {
-			return is_vowel(this.Lang, letter, o);
+			return this.lang.is_vowel(letter, o);
 		},
 
 		segment (word = this.word) {
-			if (word?.segments) {
-				return word.segments;
-			}
-
-			word = word?.word ?? word;
-
-			if (this.Lang.segment) {
-				return this.Lang.segment(word);
-			}
-
-			if (this.Lang.READING_GRANULARITY === "grapheme") {
-				segmenter ??= new Intl.Segmenter(this.Lang.code, {granularity: "grapheme"});
-				return [...segmenter.segment(word)].map(s => s.segment);
-			}
-			if (this.Lang.READING_GRANULARITY === "phoneme") {
-				return segment_phonemes(this.Lang, word);
-			}
-			else if (this.Lang.READING_GRANULARITY === "syllable") {
-				return segment_syllables(this.Lang, word);
-			}
-			else { // whole word
-				return [word];
-			}
+			return this.lang.segment(word);
 		},
 
 		goto_segment (offset) {
@@ -104,20 +75,15 @@ export default {
 			this.$emit("next_word");
 		},
 
-		speak (word) {
-			let utterance = new SpeechSynthesisUtterance(word);
-			utterance.lang = this.Lang.code;
-			utterance.rate = .8;
-			speechSynthesis.speak(utterance);
-		},
-
 		handleEvent (evt) {
 			if (evt.key === "ArrowLeft" || evt.key === "ArrowUp") {
 				this.previous_segment();
 			}
 			else if (evt.key === "ArrowRight" || evt.key === "ArrowDown") {
 				if (evt.shiftKey) {
-					this.next_word();
+					if (this.word.status === "correct" || evt.ctrlKey) {
+						this.next_word();
+					}
 				}
 				else {
 					this.next_segment();
@@ -152,23 +118,23 @@ export default {
 	template: `
 		<article class="word-card" :class="[word.status, active? 'active' : '', segments.length > 1? '' : 'no-segments']">
 			<div class="toolbar">
-				<button class="correct" @click="correct" v-if="word.status !== 'correct'" title="Read correctly! (⏎)">✓</button>
-				<button class="next-word" v-if="word.status === 'correct'" @click.stop="next_word" title="Next word (⇧→)">▶▶</button>
+				<button class="correct bi bi-check-lg" @click="correct" v-if="word.status !== 'correct'" title="Mark as correct (⏎)"></button>
+				<button class="next-word bi bi-skip-end-fill" v-if="word.status === 'correct'" @click.stop="next_word" title="Next word (⇧→)"></button>
 				<div class="spacer"></div>
-				<button class="speak" @click.stop="speak(current_segment === -1 ? word.word : segments[current_segment])">🗣️</button>
+				<button class="speak bi bi-chat-text-fill" @click.stop="lang.speak(current_segment === -1 ? word.word : segments[current_segment])"></button>
 				<div class="spacer"></div>
-				<button class="skip-word" v-if="word.status !== 'correct'" @click.stop="next_word" title="Skip word">▶▶</button>
+				<button class="skip-word bi bi-fast-forward-fill" v-if="word.status !== 'correct'" @click.stop="next_word" title="Skip word (⌃⇧→)"></button>
 			</div>
 			<h2>
-				<button title="Previous segment (←)" class="previous-segment" @click="previous_segment">◀</button>
-				<div class="word" :lang="Lang.code">
+				<button :title="\`Previous \${ lang.segment_name } (←)\`" class="previous-segment bi bi-caret-left-fill" @click="previous_segment"></button>
+				<div class="word" :lang="lang.code">
 					<span class="segment" v-for="(segment, i) in segments" :class="{active: i === current_segment}">
 						<span v-for="(letter, j) in segment" class="letter" :class="{vowel: is_vowel(letter, {previous: segment[j - 1] ?? segments[i - 1]?.at(-1) })}"
-						@click="speak(letter)">{{ letter }}</span>
+						@click="lang.speak(letter)">{{ letter }}</span>
 					</span>
 				</div>
 				<div class="word en" v-if="settings.show_en && word.status == 'correct' && word.en">{{ word.en }}</div>
-				<button title="Next segment (→)" class="next-segment" @click="next_segment">▶</button>
+				<button :title="\`Next \${ lang.segment_name } (→)\`" class="next-segment bi bi-caret-right-fill" @click="next_segment"></button>
 			</h2>
 			<div class="photos" v-if="word.photos && word.status === 'correct'" :style="photo_container_styles">
 				<img v-for="photo in word.photos" :src="photo.urls.small" :alt="photo.description"

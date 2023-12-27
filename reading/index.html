@@ -34,8 +34,12 @@
 		<button class="close" @click="ui.showIndex = false"></button>
 	</h2>
 	<ul>
-		<li v-for="word in all_words">
-			<a :href="`#${word.word}`" :class="{used: used_words.includes(word)}">{{ word.word }}</a>
+		<li v-for="word in all_words" :class="word.status">
+			<a :href="`#${word.word}`">
+				<a :href="`#${word.word}`" class="word" :lang="lang.code">
+					<span v-for="(letter, i) in word.word" class="letter" :class="{vowel: lang.is_vowel(letter, {previous: word.word[i - 1] })}">{{ letter }}</span>
+				</a>
+			</a>
 		</li>
 	</ul>
 </dialog>
