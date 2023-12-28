@@ -10,6 +10,10 @@ export default class Language extends EventTarget {
 		return this.#Lang.code;
 	}
 
+	get code_detailed () {
+		return this.#Lang.code_detailed ?? this.code;
+	}
+
 	is_vowel (letter, {previous} = {}) {
 		if (this.#Lang.is_vowel) {
 			return this.#Lang.is_vowel.call(this, letter, {previous});

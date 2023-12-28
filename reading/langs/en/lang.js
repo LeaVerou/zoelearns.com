@@ -1,4 +1,5 @@
-export const code = "en-GB";
+export const code = "en";
+export const code_detailed = "en-GB";
 export const READING_GRANULARITY = "sound";
 export const VOWELS_NOACCENTS = "aeiou";
 

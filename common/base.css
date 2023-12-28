@@ -1,6 +1,6 @@
 :root {
-	--color-red: oklch(55% .2 20);
-	--color-green: oklch(60% .3 120deg);
+	--color-red: oklch(55% .25 20);
+	--color-green: oklch(60% .18 120deg);
 
 	--color-neutral-50: oklch(50% .01 250);
 	--color-neutral-60: oklch(60% .01 250);
@@ -13,4 +13,9 @@
 
 button {
 	cursor: pointer;
+}
+
+input, button, select, textarea {
+	font: inherit;
+	color: inherit;
 }

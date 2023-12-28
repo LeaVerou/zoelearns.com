@@ -11,6 +11,11 @@
 <body>
 
 <nav>
+	<select oninput="location.search = '?lang=' + this.value" :value="lang.code">
+		<option value="en">🇬🇧 English</option>
+		<option value="el">🇬🇷 Ελληνικά</option>
+		<option value="mk">🇲🇰 Македонски</option>
+	</select>
 	<button @click="ui.showIndex = true">All words</button>
 	<button class="show-settings" @click="show_settings = true"></button>
 </nav>
