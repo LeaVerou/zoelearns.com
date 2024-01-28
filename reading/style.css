@@ -100,6 +100,8 @@ details {
 	contain: inline-size;
 	container-name: word-card;
 	container-type: inline-size;
+	-webkit-user-select: none;
+	user-select: none;
 
 	&.active {
 		grid-column: 2;
