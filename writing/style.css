@@ -79,14 +79,13 @@ fieldset {
 	display: flex;
 	flex-flow: column;
 	gap: .5rem;
+	container-name: fieldset;
+	container-type: inline-size;
 
 	&.compact {
+		flex-flow: row wrap;
 		align-items: baseline;
 		gap: 1rem;
-
-		@container (width > 600px) {
-			flex-flow: row;
-		}
 
 		> button,
 		> button-group {
@@ -104,6 +103,7 @@ small {
 	&.quick {
 		color: inherit;
 		display: flex;
+		flex-wrap: wrap;
 		gap: .6em;
 		align-items: center;
 	}
@@ -143,7 +143,7 @@ button {
 	@media (width < 1400px) {
 		display: grid;
 		grid-template-rows: auto auto;
-		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+		grid-template-columns: min-content 1fr 1fr 1fr;
 		gap: 1rem;
 
 		fieldset {
