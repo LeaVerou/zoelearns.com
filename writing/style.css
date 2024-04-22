@@ -185,6 +185,13 @@ body {
 	background-clip: border-box;
 	background-origin: content-box;
 	background-blend-mode: multiply;
+
+	text-shadow:
+		1.5ch 0 oklch(from var(--color-neutral) l c h / 30%),
+		3ch 0 oklch(from var(--color-neutral) l c h / 15%),
+		4.5ch 0 oklch(from var(--color-neutral) l c h / 10%),
+		6ch 0 oklch(from var(--color-neutral) l c h / 5%)
+		;
 }
 
 @page {
