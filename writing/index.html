@@ -15,47 +15,83 @@
 			<img src="favicon.svg" alt="">
 			Zoe learns… <strong>writing</strong>!
 		</h1>
+		<button @click="print" id="print-button">
+			Print {{ pages.length }} page{{ pages.length > 1 ? 's' : '' }}
+			<small>{{ lines_per_page }} lines per page at {{ size }}pt</small>
+		</button>
+		<fieldset>
+			<legend>Lines</legend>
+			<textarea id="letters" v-model="lines_string" wrap="soft" aria-label="Lines"></textarea>
+			<small>Separated by commas or line breaks.</small>
+			<small class="quick">Quick enter:
+				<button-group multiple class="langs" v-model="quick_langs">
+					<button value="en">🇬🇧</button>
+					<button value="el">🇬🇷</button>
+					<button value="mk">🇲🇰</button>
+					<button value="sh">🇷🇸</button>
+				</button-group>
+				<button-group multiple v-model="quick_forms">
+					<button value="upper">ABC</button>
+					<button value="lower">abc</button>
+					<button value="numbers">123</button>
+					<button value="punctuation">.!?</button>
+				</button-group>
+			</small>
+		</fieldset>
 		<fieldset>
 			<legend>Settings</legend>
-			<label>
-				Letters:
-				<textarea id="letters" v-model="lettersSource" wrap="soft"></textarea>
-				<small>Comma-separated</small>
-			</label>
 			<!-- <label>
 				Size (pt):
 				<input type="range" v-model="size" min="12" max="280">
 			</label> -->
 			<label>
-				Lines per page:
-				<input type="range" v-model="lines_per_page" min="5" max="20"> {{ lines_per_page }}
-				<small>Each letter will be {{ size }}pt</small>
+				Max lines per page:
+				<input type="range" v-model="max_lines_per_page" min="5" max="20"> {{ max_lines_per_page }}
 			</label>
 			<label>
-				Repetitions per letter:
-				<input type="number" v-model="repetitions">
+				Empty lines per entry:
+				<input type="number" v-model="empty_lines" min="0">
+			</label>
+			<label>
+				Ghosts:
+				<input type="number" v-model="ghosts" min="0" max="9">
+
+				<span class="line" style="margin-left: 1em">
+					<span>Gh</span>
+					<span class="ghost" v-for="ghost, j in ghosts" :style="`--ghost-index: ${j}`">&nbsp;Gh</span>
+				</span>
+			</label>
+			<label>
+				Font:
+				<select v-model="font_family" style="font-family: var(--font-family)">
+					<option value="serif">Serif</option>
+					<option value="sans">Sans serif</option>
+					<option value="handwriting">Handwriting</option>
+				</select>
 			</label>
 		</fieldset>
-		<fieldset id="page-settings">
+		<fieldset class="compact" id="page-settings">
 			<legend>Page settings</legend>
 			<button-group v-model="page_size" aria-label="Size">
 				<button>A4</button>
 				<button value="letter">Letter</button>
 			</button-group>
 			<button-group v-model="orientation" aria-label="Orientation">
-				<button>Portrait</button>
+				<button value="portrait">Portrait</button>
 				<button value="landscape">Landscape</button>
 			</button-group>
-
 		</fieldset>
-		<div>
-			{{ pages.length }} pages
-			<button @click="print">Print</button>
-		</div>
+
 	</section>
 	<section id="pages">
-		<article v-for="page in pages" class="page">
-			<div v-for="letter in page" class="letter-line" >{{ letter }}</div>
+		<article v-for="page, i in pages" class="page" :style="`--page-index: ${i}`">
+			<template v-for="line in page">
+				<div class="line" :class="{empty: !line}">
+					<span class="main">{{ line }}</span>
+					<span class="ghost" v-for="ghost, j in ghosts" :style="`--ghost-index: ${j}`">&nbsp;{{ line }}</span>
+				</div>
+				<div v-for="line in empty_lines" class="empty line"></div>
+			</template>
 		</article>
 	</section>
 </body>

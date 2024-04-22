@@ -2,6 +2,22 @@
 /* @import url("../common/settings.css"); */
 /* @import url("../common/hue-slider.css"); */
 @import url("https://nudeui.com/style.css") layer(buttons);
+@import url('https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@font-face {
+	font-family: Vollkorn;
+	src: url("https://lea.verou.me/assets/fonts/Vollkorn/Vollkorn-VariableFont_wght.woff2") format("woff2");
+	font-weight: 400 900;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: Vollkorn;
+	src: url("https://lea.verou.me/assets/fonts/Vollkorn/Vollkorn-Italic-VariableFont_wght.woff2") format("woff2");
+	font-weight: 400 900;
+	font-style: italic;
+	font-display: swap;
+}
 
 * {
 	margin: 0;
@@ -15,12 +31,19 @@
 	--color-neutral-80: color-mix(in oklch, var(--color-neutral), oklch(100% 0 none) 80%);
 	--color-neutral-70: color-mix(in oklch, var(--color-neutral), oklch(100% 0 none) 70%);
 
-	--page-margin-block: 3%;
-	--page-margin-inline: 5%;
+	--color-blue: oklch(60% 0.17 240);
+
+	--page-margin-block: 0.05;
+	--page-margin-inline: 0.06;
+
+	--color-primary: var(--color-blue);
+	--color-baseline: oklch(from var(--color-neutral) 0% c h / 70%);
+	--color-capline: oklch(from var(--color-neutral) 0% c h / 40%);
+	--color-xline: color-mix(in oklch, var(--color-primary), oklch(100% none none / 0) 60%);
 }
 
 html {
-	font: 150%/1 system-ui, sans-serif;
+	font: 120%/1 system-ui, sans-serif;
 	display: flex;
 	flex-flow: column;
 }
@@ -59,19 +82,29 @@ fieldset {
 	flex-flow: column;
 	gap: .5rem;
 
-	small {
-		display: block;
-		margin-top: .3em;
-		font-size: 70%;
-		color: var(--color-neutral);
-	}
-
-	&[id="page-settings"] {
+	&.compact {
 		flex-flow: row;
+		align-items: baseline;
+		gap: 1rem;
 
-		> button {
+		> button,
+		> button-group {
 			flex: 1;
 		}
+	}
+}
+
+small {
+	display: block;
+	margin-top: .3em;
+	font-size: 70%;
+	color: var(--color-neutral);
+
+	&.quick {
+		color: inherit;
+		display: flex;
+		gap: .6em;
+		align-items: center;
 	}
 }
 
@@ -92,44 +125,44 @@ button {
 }
 
 #settings {
+	display: flex;
+	flex-flow: column;
 	max-width: 50ch;
-	padding: 2rem;
-	padding-right: 0;
-
-	> div {
-		display: flex;
-		gap: 1rem;
-		align-items: baseline;
-		padding: .5rem;
-	}
+	height: 100vh;
+	overflow: auto;
+	padding: .5rem 2rem;
 }
 
 /* or not style(--page-size) */
 body {
 	/* Defaults (letter): */
-	--page-width: 8.5;
-	--page-height: 11;
+	--page-size-width: 8.5;
+	--page-size-height: 11;
 	--unit: 1in;
 	--pt-in-unit: 72;
+
+
+	--page-width: var(--page-size-width);
+	--page-height: var(--page-size-height);
 	--aspect-ratio: var(--page-width) / var(--page-height);
 	--page-height-pt: calc(var(--pt-in-unit) * var(--page-height));
-	--font-size-to-page-height: calc(var(--page-height-pt) / var(--size));
 
 	@container style(--page-size: A4) {
-		--page-width: 210;
-		--page-height: 297;
+		--page-size-width: 210;
+		--page-size-height: 297;
 		--unit: 1mm;
 		--pt-in-unit: calc(72 / 25.4);
 	}
 
 	@container style(--orientation: landscape) {
-		--aspect-ratio: 1 / calc(var(--aspect-ratio, 8.5 / 11));
+		--page-height: var(--page-size-width);
+		--page-width: var(--page-size-height);
 	}
 }
 
 #pages {
 	--padding-block: 2rem;
-	--page-height-screen: clamp(10vh, 100vh - var(--padding-block) * 2, 20em);
+	--page-height-screen: min(100vh - var(--padding-block) * 2, 30rem);
 	--page-width-screen: calc(var(--page-height-screen) * var(--aspect-ratio));
 	--pt: calc(var(--page-height-screen) / var(--page-height-pt));
 	--font-size-screen: calc(var(--size) * var(--pt));
@@ -139,7 +172,7 @@ body {
 	--page-width: calc(100vh * var(--aspect-ratio, 8.5 / 11));
 	grid-template-columns: repeat(auto-fill, minmax(var(--page-width-screen), 1fr));
 	flex-wrap: wrap;
-	gap: 2.5rem;
+	gap: 4rem;
 	padding: var(--padding-block) 3rem;
 }
 
@@ -147,15 +180,17 @@ body {
 	display: flex;
 	flex-flow: column;
 	justify-content: space-around;
-	gap: 1%;
+	gap: 2%;
+	overflow: clip;
 
 	@media screen {
+		width: var(--page-width-screen);
 		height: var(--page-height-screen);
-		aspect-ratio: var(--aspect-ratio, 8.5 / 11);
+		/* aspect-ratio: var(--aspect-ratio, 8.5 / 11); */
 		background: linear-gradient(white, white) no-repeat 0 / 100% 100% content-box, hsl(0 50% 98%) border-box;
-		box-shadow: 0 .1em 2em -1.4em black;
-		padding-block: var(--page-margin-block);
-		padding-inline: var(--page-margin-inline);
+		box-shadow: 0 .1rem 2rem -1.4rem black;
+		padding-block: calc(var(--page-margin-block) * var(--page-height-screen));
+		padding-inline: calc(var(--page-margin-inline) * var(--page-width-screen));
 		font-size: var(--font-size-screen);
 	}
 
@@ -169,35 +204,44 @@ body {
 	}
 }
 
-.letter-line {
-	--color-baseline: oklch(from var(--color-neutral) 0% c h / 70%);
-	--color-capline: oklch(from var(--color-neutral) 0% c h / 40%);
-	--color-xline: color-mix(in oklch, var(--color-neutral), oklch(100% none none / 0) 80%);
+.line {
 	--line-thickness: clamp(1px, .05em, 1pt);
-	--color-background: white;
+	--color-background: color-mix(in oklab, var(--color-primary), oklab(100% 0 0) 100%);
 
+	font: 400 100%/1 var(--font-family, system-ui), system-ui;
 	line-height: calc(1cap + 2px);
 	padding-block: calc(0.5 * (1em - 1cap));
 	background:
-		repeating-linear-gradient(to right, var(--color-xline) 0 60%, transparent 0 100%) repeat-x 0 calc(var(--line-thickness) + 100% - 1ex) / 2mm var(--line-thickness),
-		linear-gradient(to bottom, var(--color-capline) var(--line-thickness), transparent 0 calc(100% - var(--line-thickness)), var(--color-baseline) 0) no-repeat 0 var(--line-thickness) / 100% 100%
+		repeating-linear-gradient(to right, var(--color-xline) 0 60%, transparent 0 100%) repeat-x 0 0 / 1mm var(--line-thickness),
+		linear-gradient(to bottom, var(--color-capline) var(--line-thickness), white 0 calc(100% - var(--line-thickness)), var(--color-baseline) 0) no-repeat 0 0 / 100% 100%,
 		var(--color-background);
+	background-position-y: calc(var(--line-thickness) + 100% - 1ex + var(--vertical-shift, 0em)), calc(-1 * var(--line-thickness) + var(--vertical-shift, 0em));
 	background-clip: border-box;
 	background-origin: content-box;
-	background-blend-mode: multiply;
+	white-space: nowrap;
 
-	text-shadow:
-		1.5ch 0 oklch(from var(--color-neutral) l c h / 30%),
-		3ch 0 oklch(from var(--color-neutral) l c h / 15%),
-		4.5ch 0 oklch(from var(--color-neutral) l c h / 10%),
-		6ch 0 oklch(from var(--color-neutral) l c h / 5%)
-		;
+	&.empty,
+	&:empty {
+		&::before {
+			content: "A";
+			color: transparent;
+		}
+	}
+
+	> span {
+		vertical-align: var(--vertical-shift);
+	}
+}
+
+.ghost {
+	color: oklch(from var(--color-neutral) l c h / calc(30% - (22% * (var(--ghost-index) + 1) / var(--ghosts))));
+	font-weight: calc(300 - 200 * (var(--ghost-index) + 1) / var(--ghosts));
 }
 
 @page {
 	size: var(--page-size, letter) var(--orientation,);
-	margin-block: var(--page-margin-block);
-	margin-inline: var(--page-margin-inline);
+	margin-block: calc(100% * var(--page-margin-block));
+	margin-inline: calc(100% * var(--page-margin-inline));
 }
 
 @media print {
@@ -214,6 +258,32 @@ textarea#letters {
 	display: block;
 	width: 100%;
 	max-width: 100%;
+	min-height: 2lh;
+	max-height: 6lh;
 	height: auto;
-	white-space: normal;
+	field-sizing: content;
+}
+
+.langs > button {
+	--x: 1.5;
+	font-size: calc(100% * var(--x));
+	line-height: calc(1.2 / var(--x));
+}
+
+#print-button {
+	line-height: 1.1;
+	padding-block: .5em;
+}
+
+.font-family-serif {
+	--font-family: Vollkorn;
+	--vertical-shift: -.2em;
+}
+
+.font-family-sans {
+	--font-family: system-ui;
+}
+
+.font-family-handwriting {
+	--font-family: 'Shantell Sans', Chalkboard, Chalkboard SE, Comic Sans MS;
 }
