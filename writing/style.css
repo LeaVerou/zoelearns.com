@@ -159,21 +159,26 @@ body {
 
 #pages {
 	--padding-block: 2rem;
-	--page-height-screen: min(100vh - var(--padding-block) * 2, 30rem);
+	--page-height-screen: calc(100vh - var(--padding-block) * 2);
 	--page-width-screen: calc(var(--page-height-screen) * var(--aspect-ratio));
-	--pt: calc(var(--page-height-screen) / var(--page-height-pt));
-	--font-size-screen: calc(var(--size) * var(--pt));
+	--gap: 2rem;
+	--page-width-screen-small: calc((var(--page-width-screen) - var(--gap)) / 2);
+	--page-height-screen-small: calc((var(--page-height-screen) - var(--gap)) / 2);
 
 	overflow: auto;
 	display: grid;
-	--page-width: calc(100vh * var(--aspect-ratio, 8.5 / 11));
-	grid-template-columns: repeat(auto-fill, minmax(var(--page-width-screen), 1fr));
-	flex-wrap: wrap;
-	gap: 4rem;
+	grid-template-columns: repeat(auto-fill, minmax(var(--page-width-screen-small), 1fr));
+	grid-auto-flow: row dense;
+	gap: var(--gap);
 	padding: var(--padding-block) 3rem;
 }
 
 .page {
+	--_page-width-screen: var(--page-width-screen);
+	--_page-height-screen: var(--page-height-screen);
+	--pt: calc(var(--_page-height-screen) / var(--page-height-pt));
+	--font-size-screen: calc(var(--size) * var(--pt));
+
 	display: flex;
 	flex-flow: column;
 	justify-content: space-around;
@@ -181,14 +186,24 @@ body {
 	overflow: clip;
 
 	@media screen {
-		width: var(--page-width-screen);
-		height: var(--page-height-screen);
+		width: var(--_page-width-screen);
+		height: var(--_page-height-screen);
 		/* aspect-ratio: var(--aspect-ratio, 8.5 / 11); */
 		background: linear-gradient(white, white) no-repeat 0 / 100% 100% content-box, hsl(0 50% 98%) border-box;
 		box-shadow: 0 .1rem 2rem -1.4rem black;
-		padding-block: calc(var(--page-margin-block) * var(--page-height-screen));
-		padding-inline: calc(var(--page-margin-inline) * var(--page-width-screen));
+		padding-block: calc(var(--page-margin-block) * var(--_page-height-screen));
+		padding-inline: calc(var(--page-margin-inline) * var(--_page-width-screen));
 		font-size: var(--font-size-screen);
+
+		&:first-child {
+			grid-column-end: span 2;
+			grid-row-end: span 2;
+		}
+
+		&:not(:first-child) {
+			--_page-width-screen: var(--page-width-screen-small);
+			--_page-height-screen: var(--page-height-screen-small);
+		}
 	}
 
 	@media print {
