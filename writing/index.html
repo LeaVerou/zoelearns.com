@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Zoe learns writing</title>
+	<link rel="icon" href="favicon.svg">
+	<link rel="stylesheet" href="style.css">
+	<script type="module" src="index.js"></script>
+	<script src="https://nudeui.com/button-group/button-group.js" type="module"></script>
+</head>
+<body>
+	<section id="settings">
+		<h1>
+			<img src="favicon.svg" alt="">
+			Zoe learns… <strong>writing</strong>!
+		</h1>
+		<fieldset>
+			<legend>Settings</legend>
+			<label>
+				Letters:
+				<textarea id="letters" v-model="lettersSource" wrap="soft"></textarea>
+				<small>Comma-separated</small>
+			</label>
+			<!-- <label>
+				Size (pt):
+				<input type="range" v-model="size" min="12" max="280">
+			</label> -->
+			<label>
+				Lines per page:
+				<input type="range" v-model="lines_per_page" min="5" max="20"> {{ lines_per_page }}
+				<small>Each letter will be {{ size }}pt</small>
+			</label>
+			<label>
+				Repetitions per letter:
+				<input type="number" v-model="repetitions">
+			</label>
+		</fieldset>
+		<fieldset id="page-settings">
+			<legend>Page settings</legend>
+			<button-group v-model="page_size" aria-label="Size">
+				<button>A4</button>
+				<button value="letter">Letter</button>
+			</button-group>
+			<button-group v-model="orientation" aria-label="Orientation">
+				<button>Portrait</button>
+				<button value="landscape">Landscape</button>
+			</button-group>
+			<button @click="print">Print</button>
+		</fieldset>
+	</section>
+	<section id="pages">
+		<article v-for="page in pages" class="page" :class="`size-${page_size} ${orientation}`" :style="{'--size': size}">
+			<div v-for="letter in page" class="letter-line" >{{ letter }}</div>
+		</article>
+	</section>
+</body>
+</html>

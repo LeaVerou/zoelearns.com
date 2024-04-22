@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" font-size="90" overflow="visible">
+	<g font-size="40">
+		<text x="10" y="1rem" style="transform: rotate(-20deg) translate(-20px, 7px); transform-box: fill-box">✍🏼</text>
+		<text x="103" y="1rem" style="transform: rotate(20deg) translate(20px, 7px) scale(-1, 1); transform-box: fill-box">✍🏼</text>
+	</g>
+	<text x="10" y=".9em">👶🏼</text>
+</svg>

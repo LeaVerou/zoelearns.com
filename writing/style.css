@@ -1,0 +1,202 @@
+/* @import url("../common/dialog.css"); */
+/* @import url("../common/settings.css"); */
+/* @import url("../common/hue-slider.css"); */
+@import url("https://nudeui.com/style.css") layer(buttons);
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+:root {
+	--color-neutral: oklch(50% 0.03 230);
+	--color-neutral-90: color-mix(in oklch, var(--color-neutral), oklch(100% 0 none) 90%);
+	--color-neutral-80: color-mix(in oklch, var(--color-neutral), oklch(100% 0 none) 80%);
+	--color-neutral-70: color-mix(in oklch, var(--color-neutral), oklch(100% 0 none) 70%);
+
+	--page-margin-block: 3%;
+	--page-margin-inline: 5%;
+}
+
+html {
+	font: 150%/1 system-ui, sans-serif;
+	display: flex;
+	flex-flow: column;
+}
+
+body {
+	margin: 0;
+
+	@media screen {
+		display: grid;
+		grid-template-columns: auto 1fr;
+
+		background: var(--color-neutral-90);
+		height: 100vh;
+	}
+}
+
+h1 {
+	grid-column: 1 / -1;
+	margin-bottom: 1rem;
+	font-size: 260%;
+	font-weight: 300;
+
+	img {
+		display: inline-block;
+		height: 1.5cap;
+		vertical-align: -.22em;
+	}
+}
+
+fieldset {
+	border: 1px solid var(--color-neutral-70);
+	border-radius: .3em;
+	padding: 1rem;
+	margin-top: 1rem;
+	display: flex;
+	flex-flow: column;
+	gap: .5rem;
+
+	small {
+		display: block;
+		margin-top: .3em;
+		font-size: 70%;
+		color: var(--color-neutral);
+	}
+
+	&[id="page-settings"] {
+		flex-flow: row;
+
+		> button {
+			flex: 1;
+		}
+	}
+}
+
+input,
+select,
+textarea,
+button {
+	font: inherit;
+}
+
+input:not([type]),
+input[type=text],
+input[type=number],
+textarea,
+select,
+button {
+	padding: .3em .5em;
+}
+
+#settings {
+	max-width: 50ch;
+	padding: 2rem;
+	padding-right: 0;
+}
+
+/* or not style(--page-size) */
+body {
+	/* Defaults (letter): */
+	--page-width: 8.5;
+	--page-height: 11;
+	--unit: 1in;
+	--pt-in-unit: 72;
+	--aspect-ratio: var(--page-width) / var(--page-height);
+	--page-height-pt: calc(var(--pt-in-unit) * var(--page-height));
+	--font-size-to-page-height: calc(var(--page-height-pt) / var(--size));
+
+	@container style(--page-size: A4) {
+		--page-width: 210;
+		--page-height: 297;
+		--unit: 1mm;
+		--pt-in-unit: calc(72 / 25.4);
+	}
+
+	@container style(--orientation: landscape) {
+		--aspect-ratio: 1 / calc(var(--aspect-ratio, 8.5 / 11));
+	}
+}
+
+#pages {
+	overflow: auto;
+	display: grid;
+	--page-width: calc(100vh * var(--aspect-ratio, 8.5 / 11));
+	grid-template-columns: repeat(auto-fill, minmax(var(--page-width), 1fr));
+	flex-wrap: wrap;
+	gap: 1.5rem;
+	--padding-block: 2rem;
+	--page-height-screen: clamp(10vh, 100vh - var(--padding-block) * 2, 50em);
+	--font-size-screen: calc(var(--size) * var(--page-height-screen) / var(--page-height-pt));
+	padding: var(--padding-block) 3rem;
+}
+
+.page {
+	display: flex;
+	flex-flow: column;
+	justify-content: space-between;
+	gap: 1%;
+
+	@media screen {
+		min-width: var(--page-width);
+		height: var(--page-height-screen);
+		aspect-ratio: var(--aspect-ratio, 8.5 / 11);
+		background: linear-gradient(white, white) no-repeat 0 / 100% 100% content-box, hsl(0 50% 98%) border-box;
+		box-shadow: 0 .1em 2em -1.4em black;
+		padding-block: var(--page-margin-block);
+		padding-inline: var(--page-margin-inline);
+		font-size: var(--font-size-screen);
+	}
+
+	@media print {
+		width: 100vw;
+		height: 100vh;
+		page-break-before: always;
+		page-break-inside: avoid;
+		page-break-after: always;
+		font-size: calc(var(--size) * 1pt);
+	}
+}
+
+.letter-line {
+	--color-baseline: oklch(from var(--color-neutral) 0% c h / 70%);
+	--color-capline: oklch(from var(--color-neutral) 0% c h / 40%);
+	--color-xline: color-mix(in oklch, var(--color-neutral), oklch(100% none none / 0) 80%);
+	--color-background: white;
+
+	line-height: calc(1cap + 2px);
+	padding-block: calc(0.5 * (1em - 1cap));
+	background:
+		repeating-linear-gradient(to right, var(--color-xline) 0 60%, transparent 0 100%) repeat-x 0 calc(1px + 100% - 1ex) / 2mm 1px,
+		linear-gradient(to bottom, var(--color-capline) 1px, transparent 0 calc(100% - 1px), var(--color-baseline) 0) no-repeat 0 1px / 100% 100%
+		var(--color-background);
+	background-clip: border-box;
+	background-origin: content-box;
+	background-blend-mode: multiply;
+}
+
+@page {
+	size: var(--page-size, letter) var(--orientation,);
+	margin-block: var(--page-margin-block);
+	margin-inline: var(--page-margin-inline);
+}
+
+@media print {
+	body > :not(.page) {
+		display: none;
+	}
+
+	body, #pages {
+		display: contents;
+	}
+}
+
+textarea#letters {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	height: auto;
+	white-space: normal;
+}
