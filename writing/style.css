@@ -37,9 +37,6 @@
 	--page-margin-inline: 0.06;
 
 	--color-primary: var(--color-blue);
-	--color-baseline: oklch(from var(--color-neutral) 0% c h / 70%);
-	--color-capline: oklch(from var(--color-neutral) 0% c h / 40%);
-	--color-xline: color-mix(in oklch, var(--color-primary), oklch(100% none none / 0) 60%);
 }
 
 html {
@@ -205,17 +202,21 @@ body {
 }
 
 .line {
+	--color-baseline: oklch(from var(--color-neutral) 0% c h / 70%);
+	--color-capline: oklch(from var(--color-neutral) 0% c h / 40%);
+	--color-xline: color-mix(in oklch, var(--color-primary), oklch(100% none none / 0) 60%);
+
 	--line-thickness: clamp(1px, .05em, 1pt);
 	--color-background: color-mix(in oklab, var(--color-primary), oklab(100% 0 0) 100%);
 
 	font: 400 100%/1 var(--font-family, system-ui), system-ui;
-	line-height: calc(1cap + 2px);
+	line-height: calc(1cap + var(--line-thickness));
 	padding-block: calc(0.5 * (1em - 1cap));
 	background:
 		repeating-linear-gradient(to right, var(--color-xline) 0 60%, transparent 0 100%) repeat-x 0 0 / 1mm var(--line-thickness),
 		linear-gradient(to bottom, var(--color-capline) var(--line-thickness), white 0 calc(100% - var(--line-thickness)), var(--color-baseline) 0) no-repeat 0 0 / 100% 100%,
 		var(--color-background);
-	background-position-y: calc(var(--line-thickness) + 100% - 1ex + var(--vertical-shift, 0em)), calc(-1 * var(--line-thickness) + var(--vertical-shift, 0em));
+	background-position-y: calc(100% - var(--line-thickness) - 1ex + var(--vertical-shift, 0em)), calc(-1 * var(--line-thickness) + var(--vertical-shift, 0em));
 	background-clip: border-box;
 	background-origin: content-box;
 	white-space: nowrap;
@@ -277,13 +278,15 @@ textarea#letters {
 
 .font-family-serif {
 	--font-family: Vollkorn;
-	--vertical-shift: -.2em;
+	--vertical-shift: -.06em;
 }
 
 .font-family-sans {
 	--font-family: system-ui;
+	--vertical-shift: .02em;
 }
 
 .font-family-handwriting {
 	--font-family: 'Shantell Sans', Chalkboard, Chalkboard SE, Comic Sans MS;
+	--vertical-shift: .01em;
 }
