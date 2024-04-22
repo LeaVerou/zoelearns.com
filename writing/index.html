@@ -46,11 +46,15 @@
 				<button>Portrait</button>
 				<button value="landscape">Landscape</button>
 			</button-group>
-			<button @click="print">Print</button>
+
 		</fieldset>
+		<div>
+			{{ pages.length }} pages
+			<button @click="print">Print</button>
+		</div>
 	</section>
 	<section id="pages">
-		<article v-for="page in pages" class="page" :class="`size-${page_size} ${orientation}`" :style="{'--size': size}">
+		<article v-for="page in pages" class="page">
 			<div v-for="letter in page" class="letter-line" >{{ letter }}</div>
 		</article>
 	</section>

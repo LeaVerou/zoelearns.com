@@ -25,7 +25,7 @@ globalThis.app = createApp({
 
 	computed: {
 		letters () {
-			return this.lettersSource.split(",").map(letter => letter.trim());
+			return this.lettersSource.split(",").map(letter => letter.trim()).filter(Boolean);
 		},
 		lettersDrawn () {
 			return this.letters.flatMap(letter => Array(this.repetitions).fill(letter));
@@ -36,7 +36,8 @@ globalThis.app = createApp({
 		},
 		size () {
 			// lines_per_page = this.pageHeight / (this.size * 1.3)
-			return Math.floor(this.pageHeight / (this.lines_per_page * 1.3));
+			let lines = Math.min(this.lines_per_page, this.lettersDrawn.length + 1);
+			return Math.floor(this.pageHeight / (lines * 1.3));
 		},
 		// lines_per_page () {
 		// 	return this.pageHeight / (this.size * 1.3);
@@ -44,7 +45,7 @@ globalThis.app = createApp({
 		pages () {
 			let { lettersDrawn, lines_per_page } = this;
 
-			let pageCount = Math.floor(lettersDrawn.length / lines_per_page);
+			let pageCount = Math.ceil(lettersDrawn.length / lines_per_page);
 			let ret = [];
 			for (let i=0; i<pageCount; i++) {
 				ret.push(lettersDrawn.slice(i * lines_per_page, (i+1) * lines_per_page));
@@ -54,10 +55,15 @@ globalThis.app = createApp({
 	},
 
 	watch: {
+		lines_per_page: {
+			handler (value) {
+				document.documentElement.style.setProperty("--lines-per-page", value);
+			},
+			immediate: true
+		},
 		size: {
 			handler (value) {
-				document.documentElement.style.setProperty("--size", value);
-				// this.updateLineHeight();
+				document.documentElement.style.setProperty("--size", this.size);
 			},
 			immediate: true
 		},

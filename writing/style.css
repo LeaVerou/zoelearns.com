@@ -95,6 +95,13 @@ button {
 	max-width: 50ch;
 	padding: 2rem;
 	padding-right: 0;
+
+	> div {
+		display: flex;
+		gap: 1rem;
+		align-items: baseline;
+		padding: .5rem;
+	}
 }
 
 /* or not style(--page-size) */
@@ -121,26 +128,27 @@ body {
 }
 
 #pages {
+	--padding-block: 2rem;
+	--page-height-screen: clamp(10vh, 100vh - var(--padding-block) * 2, 20em);
+	--page-width-screen: calc(var(--page-height-screen) * var(--aspect-ratio));
+	--font-size-screen: calc(var(--size) * var(--page-height-screen) / var(--page-height-pt));
+
 	overflow: auto;
 	display: grid;
 	--page-width: calc(100vh * var(--aspect-ratio, 8.5 / 11));
-	grid-template-columns: repeat(auto-fill, minmax(var(--page-width), 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(var(--page-width-screen), 1fr));
 	flex-wrap: wrap;
-	gap: 1.5rem;
-	--padding-block: 2rem;
-	--page-height-screen: clamp(10vh, 100vh - var(--padding-block) * 2, 50em);
-	--font-size-screen: calc(var(--size) * var(--page-height-screen) / var(--page-height-pt));
+	gap: 2.5rem;
 	padding: var(--padding-block) 3rem;
 }
 
 .page {
 	display: flex;
 	flex-flow: column;
-	justify-content: space-between;
+	justify-content: space-around;
 	gap: 1%;
 
 	@media screen {
-		min-width: var(--page-width);
 		height: var(--page-height-screen);
 		aspect-ratio: var(--aspect-ratio, 8.5 / 11);
 		background: linear-gradient(white, white) no-repeat 0 / 100% 100% content-box, hsl(0 50% 98%) border-box;
@@ -164,13 +172,14 @@ body {
 	--color-baseline: oklch(from var(--color-neutral) 0% c h / 70%);
 	--color-capline: oklch(from var(--color-neutral) 0% c h / 40%);
 	--color-xline: color-mix(in oklch, var(--color-neutral), oklch(100% none none / 0) 80%);
+	--line-thickness: clamp(1px, .05em, 1pt);
 	--color-background: white;
 
 	line-height: calc(1cap + 2px);
 	padding-block: calc(0.5 * (1em - 1cap));
 	background:
-		repeating-linear-gradient(to right, var(--color-xline) 0 60%, transparent 0 100%) repeat-x 0 calc(1px + 100% - 1ex) / 2mm 1px,
-		linear-gradient(to bottom, var(--color-capline) 1px, transparent 0 calc(100% - 1px), var(--color-baseline) 0) no-repeat 0 1px / 100% 100%
+		repeating-linear-gradient(to right, var(--color-xline) 0 60%, transparent 0 100%) repeat-x 0 calc(var(--line-thickness) + 100% - 1ex) / 2mm var(--line-thickness),
+		linear-gradient(to bottom, var(--color-capline) var(--line-thickness), transparent 0 calc(100% - var(--line-thickness)), var(--color-baseline) 0) no-repeat 0 var(--line-thickness) / 100% 100%
 		var(--color-background);
 	background-clip: border-box;
 	background-origin: content-box;
