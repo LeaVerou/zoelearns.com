@@ -131,7 +131,8 @@ body {
 	--padding-block: 2rem;
 	--page-height-screen: clamp(10vh, 100vh - var(--padding-block) * 2, 20em);
 	--page-width-screen: calc(var(--page-height-screen) * var(--aspect-ratio));
-	--font-size-screen: calc(var(--size) * var(--page-height-screen) / var(--page-height-pt));
+	--pt: calc(var(--page-height-screen) / var(--page-height-pt));
+	--font-size-screen: calc(var(--size) * var(--pt));
 
 	overflow: auto;
 	display: grid;
