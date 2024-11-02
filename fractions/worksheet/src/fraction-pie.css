@@ -1,0 +1,21 @@
+svg {
+	width: 10em;
+}
+
+circle, line {
+	stroke: currentColor;
+	fill: none;
+	stroke-width: .15em;
+}
+
+line {
+	transform-origin: bottom;
+	transform-box: stroke-box;
+
+	&.faint {
+		stroke-width: .05em;
+		stroke-opacity: 50%;
+		stroke-dasharray: 5 2;
+		stroke-dashoffset: var(--index);
+	}
+}

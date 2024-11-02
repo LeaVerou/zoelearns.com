@@ -1,0 +1,47 @@
+:host {
+	display: flex;
+	flex-flow: column;
+	justify-content: center;
+	align-items: center;
+	gap: .2em;
+	font-size: 300%;
+	line-height: 1.2;
+
+	&::before,
+	&::after {
+		content: "\a0";
+		display: block;
+		min-width: 1em;
+		padding-inline: .3em;
+		margin-inline: .3em;
+		text-align: center;
+		border: 1px solid hsl(220 10% 50% / 80%);
+	}
+
+	hr {
+		background: currentColor;
+		border: none;
+		height: .1em;
+		width: 100%;
+		margin: 0;
+	}
+}
+
+:host([fraction]:not([fraction^="/"])),
+:host-context([fraction]:not([fraction^="/"])) {
+	&::before {
+		counter-reset: numerator var(--numerator);
+		content: counter(numerator);
+		border-color: hsl(220 10% 50% / 20%);
+	}
+}
+
+:host([fraction*="/"]),
+:host-context([fraction*="/"]) {
+	&::after {
+		counter-reset: denominator var(--denominator);
+		content: counter(denominator);
+		border-color: hsl(220 10% 50% / 20%);
+	}
+}
+
