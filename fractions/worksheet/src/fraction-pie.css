@@ -1,11 +1,11 @@
 svg {
-	width: 10em;
+	width: 4em;
 }
 
 circle, line {
 	stroke: currentColor;
 	fill: none;
-	stroke-width: .15em;
+	stroke-width: .03em;
 }
 
 line {
@@ -13,7 +13,7 @@ line {
 	transform-box: stroke-box;
 
 	&.faint {
-		stroke-width: .05em;
+		stroke-width: .02em;
 		stroke-opacity: 50%;
 		stroke-dasharray: 5 2;
 		stroke-dashoffset: var(--index);

@@ -1,10 +1,90 @@
 body {
 	font: 100%/1.5 system-ui, sans-serif;
 	display: flex;
+	align-items: start;
+	gap: 2em;
+	margin: 0;
+	--in: 1in;
+
+	--body-padding: 0rem;
+	padding: var(--body-padding);
+
+	@media screen {
+		--body-padding: 2rem;
+	}
+}
+
+input, button {
+	font: inherit;
+}
+
+aside {
+	display: flex;
 	flex-flow: column;
 	gap: 1em;
 }
 
-fraction-exercise {
+fieldset {
+	display: flex;
+	flex-flow: column;
+	gap: .4em;
+	border-radius: .3em;
+	background: hsl(220 10 96);
+	border: none;
+	padding: 1em;
 
+	article {
+		display: flex;
+		gap: 1em;
+	}
+}
+
+@page {
+	size: letter;
+	margin: .5in .8in;
+}
+
+main {
+	--page-margin-inline: .8in;
+	--page-margin-block: .5in;
+	--h: calc(100svh - 2 * var(--body-padding));
+	--h-inner: calc(var(--h) - 2 * var(--page-margin-block));
+
+	display: flex;
+	flex-flow: column;
+	box-sizing: border-box;
+	height: var(--h);
+	/* background: linear-gradient(yellow 0 100%) 0 0 / 100% calc(var(--h)/2) no-repeat; */
+
+	@media screen {
+		contain: size;
+		aspect-ratio: 8.5 / 11;
+		padding-inline: var(--page-margin-inline);
+		padding-block: var(--page-margin-block);
+		border: 1px solid hsl(220 10 80);
+		box-shadow: .05em .1em .8em -.5em hsl(220 10 50);
+		--in: calc(var(--h) / 11);
+		height: var(--h);
+	}
+
+	@media print {
+		flex: 1;
+
+		outline: 1px dashed red;
+	}
+
+	fraction-exercise {
+		padding: 0;
+		font-size: clamp(1.25rem, var(--h-inner) / var(--exercise-count) * .24, 3rem);
+
+		@media print {
+			margin-block: auto;
+		}
+	}
+}
+
+@media print {
+	body > aside {
+		display: none;
+	}
 }

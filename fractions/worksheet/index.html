@@ -10,10 +10,22 @@
 	<script type="module" src="src/index.js"></script>
 </head>
 <body>
-	<fraction-exercise fraction="1/2"></fraction-exercise>
-	<fraction-exercise fraction="1/3"></fraction-exercise>
-	<fraction-exercise fraction="/4"></fraction-exercise>
-	<fraction-exercise max="/5"></fraction-exercise>
-	<fraction-exercise max="10/5"></fraction-exercise>
+	<aside>
+		<button @click="print()">Print</button>
+		<fieldset id="settings">
+			<legend>Exercises</legend>
+			<article v-for="(exercise, i) of exercises">
+				<label>Fraction: <input v-model="exercise.fraction" /></label>
+				<label>Max: <input v-model="exercise.max" /></label>
+				<button @click="exercises.splice(i, 1)">Delete</button>
+			</article>
+			<button @click="exercises.push({max: '/4'})">Add</button>
+		</fieldset>
+	</aside>
+	<main class="page" :style="`--exercise-count: ${ exercises.length }`">
+		<fraction-exercise v-for="(exercise, i) of exercises"
+			:fraction="exercise.fraction" :max="exercise.max"
+		></fraction-exercise>
+	</main>
 </body>
 </html>
