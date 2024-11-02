@@ -10,7 +10,6 @@ function root_css_property (name, property) {
 				Object.assign(acc, root_css_property(key));
 				return acc;
 			}, {});
-			console.log(ret)
 			return ret;
 		}
 		else if (typeof name === "object") {
@@ -56,7 +55,6 @@ function root_class (name, prefix) {
 	return {
 		[name]: {
 			handler (value, oldValue) {
-				console.log(prefix, value, oldValue)
 				if (oldValue) {
 					let oldClassName = prefix + oldValue;
 					console.log(oldClassName);
@@ -81,15 +79,29 @@ globalThis.app = createApp({
 		return {
 			lines_string: "A, a, B, b, C, c, D, d, E, e, F, f, G, g, H, h, I, i, J, j, K, k, L, l, M, m, N, n, O, o, P, p, Q, q, R, r, S, s, T, t, U, u, V, v, W, w, X, x, Y, y, Z, z",
 			// size: 36,
-			font_family: "handwriting",
-			max_lines_per_page: 12,
-			page_size: "letter",
-			orientation: "portrait",
-			empty_lines: 0,
-			ghosts: 4,
 			quick_langs: ["en"],
 			quick_forms: ["upper", "lower"],
+			font_family: "handwriting",
+			max_lines_per_page: 12,
+			repetitions: {
+				value: 0,
+				target: "line",
+			},
+			empty_lines: {
+				value: 0,
+				target: "line",
+			},
+			ghosts: 4,
+			page_size: "letter",
+			orientation: "portrait",
 		}
+	},
+
+	mounted () {
+		this.repetitions.unwatch = this.$watch("lines", () => {
+			let lines = this.lines.length;
+			this.repetitions.value = this.lines < 8 ? Math.floor(8 / lines.length) : 1;
+		});
 	},
 
 	mixins: [
@@ -180,6 +192,15 @@ globalThis.app = createApp({
 			},
 			deep: true,
 		},
+
+		"repetitions.edited": {
+			handler (value) {
+				if (value) {
+					this.repetitions?.unwatch();
+				}
+			},
+			immediate: true
+		},
 	},
 
 	methods: {
@@ -225,5 +246,9 @@ globalThis.app = createApp({
 			this.lines = [...new Set(ret)];
 		}
 	},
+
+	compilerOptions: {
+		isCustomElement: tag => tag === "button-group"
+	}
 }).mount(document.body);
 

@@ -39,18 +39,40 @@
 			</small>
 		</fieldset>
 		<fieldset>
-			<legend>Settings</legend>
-			<!-- <label>
-				Size (pt):
-				<input type="range" v-model="size" min="12" max="280">
-			</label> -->
+			<legend>Design</legend>
+			<label>
+				Font:
+				<select v-model="font_family" style="font-family: var(--font-family)">
+					<option value="serif">Serif</option>
+					<option value="sans">Sans serif</option>
+					<option value="handwriting">Handwriting</option>
+				</select>
+			</label>
 			<label>
 				Max lines per page:
 				<input type="range" v-model="max_lines_per_page" min="5" max="20"> {{ max_lines_per_page }}
 			</label>
+		</fieldset>
+		<fieldset>
+			<legend>Content</legend>
+
 			<label>
-				Empty lines per entry:
-				<input type="number" v-model="empty_lines" min="0">
+				Empty lines:
+				<input type="number" v-model="empty_lines.value" min="0" @input="empty_lines.edited = true">
+
+				<button-group v-model="empty_lines.target" aria-label="Target">
+					<button value="line">per line</button>
+					<button value="end">at the end</button>
+				</button-group>
+			</label>
+			<label>
+				Repetitions:
+				<input type="number" v-model="repetitions.value" min="0" @input="repetitions.edited = true">
+
+				<button-group v-model="repetitions.target" aria-label="Target">
+					<button value="line">per line</button>
+					<button value="end">at the end</button>
+				</button-group>
 			</label>
 			<label>
 				Ghosts:
@@ -61,14 +83,7 @@
 					<span class="ghost" v-for="ghost, j in ghosts" :style="`--ghost-index: ${j}`">&nbsp;Gh</span>
 				</span>
 			</label>
-			<label>
-				Font:
-				<select v-model="font_family" style="font-family: var(--font-family)">
-					<option value="serif">Serif</option>
-					<option value="sans">Sans serif</option>
-					<option value="handwriting">Handwriting</option>
-				</select>
-			</label>
+
 		</fieldset>
 		<fieldset class="compact" id="page-settings">
 			<legend>Page settings</legend>

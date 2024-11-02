@@ -92,6 +92,13 @@ fieldset {
 			flex: 1;
 		}
 	}
+
+	> label {
+		outline: 1px solid red;
+		display: flex;
+		gap: .3em;
+		align-items: baseline;
+	}
 }
 
 small {
@@ -291,7 +298,8 @@ body {
 }
 
 @media print {
-	body > :not(.page) {
+	body > :not(.page),
+	#settings {
 		display: none;
 	}
 
