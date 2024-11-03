@@ -66,9 +66,17 @@ const Self = class extends HTMLElement {
 			if (numerator) {
 				this.style.setProperty("--numerator", numerator);
 			}
+			else {
+				this.style.removeProperty("--numerator");
+			}
+
 			if (denominator) {
 				this.style.setProperty("--denominator", denominator);
 			}
+			else {
+				this.style.removeProperty("--denominator");
+			}
+
 			render = true;
 		}
 
@@ -79,9 +87,17 @@ const Self = class extends HTMLElement {
 			if (maxNumerator) {
 				this.style.setProperty("--max-numerator", maxNumerator);
 			}
+			else {
+				this.style.removeProperty("--max-numerator");
+			}
+
 			if (maxDenominator) {
 				this.style.setProperty("--max-denominator", maxDenominator);
 			}
+			else {
+				this.style.removeProperty("--max-denominator");
+			}
+
 			render = true;
 		}
 

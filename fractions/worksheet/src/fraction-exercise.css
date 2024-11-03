@@ -9,3 +9,8 @@
 fraction-write {
 	margin-inline-end: auto;
 }
+
+#pies {
+	display: flex;
+	gap: .3em;
+}

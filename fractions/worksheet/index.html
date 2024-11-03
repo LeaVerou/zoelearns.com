@@ -11,15 +11,16 @@
 </head>
 <body>
 	<aside>
-		<button @click="print()">Print</button>
+		<button class="print" @click="print()">Print</button>
 		<fieldset id="settings">
 			<legend>Exercises</legend>
 			<article v-for="(exercise, i) of exercises">
 				<label>Fraction: <input v-model="exercise.fraction" /></label>
 				<label>Max: <input v-model="exercise.max" /></label>
-				<button @click="exercises.splice(i, 1)">Delete</button>
+				<button @click="exercises.splice(i, 0, {})">+</button>
+				<button @click="exercises.splice(i, 1)">x</button>
 			</article>
-			<button @click="exercises.push({max: '/4'})">Add</button>
+			<button class="add" @click="exercises.push({})">Add</button>
 		</fieldset>
 	</aside>
 	<main class="page" :style="`--exercise-count: ${ exercises.length }`">

@@ -1,11 +1,16 @@
 svg {
-	width: 4em;
+	--_stroke-width: var(--stroke-width, .03em);
+	--_faint-stroke-opacity: var(--faint-stroke-opacity, 70%);
+	--_faint-stroke-opacity-decay: var(--faint-stroke-opacity-decay, 1.3);
+	--_faint-stroke-width-decay: var(--faint-stroke-opacity-decay, 1);
+
+	width: 3em;
 }
 
 circle, line {
 	stroke: currentColor;
 	fill: none;
-	stroke-width: .03em;
+	stroke-width: var(--_stroke-width);
 }
 
 line {
@@ -13,8 +18,11 @@ line {
 	transform-box: stroke-box;
 
 	&.faint {
-		stroke-width: .02em;
-		stroke-opacity: 50%;
+		--denominator-index: calc(var(--first-denominator) - 1);
+		--stroke-opacity-decay-factor: pow(2, var(--_faint-stroke-opacity-decay)) / pow(var(--denominator-index) + 1, var(--_faint-stroke-opacity-decay));
+		--stroke-width-decay-factor: pow(2, var(--_faint-stroke-width-decay)) / pow(var(--denominator-index) + 1, var(--_faint-stroke-width-decay));
+		stroke-width: calc(var(--_stroke-width) * var(--stroke-width-decay-factor));
+		stroke-opacity: calc(var(--_faint-stroke-opacity) * var(--stroke-opacity-decay-factor));
 		stroke-dasharray: 5 2;
 		stroke-dashoffset: var(--index);
 	}

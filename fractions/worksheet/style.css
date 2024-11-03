@@ -11,6 +11,7 @@ body {
 
 	@media screen {
 		--body-padding: 2rem;
+		background: hsl(220 10 98);
 	}
 }
 
@@ -52,6 +53,8 @@ main {
 
 	display: flex;
 	flex-flow: column;
+	--gap: 1em;
+	gap: var(--gap);
 	box-sizing: border-box;
 	height: var(--h);
 	/* background: linear-gradient(yellow 0 100%) 0 0 / 100% calc(var(--h)/2) no-repeat; */
@@ -65,17 +68,17 @@ main {
 		box-shadow: .05em .1em .8em -.5em hsl(220 10 50);
 		--in: calc(var(--h) / 11);
 		height: var(--h);
+		background: white;
 	}
 
 	@media print {
 		flex: 1;
-
-		outline: 1px dashed red;
+		/* outline: 1px dashed red; */
 	}
 
 	fraction-exercise {
 		padding: 0;
-		font-size: clamp(1.25rem, var(--h-inner) / var(--exercise-count) * .24, 3rem);
+		font-size: clamp(1.25rem, (var(--h-inner) - (var(--exercise-count) - 1) * var(--gap)) / var(--exercise-count) / 3.5, 3rem);
 
 		@media print {
 			margin-block: auto;
