@@ -33,7 +33,7 @@ globalThis.app = createApp({
 			return this.settings.max;
 		},
 
-		status() {
+		correct() {
 			let ret = {};
 
 			for (let m = 1; m <= this.max; m++) {
@@ -43,7 +43,7 @@ globalThis.app = createApp({
 					let answer = this.answers[m][n];
 
 					if (answer) {
-						statuses[n] = answer.trim() == m * n ? "correct" : "incorrect";
+						statuses[n] = answer.trim() == m * n ? true : false;
 					}
 				}
 			}
