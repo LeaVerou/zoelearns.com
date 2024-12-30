@@ -47,15 +47,15 @@ td {
 	--padding: .3rem;
 
 	input {
+		display: block;
 		width: 100%;
 		box-sizing: border-box;
 		padding: calc(var(--padding) + var(--border-width));
 		border: none;
-		display: block;
+		text-align: center;
 		background: transparent no-repeat right .4em center / 0 0;
 		background-origin: content-box;
-		transition: 500ms background cubic-bezier(.1, .7, .5, 1.6);
-
+		transition: 400ms background cubic-bezier(.1, .7, .5, 1.6);
 
 		&:focus {
 			outline: none;
@@ -67,19 +67,24 @@ td {
 				background-size: .8em .8em;
 				background-position: right center;
 			}
+
+			&::placeholder {
+				color: oklab(from var(--color-neutral-50) l a b / 30%);
+				font-size: 80%;
+			}
 		}
 
 		&:not(:focus) {
 			&:not(:placeholder-shown):invalid {
 				color: color-mix(in oklab, var(--color-red), canvastext 20%);
 			}
+
+			&::placeholder {
+				color: transparent;
+			}
 		}
 
-		&::placeholder {
-			color: oklab(from var(--color-neutral-50) l a b / 30%);
-			font-size: 50%;
-			line-height: 2;
-		}
+
 	}
 
 	&.rect {
