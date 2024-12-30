@@ -32,6 +32,24 @@ globalThis.app = createApp({
 		max() {
 			return this.settings.max;
 		},
+
+		status() {
+			let ret = {};
+
+			for (let m = 1; m <= this.max; m++) {
+				let statuses = ret[m] = {};
+
+				for (let n = 1; n <= this.max; n++) {
+					let answer = this.answers[m][n];
+
+					if (answer) {
+						statuses[n] = answer.trim() == m * n ? "correct" : "incorrect";
+					}
+				}
+			}
+
+			return ret;
+		}
 	},
 
 	watch: {

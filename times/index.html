@@ -23,8 +23,8 @@
 		<tbody>
 			<tr v-for="m in max">
 				<th :class="{selected: row == m}">{{ m }}</th>
-				<td v-for="n in 10" :class="{ 'rect': row >= m && col >= n }">
-					<input inputmode="numeric" required v-model="answers[m][n]" min="1" :pattern="m * n" :placeholder="`${m}×${n}`"
+				<td v-for="n in 10" :class="{ 'rect': row >= m && col >= n, 'correct': status[m][n] === 'correct', 'incorrect': status[m][n] === 'incorrect' }">
+					<input inputmode="numeric" v-model="answers[m][n]" min="1" :pattern="m * n" :placeholder="`${m}×${n}`"
 					  ref="input"
 					  @focus="row = m; col = n;" @blur="row = col = 0"
 					  @keydown="handleKeydown"
