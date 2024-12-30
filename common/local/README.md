@@ -25,7 +25,7 @@ mixins: [
 		paths: ["answers", "settings.max"],
 		deep: false, // true by default
 		immediate: true, // false by default
-		localStorage: localStorage.settings, // localStorage by default
+		localStorageKey: "foo", // location.pathname.slice(1) by default
 	})
 ],
 ```
