@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+	<g fill="none" stroke="currentColor" stroke-width="2px">
+		<rect x="2" y="2" width="96" height="96"  stroke-width="4px" fill="white" />
+		<line x1="0" y1="50%" x2="100%" y2="50%" />
+		<line x1="50%" y1="0" x2="50%" y2="100%" />
+	</g>
+	<g style="font: 700 40px/50px system-ui; text-anchor: middle">
+		<text y="1em">
+			<tspan x="33%">1</tspan>
+			<tspan x="67%">2</tspan>
+		</text>
+		<text y="90">
+			<tspan x="33%">2</tspan>
+			<tspan x="67%">4</tspan>
+		</text>
+	</g>
+</svg>
