@@ -60,19 +60,22 @@ globalThis.app = createApp({
 				else if (e.key === "ArrowDown") {
 					relativeRow++;
 				}
-				else if (e.key === "ArrowLeft") {
-					// Make sure it's not to move the caret
+				else if (e.target.selectionStart === e.target.selectionEnd) { // no selection
+					if (e.key === "ArrowLeft") {
+						// Make sure it's not to move the caret
 
-					if (e.target.selectionStart === 0) {
-						relativeCol--;
+						if (e.target.selectionStart === 0) {
+							relativeCol--;
+						}
+					}
+					else if (e.key === "ArrowRight") {
+						// Make sure it's not to move the caret
+						if (e.target.selectionEnd === e.target.value.length) {
+							relativeCol++;
+						}
 					}
 				}
-				else if (e.key === "ArrowRight") {
-					// Make sure it's not to move the caret
-					if (e.target.selectionEnd === e.target.value.length) {
-						relativeCol++;
-					}
-				}
+
 
 				if (relativeRow || relativeCol) {
 					e.preventDefault();
