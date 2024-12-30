@@ -31,6 +31,12 @@ th {
 	max-width: 3ch;
 }
 
+@keyframes background-size-grow {
+	from {
+		background-size: 0 0;
+	}
+}
+
 td {
 	padding: 0;
 	border: 1px solid var(--color-neutral-70,);
@@ -46,10 +52,27 @@ td {
 		padding: calc(var(--padding) + var(--border-width));
 		border: none;
 		display: block;
-		background: transparent;
+		background: transparent no-repeat right .4em center / 0 0;
+		background-origin: content-box;
+		transition: 500ms background cubic-bezier(.1, .7, .5, 1.6);
+
 
 		&:focus {
 			outline: none;
+
+			&:valid {
+				/* https://fontawesome.com/icons/circle-check?f=classic&s=solid */
+				background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="yellowgreen"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>'),
+					radial-gradient(closest-side circle, white 99%, transparent 0);
+				background-size: .8em .8em;
+				background-position: right center;
+			}
+		}
+
+		&:not(:focus) {
+			&:not(:placeholder-shown):invalid {
+				color: color-mix(in oklab, var(--color-red), canvastext 20%);
+			}
 		}
 
 		&::placeholder {
