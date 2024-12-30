@@ -4,9 +4,40 @@ This mixin provides a way to manage settings that are automatically stored and r
 
 To use:
 
-1. Add its default export as a Vue mixin
-2. In your data, you need a `default_settings` object with the default settings, if any (a `settings` object with the current settings will be created by the mixin)
+First, import its default export:
 
-Optionally, you could also use the styles in `settings/style.css` to provide a settings dialog and a toggle to show it.
-1. Apply a class of `show-settings` to the toggle to get the default styling
-2. Apply an id of `settings` to the dialog
+```js
+import settings from "../common/settings/index.js";
+```
+
+Then, add it as a Vue mixin:
+
+```js
+mixins: [
+	settings
+],
+```
+
+2. In your data, you can use a `default_settings` object to provide default settings, if any (a `settings` object with the current settings will be created by the mixin)
+
+You can use a dialog like that:
+
+```html
+<dialog id="settings" :open="show_settings">
+	<h2>Settings
+		<button class="close" @click="show_settings = false"></button>
+	</h2>
+	<label>
+		Foo:
+		<input type="range" v-model="settings.foo">
+	</label>
+</dialog>
+```
+
+And a toggle like that:
+
+```html
+<button class="show-settings" @click="show_settings = true"></button>
+```
+
+Optionally, you could also use the styles in `settings/style.css` to provide styles for these.
