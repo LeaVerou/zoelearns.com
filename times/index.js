@@ -33,6 +33,10 @@ globalThis.app = createApp({
 			return this.settings.max;
 		},
 
+		/**
+		 * The status of each answer
+		 * @property { Object<number, Object<number, boolean | undefined>> }
+		*/
 		correct() {
 			let ret = {};
 
@@ -49,6 +53,15 @@ globalThis.app = createApp({
 			}
 
 			return ret;
+		},
+
+		/**
+		 * The number of correct answers over the total number of answers
+		 * @property { number }
+		 */
+		progress () {
+			let correct = Object.values(this.correct).map(Object.values).flat().filter(Boolean).length;
+			return correct / (this.max ** 2);
 		}
 	},
 

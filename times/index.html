@@ -9,6 +9,11 @@
 	<script type="module" src="index.js"></script>
 </head>
 <body>
+	<progress :value="progress * 100" max="100" :style="{'--progress': progress}" :class="{
+		'good': progress >= 0.8,
+		'ok': progress >= 0.3 && progress < 0.8,
+		'bad': progress < 0.3
+	}"></progress>
 	<table :style="{ '--max': max }">
 		<thead>
 			<tr>
