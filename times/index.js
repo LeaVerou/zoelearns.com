@@ -90,8 +90,9 @@ globalThis.app = createApp({
 			let { row, col } = this;
 			row += rowRelative;
 			col += colRelative;
-			row = (row + this.max) % this.max;
-			col = (col + this.max) % this.max;
+
+			row = (row + this.max) % this.max || this.max;
+			col = (col + this.max) % this.max || this.max;
 			this.focus(row, col);
 		},
 
@@ -99,7 +100,11 @@ globalThis.app = createApp({
 		getInput (row, col) {
 			// this.$refs.input is a one dimensional array of inputs ordered by row
 			// so we need to calculate the index of the input in the array
-			return this.$refs.input[--row * this.max + --col];
+			let input = this.$refs.input[(row - 1) * this.max + col - 1];
+			if (!input) {
+				console.warn(`No <input> found for ${row} x ${col}`, "$refs:", this.$refs.input);
+			}
+			return input;
 		},
 
 		handleKeydown (e) {
