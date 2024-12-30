@@ -1,6 +1,10 @@
 :root {
 	--color-red: oklch(55% .25 20);
-	--color-green: oklch(60% .18 120deg);
+	--color-yellow: oklch(70% .5 90);
+	--color-green: oklch(60% .18 120);
+	--color-cyan: oklch(70% .5 180);
+	--color-blue: oklch(60% .18 240);
+	--color-purple: oklch(55% .25 300);
 
 	--color-neutral-50: oklch(50% .01 250);
 	--color-neutral-60: oklch(60% .01 250);
@@ -18,4 +22,18 @@ button {
 input, button, select, textarea {
 	font: inherit;
 	color: inherit;
+}
+
+fieldset {
+	border: 1px solid var(--color-neutral-80);
+	border-radius: .3em;
+
+	@media print {
+		display: none;
+	}
+}
+
+input[type=number]::-webkit-inner-spin-button {
+	filter: contrast(2) opacity(.6);
+	mix-blend-mode: multiply;
 }

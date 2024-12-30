@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Zoe Learns Multiplication</title>
+	<link rel="stylesheet" href="style.css">
+	<script type="module" src="index.js"></script>
+</head>
+<body>
+	<fieldset>
+		<legend>Settings</legend>
+		<label>
+			Max: <input type="number" v-model="max">
+		</label>
+	</fieldset>
+	<table :style="{ '--max': max }">
+		<thead>
+			<tr>
+				<th></th>
+				<th v-for="n in max">{{ n }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for="m in max">
+				<th>{{ m }}</th>
+				<td v-for="n in 10" :class="{ 'rect': row >= m && col >= n }">
+					<input inputmode="numeric" v-model="answers[m][n]" min="1" :pattern="m * n" :placeholder="`${m}×${n}`"
+					  ref="input"
+					  @focus="row = m; col = n;" @blur="row = col = 0"
+					  @keydown="handleKeydown"
+					  >
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
