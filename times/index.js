@@ -31,13 +31,17 @@ globalThis.app = createApp({
 	computed: {
 		max() {
 			return this.settings.max;
-		}
+		},
 	},
 
 	watch: {
 		max: {
-			handler (max) {
-				this.answers = Object.fromEntries(Array.from({length: max}, (_, i) => [i + 1, {}]));
+			handler (max, oldMax) {
+				if (max > oldMax) {
+					for (let i = oldMax + 1; i <= max; i++) {
+						this.answers[i] = {};
+					}
+				}
 			},
 			immediate: true
 		}
