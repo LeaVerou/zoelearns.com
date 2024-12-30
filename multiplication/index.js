@@ -1,5 +1,6 @@
 import Vue from "../common/vue.js";
 import settings from "../common/settings/index.js";
+import local from "../common/local/index.js";
 
 let { createApp } = Vue;
 
@@ -16,7 +17,8 @@ globalThis.app = createApp({
 	},
 
 	mixins: [
-		settings
+		local("answers"),
+		settings,
 	],
 
 	computed: {
