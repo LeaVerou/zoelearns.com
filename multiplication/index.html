@@ -9,16 +9,12 @@
 	<script type="module" src="index.js"></script>
 </head>
 <body>
-	<fieldset>
-		<legend>Settings</legend>
-		<label>
-			Max: <input type="number" v-model="max">
-		</label>
-	</fieldset>
-	<table :style="{ '--max': max }">
+	<table :style="{ '--max': max, '--max-chars': (max**2 + '').length }">
 		<thead>
 			<tr>
-				<th></th>
+				<th>
+					<button class="show-settings" @click="show_settings = true"></button>
+				</th>
 				<template v-for="n in max">
 					<th v-text="n" :class="{selected: col == n}"></th>
 				</template>
@@ -37,5 +33,13 @@
 			</tr>
 		</tbody>
 	</table>
+	<dialog id="settings" :open="show_settings">
+		<h2>Settings
+			<button class="close" @click="show_settings = false"></button>
+		</h2>
+		<label>
+			Max: <input type="number" v-model="settings.max">
+		</label>
+	</dialog>
 </body>
 </html>

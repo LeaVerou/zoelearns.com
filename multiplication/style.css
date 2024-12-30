@@ -1,4 +1,5 @@
 @import url("../common/base.css");
+@import url("../common/settings/style.css");
 
 html {
 	font: 150%/1 system-ui, sans-serif;

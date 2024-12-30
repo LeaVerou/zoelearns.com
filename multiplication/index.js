@@ -1,19 +1,28 @@
 import Vue from "../common/vue.js";
+import settings from "../common/settings/index.js";
 
 let { createApp } = Vue;
 
 globalThis.app = createApp({
 	data () {
 		return {
-			max: 10,
 			answers: {},
 			row: 0,
 			col: 0,
+			default_settings: {
+				max: 10
+			}
 		}
 	},
 
-	computed: {
+	mixins: [
+		settings
+	],
 
+	computed: {
+		max() {
+			return this.settings.max;
+		}
 	},
 
 	watch: {
