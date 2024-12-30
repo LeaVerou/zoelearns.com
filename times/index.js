@@ -17,9 +17,16 @@ globalThis.app = createApp({
 	},
 
 	mixins: [
-		local("answers"),
+		local("answers", "row", "col"),
 		settings,
 	],
+
+	mounted() {
+		// Stored state
+		if (this.col > 0 || this.row > 0) {
+			this.focus(this.row, this.col);
+		}
+	},
 
 	computed: {
 		max() {
