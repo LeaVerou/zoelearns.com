@@ -1,7 +1,7 @@
 @import url("../common/base.css");
 @import url("../common/icons.css");
 @import url("../common/dialog.css");
-@import url("../common/settings.css");
+@import url("../common/settings/style.css");
 
 :root {
 	--color-green-light: color-mix(in oklab, var(--color-green), white 85%);

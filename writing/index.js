@@ -1,5 +1,5 @@
 import Vue from "../common/vue.js";
-// import settings from "../common/settings.js";
+// import settings from "../common/settings/index.js";
 let { createApp, nextTick } = Vue;
 import presets, { string_to_lines } from "./presets.js";
 

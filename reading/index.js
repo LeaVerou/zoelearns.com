@@ -1,7 +1,7 @@
 import Vue from "../common/vue.js";
 import WordCard from "./word-card.js";
 import Language from "./Language.js";
-import settings from "../common/settings.js";
+import settings from "../common/settings/index.js";
 
 let params = new URLSearchParams(location.search);
 let lang_code = params.get("lang") ?? "el";
