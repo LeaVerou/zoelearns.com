@@ -19,12 +19,14 @@
 		<thead>
 			<tr>
 				<th></th>
-				<th v-for="n in max">{{ n }}</th>
+				<template v-for="n in max">
+					<th v-text="n" :class="{selected: col == n}"></th>
+				</template>
 			</tr>
 		</thead>
 		<tbody>
 			<tr v-for="m in max">
-				<th>{{ m }}</th>
+				<th :class="{selected: row == m}">{{ m }}</th>
 				<td v-for="n in 10" :class="{ 'rect': row >= m && col >= n }">
 					<input inputmode="numeric" required v-model="answers[m][n]" min="1" :pattern="m * n" :placeholder="`${m}×${n}`"
 					  ref="input"

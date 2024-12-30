@@ -29,11 +29,9 @@ th {
 	padding: .4em .5em;
 	font-size: 60%;
 	max-width: 3ch;
-}
 
-@keyframes background-size-grow {
-	from {
-		background-size: 0 0;
+	&.selected {
+		color: var(--color-blue);
 	}
 }
 
