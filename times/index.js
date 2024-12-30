@@ -39,7 +39,7 @@ globalThis.app = createApp({
 			handler (max, oldMax) {
 				if (max > oldMax) {
 					for (let i = oldMax + 1; i <= max; i++) {
-						this.answers[i] = {};
+						this.answers[i] ??= {};
 					}
 				}
 			},
