@@ -22,21 +22,29 @@ progress {
 	height: .5rem;
 	border-radius: 0;
 	background: var(--color-neutral-90);
-	--indicator-color: var(--color-blue);
+	--color-1: var(--color-blue);
+	--color-2: var(--color-blue);
+	--indicator-color: color-mix(in oklch, var(--color-1), var(--color-2) calc(100% * (var(--progress) - var(--progress-1, 0)) / (var(--progress-2, 1) - var(--progress-1, 0))));
 
 	&.bad {
-		--progress
-		--indicator-color: color-mix(in oklch, var(--color-red), var(--color-yellow) calc(100% * var(--progress) / 0.3));
+		--color-1: var(--color-red);
+		--color-2: var(--color-yellow);
+		--progress-1: 0;
+		--progress-2: 0.3;
 	}
 
 	&.ok {
-		--indicator-color: var(--color-yellow);
-		--indicator-color: color-mix(in oklch, var(--color-yellow), var(--color-green) calc(100% * (var(--progress) - 0.3) / (0.7 - 0.3)));
+		--color-1: var(--color-yellow);
+		--color-2: var(--color-green);
+		--progress-1: 0.3;
+		--progress-2: 0.7;
 	}
 
 	&.good {
-		--indicator-color: var(--color-green);
-		--indicator-color: color-mix(in oklch, var(--color-green), oklch(from var(--color-green) calc(l * .9) c calc(h + 20)) calc(100% * (var(--progress) - 0.7) / (1 - 0.7)));
+		--color-1: var(--color-green);
+		--color-2: oklch(from var(--color-green) calc(l * .9) c calc(h + 20));
+		--progress-1: 0.7;
+		--progress-2: 1;
 	}
 
 	&::-webkit-progress-bar {
