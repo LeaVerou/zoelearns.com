@@ -65,7 +65,10 @@ table {
 	border-spacing: 0;
 	border-collapse: collapse;
 	table-layout: fixed;
-	font-size: calc((100vmin - 10rem) / (var(--max) + 1));
+	--max-chars: clamp(2, round(up, log(pow(var(--max), 2), 10)), 4);
+	--size: calc(100svmin - 2rem);
+	font-size: calc(var(--size) / (var(--max) + 1) / var(--max-chars, 2) - 2px);
+	font-variant-numeric: tabular-nums;
 }
 
 th {
@@ -79,19 +82,20 @@ th {
 }
 
 td {
+	width: calc((var(--max-chars) + 1) * 1ch + .6rem);
 	padding: 0;
 	border: 1px solid var(--color-neutral-70,);
 	--border-rect-width: 2px;
 	--border-rect-color: var(--color-blue);
 	--border-rect: var(--border-rect-width) solid var(--border-rect-color);
 	--border-width: 1px;
-	--padding: .3rem;
+	line-height: var(--max-chars);
 
 	input {
 		display: block;
 		width: 100%;
 		box-sizing: border-box;
-		padding: calc(var(--padding) + var(--border-width));
+		padding: var(--border-width);
 		border: none;
 		text-align: center;
 		background: transparent no-repeat right .4em center / 0 0;
@@ -137,7 +141,7 @@ td {
 			border-inline-end: var(--border-rect);
 
 			input {
-				padding-inline-end: var(--padding);
+				padding-inline-end: 0;
 			}
 		}
 
@@ -146,7 +150,7 @@ td {
 			border-block-start: var(--border-rect);
 
 			input {
-				padding-block-start: var(--padding);
+				padding-block-start: 0;
 			}
 		}
 
@@ -155,7 +159,7 @@ td {
 			border-inline-start: var(--border-rect);
 
 			input {
-				padding-inline-start: var(--padding);
+				padding-inline-start: 0;
 			}
 		}
 
@@ -164,7 +168,7 @@ td {
 			border-block-end: var(--border-rect);
 
 			input {
-				padding-block-end: var(--padding);
+				padding-block-end: 0;
 			}
 		}
 	}
