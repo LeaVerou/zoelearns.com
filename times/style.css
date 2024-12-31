@@ -133,12 +133,14 @@ td {
 	}
 
 	&.rect {
-		background: color-mix(in oklab, var(--color-blue), canvas 90%);
+		--blue-intensity: 8%;
+		background: color-mix(in oklab, var(--color-blue) var(--blue-intensity), canvas);
 		border-color: var(--color-blue);
 
-		&:has(+ :not(.rect)) {
+		&:not(:has(+ .rect)) {
 			/* Right side */
 			border-inline-end: var(--border-rect);
+			--blue-intensity: 15%;
 
 			input {
 				padding-inline-end: 0;
@@ -166,6 +168,7 @@ td {
 		&:where(tr:not(:has(+ tr .rect)) td) {
 			/* Bottom side */
 			border-block-end: var(--border-rect);
+			--blue-intensity: 15%;
 
 			input {
 				padding-block-end: 0;
