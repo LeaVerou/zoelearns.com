@@ -42,6 +42,7 @@ globalThis.app = createApp({
 
 			for (let m = 1; m <= this.max; m++) {
 				let statuses = ret[m] = {};
+				this.answers[m] ??= {};
 
 				for (let n = 1; n <= this.max; n++) {
 					let answer = this.answers[m][n];
