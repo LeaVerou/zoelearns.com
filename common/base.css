@@ -24,6 +24,12 @@ input, button, select, textarea {
 	color: inherit;
 }
 
+input[type=checkbox],
+input[type=radio] {
+	width: .75em;
+	height: .75em;
+}
+
 fieldset {
 	border: 1px solid var(--color-neutral-80);
 	border-radius: .3em;
