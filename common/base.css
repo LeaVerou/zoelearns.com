@@ -1,7 +1,7 @@
 :root {
 	--color-red: oklch(55% .25 20);
 	--color-yellow: oklch(80% 0.185 90);
-	--color-green: oklch(60% .18 120);
+	--color-green: oklch(70% 0.2 130);
 	--color-cyan: oklch(70% .5 180);
 	--color-blue: oklch(60% .18 240);
 	--color-purple: oklch(55% .25 300);
