@@ -8,12 +8,12 @@ button.show-settings {
 	border-radius: .2em;
 	color: var(--color-neutral-70);
 	background: transparent;
-	font-size: .9rem;
+	font-size: 1.3rem;
 
 	&:empty::before {
-		content: var(--icon-gear-fill);
+		content: var(--icon-gear);
 		display: block;
-		font-family: bootstrap-icons;
+		font: var(--fa-font-solid);
 	}
 
 	&:hover {

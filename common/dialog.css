@@ -31,8 +31,7 @@ dialog {
 		top: .5em;
 		right: .5em;
 		min-width: 1.4em;
-		line-height: 1;
-		padding: .3em;
+		padding: .2em .3em;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -41,9 +40,9 @@ dialog {
 		background: hsl(220 10% 50% / .2);
 
 		&:empty::before {
-			content: var(--icon-x-lg);
-			font-family: bootstrap-icons;
-			font-size: 120%;
+			content: var(--icon-xmark);
+			font: var(--fa-font-solid);
+			font-size: 100%;
 		}
 
 		&:hover {

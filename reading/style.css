@@ -239,24 +239,24 @@ details {
 	gap: .2em;
 
 	@media (width > 800px) {
-		font-size: 150%;
+		font-size: 130%;
 	}
 
 	.spacer {
 		flex: 1;
 	}
 
-	.previous-word,
-	.next-word,
-	.skip-word {
-		letter-spacing: -.3em;
-		padding-right: .6em;
+	> button {
+		padding: .2em .4em;
+		font-size: 90%;
+		color: light-dark(currentColor, white);
 	}
 
 	.correct,
 	.next-word,
 	.skip-word {
-		color: white;
+		color-scheme: dark;
+
 	}
 
 	.correct,
@@ -331,12 +331,12 @@ dialog[id=index] {
 		columns: 4 7ch;
 
 		& li {
-			--icon: var(--icon-question-circle-fill);
+			--icon: var(--icon-circle-question);
 
 			&::marker {
 				content: var(--icon) "  ";
 				color: var(--color, var(--color-neutral-70));
-				font-family: bootstrap-icons;
+				font: var(--fa-font-solid);
 				font-size: 60%;
 			}
 
@@ -351,12 +351,12 @@ dialog[id=index] {
 
 			&.correct {
 				--color: var(--color-green);
-				--icon: var(--icon-check-circle-fill);
+				--icon: var(--icon-circle-check);
 			}
 
 			&.skipped {
 				--color: var(--color-red);
-				--icon: var(--icon-skip-forward-circle-fill);
+				--icon: var(--icon-forward-fast);
 			}
 		}
 	}

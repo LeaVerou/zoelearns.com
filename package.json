@@ -1,7 +1,6 @@
 {
   "name": "zoelearns",
   "dependencies": {
-    "bootstrap-icons": "^1",
     "vue": "^3"
   }
 }

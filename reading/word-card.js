@@ -118,16 +118,16 @@ export default {
 	template: `
 		<article class="word-card" :class="[word.status, active? 'active' : '', segments.length > 1? '' : 'no-segments']">
 			<div class="toolbar">
-				<button class="correct bi bi-check-lg" @click="correct" v-if="word.status !== 'correct'" title="Mark as correct (⏎)"></button>
+				<button class="correct fa fa-check" @click="correct" v-if="word.status !== 'correct'" title="Mark as correct (⏎)"></button>
 
 				<div class="spacer"></div>
-				<button class="speak bi bi-chat-text-fill" @click.stop="lang.speak(current_segment === -1 ? word.word : segments[current_segment])"></button>
+				<button class="speak fa-solid fa-comment-smile" @click.stop="lang.speak(current_segment === -1 ? word.word : segments[current_segment])"></button>
 				<div class="spacer"></div>
-				<button class="next-word bi bi-skip-end-fill" v-if="word.status === 'correct'" @click.stop="next_word" title="Next word (⇧→)"></button>
-				<button class="skip-word bi bi-fast-forward-fill" v-else @click.stop="next_word" title="Skip word (⌃⇧→)"></button>
+				<button class="next-word fa-solid fa-forward-step" v-if="word.status === 'correct'" @click.stop="next_word" title="Next word (⇧→)"></button>
+				<button class="skip-word fa-solid fa-forward-fast" v-else @click.stop="next_word" title="Skip word (⌃⇧→)"></button>
 			</div>
 			<h2>
-				<button :title="\`Previous \${ lang.segment_name } (←)\`" class="previous-segment bi bi-caret-left-fill" @click="previous_segment"></button>
+				<button :title="\`Previous \${ lang.segment_name } (←)\`" class="previous-segment fa-solid fa-caret-left" @click="previous_segment"></button>
 				<div class="word" :lang="lang.code">
 					<span class="segment" v-for="(segment, i) in segments" :class="{active: i === current_segment}">
 						<span v-for="(letter, j) in segment" class="letter" :class="{vowel: is_vowel(letter, {previous: segment[j - 1] ?? segments[i - 1]?.at(-1) })}"
@@ -135,7 +135,7 @@ export default {
 					</span>
 				</div>
 				<div class="word en" v-if="settings.show_en && word.status == 'correct' && word.en">{{ word.en }}</div>
-				<button :title="\`Next \${ lang.segment_name } (→)\`" class="next-segment bi bi-caret-right-fill" @click="next_segment"></button>
+				<button :title="\`Next \${ lang.segment_name } (→)\`" class="next-segment fa-solid fa-caret-right" @click="next_segment"></button>
 			</h2>
 			<div class="photos" v-if="word.photos && word.status === 'correct'" :style="photo_container_styles">
 				<img v-for="photo in word.photos" :src="photo.urls.small" :alt="photo.description"
