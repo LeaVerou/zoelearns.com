@@ -60,6 +60,16 @@ progress {
 	}
 }
 
+.show-settings {
+	position: absolute;
+	inset-block-start: .8rem;
+	inset-inline-end: .4rem;
+
+	@media (aspect-ratio < 1.2) {
+		font-size: 80%;
+	}
+}
+
 table {
 	margin-inline: auto;
 	border-spacing: 0;
