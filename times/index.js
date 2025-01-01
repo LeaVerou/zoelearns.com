@@ -12,7 +12,8 @@ globalThis.app = createApp({
 			col: 0,
 			default_settings: {
 				max: 10
-			}
+			},
+			typing: 0,
 		}
 	},
 
@@ -109,6 +110,14 @@ globalThis.app = createApp({
 		},
 
 		handleKeydown (e) {
+			this.typing++;
+
+			setTimeout(() => {
+				if (this.typing > 0) {
+					this.typing--;
+				}
+			}, 1000);
+
 			if (e.key.startsWith("Arrow")) {
 				let relativeRow = 0;
 				let relativeCol = 0;

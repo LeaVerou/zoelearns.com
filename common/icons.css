@@ -1,9 +1,11 @@
 @import url("https://kit.fontawesome.com/06b70095b3.css");
 
 :root {
+	--icon-check: "\f00c";
 	--icon-circle-check: "\f058";
+	--icon-circle-question: "\f059";
 	--icon-gear: "\f013";
 	--icon-forward-fast: "\f050";
-	--icon-circle-question: "\f059";
+	--icon-not-equal: "\f53e";
 	--icon-xmark: "\f00d";
 }

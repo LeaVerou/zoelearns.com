@@ -164,24 +164,45 @@ td {
 		}
 	}
 
-	&:focus-within.correct {
+	&.correct {
+		--color: var(--color-green);
+		--icon: var(--icon-check, "✓");
+	}
+
+	&.incorrect {
+		--color: var(--color-red);
+		--icon: var(--icon-not-equal, "≠");
+	}
+
+	&:focus-within {
 		position: relative;
-		box-shadow: 0 0 0 .1em oklab(from var(--color-green) l a b / 30%) inset;
+		box-shadow: 0 0 0 .1em oklab(from var(--color) l a b / 30%) inset;
+		transition: scale cubic-bezier(.1, .7, .5, 1.6), box-shadow;
+		transition-duration: 400ms;
+
+		@starting-style {
+			box-shadow: 0 0 0 0 oklab(from var(--color) l a b / 30%) inset;
+		}
 
 		&::after {
-			content: var(--icon-circle-check);
+			content: var(--icon);
 			position: absolute;
-			top: -.25em;
-			right: -.3em;
-			background: white;
+			top: -.4em;
+			right: -.4em;
+			width: 1.7em;
+			aspect-ratio: 1;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: var(--color);
 			border-radius: 50%;
 			font: var(--fa-font-solid);
-			font-size: 75%;
-			color: var(--color-green);
-			transition: 400ms cubic-bezier(.1, .7, .5, 1.6);
+			font-size: clamp(.4rem, 40%, 1rem);
+			color: white;
+			transition: inherit;
 
 			@starting-style {
-				transform: scale(0);
+				scale: 0;
 			}
 		}
 	}
