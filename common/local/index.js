@@ -13,26 +13,17 @@ export default function getMixin(...args) {
 		options.paths = [...args.paths];
 	}
 
-	let {paths, deep = true, immediate, localStorageKey = location.pathname.slice(1)} = options;
-
-	if (localStorageKey) {
-		localStorage[localStorageKey] ??= "{}";
-	}
+	let {
+		paths, deep = true, immediate,
+		prefix = location.pathname !== "/" ? location.pathname.slice(1).replace(/\/?$/, "/") : "",
+	} = options;
 
 	let mixin = {
 		created() {
-			let obj;
-
-			if (localStorageKey) {
-				obj = JSON.parse(localStorage[localStorageKey]);
-			}
-			else {
-				obj = localStorage;
-			}
-
 			for (let path of paths) {
-				if (obj[path]) {
-					this[path] = localStorageKey ? obj[path] : JSON.parse(obj[path]);
+				let key = prefix + path;
+				if (localStorage[key]) {
+					this[path] = JSON.parse(localStorage[key]);
 				}
 			}
 		},
@@ -42,14 +33,14 @@ export default function getMixin(...args) {
 	for (let path of paths) {
 		mixin.watch[path] = {
 			handler (value) {
-				if (localStorageKey) {
-					let obj = JSON.parse(localStorage[localStorageKey]);
-					obj[path] = value;
-					localStorage[localStorageKey] = JSON.stringify(obj);
+				let key = prefix + path;
+				if (value === undefined) {
+					delete localStorage[key];
 				}
 				else {
-					localStorage[path] = JSON.stringify(value);
+					localStorage[key] = JSON.stringify(value);
 				}
+
 			},
 			deep,
 			immediate,
