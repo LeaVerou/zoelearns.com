@@ -20,18 +20,24 @@ mixins: [
 
 You can also provide options.
 Here, every option is set to its default value:
+
 ```js
 mixins: [
 	local({
 		paths: ["answers", "settings.max"],
+
 		// Options for Vue’s watcher
 		deep: true,
 		immediate: false,
 
 		// localStorage key prefix
 		prefix: location.pathname !== "/" ? location.pathname.slice(1).replace(/\/?$/, "/") : "",
+
+		// Delete if equal to this value
+		emptyValue: undefined,
 	})
 ],
 ```
 
+To provide different options per property, just create multiple instances of the mixin.
 
