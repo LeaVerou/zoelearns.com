@@ -1,16 +1,19 @@
+import local from "../local/index.js";
 /**
  * Settings mixin for Vue apps or components
  */
 
 export default {
 	data () {
-		let settings = localStorage.settings ? JSON.parse(localStorage.settings) : {};
-
 		return {
 			show_settings: false,
-			settings,
+			settings: {},
 		}
 	},
+
+	mixins: [
+		local("settings"),
+	],
 
 	created () {
 		// Apply default settings, if specified
@@ -18,16 +21,6 @@ export default {
 			applyDefaults(this.settings, this.default_settings);
 		}
 	},
-
-	watch: {
-		settings: {
-			handler (settings) {
-				localStorage.settings = JSON.stringify(settings);
-			},
-
-			deep: true,
-		}
-	}
 }
 
 function applyDefaults (settings, defaults) {
