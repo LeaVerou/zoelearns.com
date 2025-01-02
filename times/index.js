@@ -1,6 +1,7 @@
 import Vue from "../common/vue.js";
 import settings from "../common/settings/index.js";
 import local from "../common/local/index.js";
+import { amount } from "../common/util.js";
 
 let { createApp } = Vue;
 
@@ -11,7 +12,8 @@ globalThis.app = createApp({
 			row: 0,
 			col: 0,
 			default_settings: {
-				max: 10
+				max: 10,
+				error_delay: 1,
 			},
 			typing: 0,
 		}
@@ -30,7 +32,7 @@ globalThis.app = createApp({
 	},
 
 	computed: {
-		max() {
+		max () {
 			return this.settings.max;
 		},
 
@@ -38,7 +40,7 @@ globalThis.app = createApp({
 		 * The status of each answer
 		 * @property { Object<number, Object<number, boolean | undefined>> }
 		*/
-		correct() {
+		correct () {
 			let ret = {};
 
 			for (let m = 1; m <= this.max; m++) {
@@ -81,8 +83,19 @@ globalThis.app = createApp({
 	},
 
 	methods: {
+		amount,
+
 		focus (row, col) {
 			this.getInput(row, col).focus();
+		},
+
+		refresh_class (element, className) {
+			if (!element.classList.contains(className)) {
+				return;
+			}
+
+			element.classList.remove(className);
+			setTimeout(() => element.classList.add(className), 100);
 		},
 
 		/**
@@ -116,7 +129,7 @@ globalThis.app = createApp({
 				if (this.typing > 0) {
 					this.typing--;
 				}
-			}, 1000);
+			}, this.settings.error_delay * 1000);
 
 			if (e.key.startsWith("Arrow")) {
 				let relativeRow = 0;

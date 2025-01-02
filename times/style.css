@@ -70,6 +70,16 @@ progress {
 	}
 }
 
+.correct {
+	--color: var(--color-green);
+	--icon: var(--icon-check, "✓");
+}
+
+.incorrect {
+	--color: var(--color-red);
+	--icon: var(--icon-not-equal, "≠");
+}
+
 table {
 	margin-inline: auto;
 	border-spacing: 0;
@@ -91,7 +101,8 @@ th {
 	}
 }
 
-td {
+td,
+.td-icon {
 	width: calc((var(--max-chars) + 1) * 1ch + .6rem);
 	padding: 0;
 	border: 1px solid var(--color-neutral-70,);
@@ -129,91 +140,117 @@ td {
 			}
 		}
 	}
+}
 
-	&.rect {
-		--blue-intensity: 8%;
-		background: color-mix(in oklab, var(--color-blue) var(--blue-intensity), canvas);
-		border-color: var(--color-blue);
+td.rect,
+.td-icon {
+	--blue-intensity: 8%;
+	background: color-mix(in oklab, var(--color-blue) var(--blue-intensity), canvas);
+	border-color: var(--color-blue);
 
-		&:not(:has(+ .rect)) {
-			/* Right side */
-			border-inline-end: var(--border-rect);
-			--blue-intensity: 15%;
+	&:where(:not(:has(+ .rect))) {
+		/* Right side */
+		border-inline-end: var(--border-rect);
+		--blue-intensity: 15%;
 
-			input {
-				padding-inline-end: 0;
-			}
-		}
-
-		&:where(tr:first-child td) {
-			/* Top side */
-			border-block-start: var(--border-rect);
-
-			input {
-				padding-block-start: 0;
-			}
-		}
-
-		&:where(:first-of-type) {
-			/* Left side */
-			border-inline-start: var(--border-rect);
-
-			input {
-				padding-inline-start: 0;
-			}
-		}
-
-		&:where(tr:not(:has(+ tr .rect)) td) {
-			/* Bottom side */
-			border-block-end: var(--border-rect);
-			--blue-intensity: 15%;
-
-			input {
-				padding-block-end: 0;
-			}
+		input {
+			padding-inline-end: 0;
 		}
 	}
 
+	&:where(tr:first-child td) {
+		/* Top side */
+		border-block-start: var(--border-rect);
+
+		input {
+			padding-block-start: 0;
+		}
+	}
+
+	&:where(th + td) {
+		/* Left side */
+		border-inline-start: var(--border-rect);
+
+		input {
+			padding-inline-start: 0;
+		}
+	}
+
+	&:where(tr:not(:has(+ tr .rect)) td, .td-icon) {
+		/* Bottom side */
+		border-block-end: var(--border-rect);
+		--blue-intensity: 15%;
+
+		input {
+			padding-block-end: 0;
+		}
+	}
+}
+
+td:where(:focus-within),
+.td-icon {
+	position: relative;
+	transition: scale cubic-bezier(.1, .7, .5, 1.6), box-shadow;
+	transition-duration: 400ms;
+	box-shadow: 0 0 transparent inset;
+
 	&.correct {
-		--color: var(--color-green);
-		--icon: var(--icon-check, "✓");
+		box-shadow: 0 0 0 .1em oklab(from var(--color) l a b / 30%) inset;
 	}
 
 	&.incorrect {
-		--color: var(--color-red);
-		--icon: var(--icon-not-equal, "≠");
+		box-shadow: 0 0 0 .1em oklab(from var(--color) l a b / 30%) inset;
 	}
 
-	&:focus-within {
-		position: relative;
-		box-shadow: 0 0 0 .1em oklab(from var(--color) l a b / 30%) inset;
-		transition: scale cubic-bezier(.1, .7, .5, 1.6), box-shadow;
-		transition-duration: 400ms;
+	&::after {
+		content: var(--icon);
+		position: absolute;
+		top: -.4em;
+		right: -.4em;
+		width: 1.7em;
+		aspect-ratio: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--color);
+		border-radius: 50%;
+		font: var(--fa-font-solid);
+		font-size: clamp(.4rem, 40%, 1rem);
+		color: white;
+		transition: inherit;
 
 		@starting-style {
-			box-shadow: 0 0 0 0 oklab(from var(--color) l a b / 30%) inset;
+			scale: 0;
 		}
+	}
+}
 
-		&::after {
-			content: var(--icon);
-			position: absolute;
-			top: -.4em;
-			right: -.4em;
-			width: 1.7em;
-			aspect-ratio: 1;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			background: var(--color);
-			border-radius: 50%;
-			font: var(--fa-font-solid);
-			font-size: clamp(.4rem, 40%, 1rem);
-			color: white;
-			transition: inherit;
+@keyframes type {
+	from { content: "1"; }
+	to { content: "12"; }
+}
 
-			@starting-style {
-				scale: 0;
-			}
+.td-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.5em;
+	aspect-ratio: 1;
+	--keystroke-duration: 200ms;
+	--typing-duration: calc(var(--keystroke-duration) * 2);
+
+	border: 1px solid var(--color-blue);
+	box-shadow: 0 0 transparent inset;
+
+	&::before {
+		content: "｜";
+	}
+
+	&.incorrect {
+		transition-delay: calc(var(--typing-duration) + 200ms + var(--delay) * 1s);
+
+		&::before {
+			animation: type var(--typing-duration) 200ms forwards;
 		}
 	}
 }

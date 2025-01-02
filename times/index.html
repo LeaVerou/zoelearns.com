@@ -55,6 +55,14 @@
 			<i class="fa-solid fa-grid"></i>
 			<input type="number" v-model="settings.max">
 		</label>
+		<label>
+			<span class="label">Error delay</span>
+			<div class="td-icon incorrect"
+			  :style="{'--delay': settings.error_delay}"></div>
+			 <input type="range" min="0" step="0.5" max="5" v-model="settings.error_delay"
+			   @input="refresh_class($event.target.previousElementSibling, 'incorrect')">
+			{{ amount(settings.error_delay, {one: 'second', none: 'No delay'}) }}
+		</label>
 	</dialog>
 </body>
 </html>
