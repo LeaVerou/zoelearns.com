@@ -99,6 +99,11 @@ th {
 	&.selected {
 		color: var(--color-blue);
 	}
+
+	&:is(thead th:first-child) {
+		color: var(--color-neutral-70);
+		font-size: 50%;
+	}
 }
 
 td,

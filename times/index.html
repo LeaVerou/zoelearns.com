@@ -18,9 +18,7 @@
 	<table :style="{ '--max': max }">
 		<thead>
 			<tr>
-				<th>
-					×
-				</th>
+				<th>✕</th>
 				<template v-for="n in max">
 					<th v-text="n" :class="{selected: col == n}"></th>
 				</template>
