@@ -59,7 +59,7 @@
 			<span class="label">Error delay</span>
 			<div class="td-icon incorrect"
 			  :style="{'--delay': settings.error_delay}"></div>
-			 <input type="range" min="0" step="0.5" max="5" v-model="settings.error_delay"
+			 <input type="range" min="0" step="0.5" max="9" v-model="settings.error_delay"
 			   @input="refresh_class($event.target.previousElementSibling, 'incorrect')">
 			{{ amount(settings.error_delay, {one: 'second', none: 'No delay'}) }}
 		</label>
