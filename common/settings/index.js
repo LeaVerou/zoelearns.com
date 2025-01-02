@@ -12,7 +12,7 @@ export default {
 	},
 
 	mixins: [
-		local("settings"),
+		local("settings", "show_settings"),
 	],
 
 	created () {
