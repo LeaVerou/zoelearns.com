@@ -85,10 +85,16 @@ table {
 	border-spacing: 0;
 	border-collapse: collapse;
 	table-layout: fixed;
-	--max-chars: clamp(2, round(up, log(pow(var(--max), 2), 10)), 4);
+	--max-chars-unclamped: log(pow(var(--max), 2), 10);
+	--max-chars-rounded: var(--max-chars-unclamped);
+	--max-chars: clamp(2, var(--max-chars-rounded), 4);
 	--size: calc(100svmin - 2rem);
 	font-size: calc(var(--size) / (var(--max) + 1) / var(--max-chars, 2) - 2px);
 	font-variant-numeric: tabular-nums;
+
+	@supports (z-index: round(up, 3.5)) {
+		--max-chars-rounded: round(up, var(--max-chars-unclamped));
+	}
 }
 
 th {
