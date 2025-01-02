@@ -4,11 +4,8 @@
 @import url("../common/settings/style.css");
 
 :root {
-	--color-green-light: color-mix(in oklab, var(--color-green), white 85%);
-	--color-red-light: color-mix(in oklab, var(--color-red), white 85%);
-
-	--color-vowel: oklch(68% .18 250deg);
-	--color-consonant: oklch(67% .2 350deg);
+	--color-vowel: var(--color-blue);
+	--color-consonant: var(--color-pink);
 }
 
 body {
@@ -75,12 +72,12 @@ details {
 
 .skipped-words {
 	grid-column: 3;
-	background: var(--color-red-light);
+	background: var(--color-red-95);
 }
 
 .correct-words {
 	grid-column: 1;
-	background: var(--color-green-light);
+	background: var(--color-green-95);
 }
 
 .word-card {
