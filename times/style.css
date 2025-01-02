@@ -202,16 +202,8 @@ td:where(:focus-within),
 .td-icon {
 	position: relative;
 	transition: scale cubic-bezier(.1, .7, .5, 1.6), box-shadow;
-	transition-duration: 400ms;
+	transition-duration: 500ms;
 	box-shadow: 0 0 transparent inset;
-
-	&.correct {
-		box-shadow: 0 0 0 .1em oklab(from var(--color) l a b / 30%) inset;
-	}
-
-	&.incorrect {
-		box-shadow: 0 0 0 .1em oklab(from var(--color) l a b / 30%) inset;
-	}
 
 	&::after {
 		content: var(--icon);
@@ -229,9 +221,15 @@ td:where(:focus-within),
 		font-size: clamp(.4rem, 40%, 1rem);
 		color: white;
 		transition: inherit;
+		scale: 0;
+	}
 
-		@starting-style {
-			scale: 0;
+	&.correct,
+	&.incorrect {
+		box-shadow: 0 0 0 .1em oklab(from var(--color) l a b / 30%) inset;
+
+		&::after {
+			scale: 1;
 		}
 	}
 }
