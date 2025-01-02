@@ -13,6 +13,7 @@
 	--color-neutral-90: oklch(90% .01 250);
 	--color-neutral-90a: oklch(50% .01 250 / .1);
 	--color-neutral-95: oklch(95% .01 250);
+	--color-neutral: var(--color-neutral-50);
 }
 
 button {

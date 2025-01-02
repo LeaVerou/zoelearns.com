@@ -27,11 +27,28 @@
 	}
 }
 
-dialog[id=settings] {
+dialog:where([id=settings], .settings) {
 	width: 80vw;
 	max-width: 35rem;
 
-	@media print {
-		display: none;
+	> label {
+		display: flex;
+		gap: .3em;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	> label:has(.label) {
+		.label {
+			width: 100%;
+			font-size: 60%;
+			font-weight: 600;
+			color: var(--color-neutral-60);
+			text-transform: uppercase;
+		}
+	}
+
+	i {
+		color: var(--color-neutral);
 	}
 }

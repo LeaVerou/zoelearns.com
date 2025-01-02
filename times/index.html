@@ -12,7 +12,7 @@
 	<progress :value="progress * 100" max="100" :style="{'--progress': progress}" :class="{
 		'good': progress >= 0.8,
 		'ok': progress >= 0.3 && progress < 0.8,
-		'bad': progress < 0.3
+		'bad': progress < 0.3,
 	}"></progress>
 	<button class="show-settings" @click="show_settings = true"></button>
 	<table :style="{ '--max': max }">
@@ -32,7 +32,8 @@
 				<td v-for="n in max" :class="{
 					'rect': row >= m && col >= n,
 					'correct': correct[m][n] === true,
-					'incorrect': !typing && correct[m][n] === false
+					'incorrect': !typing && correct[m][n] === false,
+					'typing': typing
 				}">
 					<input inputmode="numeric" v-model="answers[m][n]" min="1"
 					  :pattern="m * n" :placeholder="`${m}×${n}`"
@@ -50,7 +51,9 @@
 			<button class="close" @click="show_settings = false"></button>
 		</h2>
 		<label>
-			Max: <input type="number" v-model="settings.max">
+			<span class="label">Max</span>
+			<i class="fa-solid fa-grid"></i>
+			<input type="number" v-model="settings.max">
 		</label>
 	</dialog>
 </body>
