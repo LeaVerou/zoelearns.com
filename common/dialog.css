@@ -51,8 +51,11 @@ dialog {
 		}
 	}
 
-	& > :is(h2, header, :where(.full-width), footer) {
+	> * {
 		margin: 0;
+	}
+
+	& > :is(h2, header, :where(.full-width), footer) {
 		margin-inline: calc(-1 * var(--padding-inline));
 		padding-inline: var(--padding-inline);
 

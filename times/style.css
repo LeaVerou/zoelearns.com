@@ -260,3 +260,7 @@ td:where(:focus-within),
 	}
 }
 
+.large-emoji {
+	font-size: 500%;
+	margin: 0 auto;
+}
