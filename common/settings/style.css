@@ -28,7 +28,6 @@
 }
 
 dialog:where([id=settings], .settings) {
-	width: 80vw;
 	max-width: 35rem;
 
 	> label {
