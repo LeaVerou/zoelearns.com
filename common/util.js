@@ -14,3 +14,15 @@ export function amount (num, {one, many = one + "s", none = "No " + many} = {}) 
 
 	return num + " " + (num == 1 ? one : many);
 }
+
+export function log (n, base = Math.E) {
+	return Math.log(n) / Math.log(base);
+}
+
+export function round (n, decimals = 0) {
+	return Math.round(n * 10 ** decimals) / 10 ** decimals;
+}
+
+export function ceil (n, decimals = 0) {
+	return Math.ceil(n * 10 ** decimals) / 10 ** decimals;
+}

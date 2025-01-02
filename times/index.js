@@ -1,7 +1,11 @@
 import Vue from "../common/vue.js";
 import settings from "../common/settings/index.js";
 import local from "../common/local/index.js";
-import { amount } from "../common/util.js";
+import {
+	amount,
+	log,
+	ceil,
+} from "../common/util.js";
 
 let { createApp } = Vue;
 
@@ -84,6 +88,8 @@ globalThis.app = createApp({
 
 	methods: {
 		amount,
+		log,
+		ceil,
 
 		focus (row, col) {
 			this.getInput(row, col).focus();
