@@ -14,7 +14,7 @@
 </head>
 <body>
 	<div id="app" v-cloak :style="app_styles">
-		<button class="show-settings" @click="show_settings = true"></button>
+		<button class="show-settings" @click="show_settings = !show_settings"></button>
 		<div class="fraction-container container">
 			<div class="fraction">
 				<input type="number" v-model="numerator" class="numerator" id="numerator" min="0" step="1">

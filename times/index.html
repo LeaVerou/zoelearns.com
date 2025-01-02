@@ -14,7 +14,7 @@
 		'ok': progress >= 0.3 && progress < 0.8,
 		'bad': progress < 0.3,
 	}"></progress>
-	<button class="show-settings" @click="show_settings = true"></button>
+	<button class="show-settings" @click="show_settings = !show_settings"></button>
 	<table :style="{ '--max': max }">
 		<thead>
 			<tr>

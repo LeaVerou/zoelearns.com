@@ -17,7 +17,7 @@
 		<option value="mk">🇲🇰 Македонски</option>
 	</select>
 	<button @click="ui.showIndex = true">All words</button>
-	<button class="show-settings" @click="show_settings = true"></button>
+	<button class="show-settings" @click="show_settings = !show_settings"></button>
 </nav>
 <word-card :word="activeWord" v-if="activeWord" :state="state" active @next_word="next_word"></word-card>
 

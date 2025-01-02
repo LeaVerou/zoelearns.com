@@ -37,7 +37,7 @@ You can use a dialog like that:
 And a toggle like that:
 
 ```html
-<button class="show-settings" @click="show_settings = true"></button>
+<button class="show-settings" @click="show_settings = !show_settings"></button>
 ```
 
 Optionally, you could also use the styles in `settings/style.css` to provide styles for these.
