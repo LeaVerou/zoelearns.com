@@ -15,14 +15,11 @@ body {
 	box-sizing: border-box;
 }
 
-progress {
+.progress {
 	position: absolute;
 	top: 0;
 	inset-inline: 0;
-	width: 100%;
-	height: .5rem;
-	border-radius: 0;
-	background: var(--color-neutral-90);
+
 	--color-1: var(--color-blue);
 	--color-2: var(--color-blue);
 	--indicator-color: color-mix(in oklch, var(--color-1), var(--color-2) calc(100% * (var(--progress) - var(--progress-1, 0)) / (var(--progress-2, 1) - var(--progress-1, 0))));
@@ -48,12 +45,32 @@ progress {
 		--progress-2: 1;
 	}
 
+	.percentage {
+		position: absolute;
+		inset-block: 0;
+		inset-inline-end: calc(100% - 100% * var(--progress) + .3em);
+		line-height: 1.5;
+		font-size: 50%;
+		font-weight: 900;
+		color: canvas;
+		transition: 400ms;
+	}
+}
+
+progress {
+	display: block;
+	width: 100%;
+	height: .8em;
+	border-radius: 0;
+	background: var(--color-neutral-90);
+
 	&::-webkit-progress-bar {
 		background: transparent;
 	}
 
 	&::-webkit-progress-value {
 		background-color: var(--indicator-color);
+		transition: 400ms;
 	}
 
 	&::-moz-progress-bar {

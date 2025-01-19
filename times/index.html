@@ -9,11 +9,15 @@
 	<script type="module" src="index.js"></script>
 </head>
 <body>
-	<progress :value="progress * 100" max="100" :style="{'--progress': progress}" :class="{
+	<div class="progress" :class="{
 		'good': progress >= 0.8,
 		'ok': progress >= 0.3 && progress < 0.8,
 		'bad': progress < 0.3,
-	}"></progress>
+	}" :style="{'--progress': progress}">
+		<progress :value="progress * 100" max="100"></progress>
+		<span class="percentage" v-text="Math.round(progress * 100) + '%'"></span>
+	</div>
+
 	<button class="show-settings" @click="show_settings = !show_settings"></button>
 	<table :style="{ '--max': max }">
 		<thead>
