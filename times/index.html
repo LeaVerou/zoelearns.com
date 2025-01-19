@@ -36,6 +36,7 @@
 					<input inputmode="numeric" v-model="answers[m][n]"
 					  :maxlength="ceil(log(max ** 2, 10))"
 					  :pattern="m * n" :placeholder="`${m}×${n}`"
+					  :key="`${m}x${n}`"
 					  ref="input"
 					  @focus="row = m; col = n;"
 					  @blur="row = col = 0"
