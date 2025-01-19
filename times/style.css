@@ -6,7 +6,7 @@ html {
 }
 
 body {
-	height: 100vh;
+	height: 100svh;
 	display: flex;
 	flex-flow: column;
 	gap: 1rem;
