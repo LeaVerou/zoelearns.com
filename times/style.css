@@ -305,3 +305,14 @@ td:where(:focus-within),
 	font-size: 500%;
 	margin: 0 auto;
 }
+
+dialog#success {
+	&::backdrop {
+		backdrop-filter: blur(10px);
+		transition: 500ms;
+
+		@starting-style {
+			backdrop-filter: blur(0px);
+		}
+	}
+}

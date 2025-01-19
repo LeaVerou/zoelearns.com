@@ -8,9 +8,11 @@ import {
 } from "../common/util.js";
 
 let { createApp } = Vue;
+let { promise: mountedPromise, resolve: mountedDone } = Promise.withResolvers();
 
 globalThis.app = createApp({
 	data () {
+
 		return {
 			answers: {},
 			row: 0,
@@ -20,6 +22,7 @@ globalThis.app = createApp({
 				error_delay: 1,
 			},
 			typing: 0,
+			mountedDone: mountedPromise,
 		}
 	},
 
@@ -33,6 +36,8 @@ globalThis.app = createApp({
 		if (this.col > 0 || this.row > 0) {
 			this.focus(this.row, this.col);
 		}
+
+		mountedDone();
 	},
 
 	computed: {
@@ -82,7 +87,18 @@ globalThis.app = createApp({
 					}
 				}
 			},
-			immediate: true
+			immediate: true,
+		},
+
+		progress: {
+			async handler (progress) {
+				await this.mountedDone;
+
+				if (progress >= 1) {
+					this.$refs.successDialog.showModal();
+				}
+			},
+			immediate: true,
 		}
 	},
 

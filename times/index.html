@@ -71,11 +71,11 @@
 			{{ amount(settings.error_delay, {one: 'second', none: 'No delay'}) }}
 		</label>
 	</dialog>
-	<dialog id="success" :open="progress == 1">
+	<dialog id="success" ref="successDialog">
 		<h2>Congratulations!</h2>
 		<p class="large-emoji">🎉</p>
-		<p>You got it! You can now multiply up to {{ max }}×{{ max }}!</p>
-		<button @click="settings.max++">Next level: {{ max + 1 }}×{{ max + 1 }}</button>
+		<p>You got it! You can now multiply up to <strong>{{ max }}×{{ max }}</strong>!</p>
+		<button @click="settings.max++">Next level: <strong>{{ max + 1 }}×{{ max + 1 }}</strong></button>
 	</dialog>
 </body>
 </html>
