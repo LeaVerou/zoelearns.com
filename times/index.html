@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, minimum-scale=1.0">
 	<title>Zoe Learns Multiplication</title>
 	<link rel="icon" href="favicon.svg">
 	<link rel="stylesheet" href="style.css">
@@ -75,7 +75,7 @@
 		<h2>Congratulations!</h2>
 		<p class="large-emoji">🎉</p>
 		<p>You got it! You can now multiply up to <strong>{{ max }}×{{ max }}</strong>!</p>
-		<button @click="settings.max++">Next level: <strong>{{ max + 1 }}×{{ max + 1 }}</strong></button>
+		<button @click="settings.max++" class="next-level">Next level: <strong>{{ max + 1 }}×{{ max + 1 }}</strong></button>
 	</dialog>
 </body>
 </html>

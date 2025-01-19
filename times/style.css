@@ -315,4 +315,8 @@ dialog#success {
 			backdrop-filter: blur(0px);
 		}
 	}
+
+	.next-level {
+		padding-block: .4em;
+	}
 }
