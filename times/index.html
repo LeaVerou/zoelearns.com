@@ -33,6 +33,9 @@
 					'incorrect': !typing && correct[m][n] === false,
 					'typing': typing
 				}">
+					<label>
+						<span class="label">{{ m }}&thinsp;×&thinsp;{{ n }}&thinsp;=</span>
+					</label>
 					<input inputmode="numeric" v-model="answers[m][n]"
 					  :maxlength="ceil(log(max ** 2, 10))"
 					  :pattern="m * n" :placeholder="`${m}×${n}`"

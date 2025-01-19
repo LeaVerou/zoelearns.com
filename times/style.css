@@ -115,6 +115,7 @@ th {
 
 td,
 .td-icon {
+	position: relative;
 	width: calc((var(--max-chars) + 1) * 1ch + .6rem);
 	padding: 0;
 	border: 1px solid var(--color-neutral-70,);
@@ -123,6 +124,24 @@ td,
 	--border-rect: var(--border-rect-width) solid var(--border-rect-color);
 	--border-width: 1px;
 	line-height: var(--max-chars);
+
+	label {
+		position: absolute;
+		font-size: 40%;
+		inset: .4em;
+		inset-inline-start: 0;
+		inset-block-end: auto;
+		text-align: center;
+		line-height: 1;
+		color: oklab(from var(--color-neutral-50) l a b / 50%);
+		transition: 0s;
+		opacity: 0;
+
+		&:has(+ input:is(.incorrect > *, :focus:not(:placeholder-shown))) {
+			opacity: 1;
+			transition: 500ms;
+		}
+	}
 
 	input {
 		display: block;
