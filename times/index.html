@@ -78,7 +78,7 @@
 		</h2>
 		<p class="large-emoji">🎉</p>
 		<p>You got it! You can now multiply up to <strong>{{ max }}×{{ max }}</strong>!</p>
-		<button @click="settings.max++" class="next-level">Next level: <strong>{{ max + 1 }}×{{ max + 1 }}</strong></button>
+		<button @click="settings.max++; this.$refs.successDialog.close();" class="next-level">Next level: <strong>{{ max + 1 }}×{{ max + 1 }}</strong></button>
 	</dialog>
 </body>
 </html>
