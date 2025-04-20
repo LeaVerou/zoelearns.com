@@ -94,7 +94,7 @@ globalThis.app = createApp({
 			async handler (progress) {
 				await this.mountedDone;
 
-				if (progress >= 1) {
+				if (progress >= 1 && !this.show_settings) {
 					this.$refs.successDialog.showModal();
 				}
 			},
