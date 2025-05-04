@@ -73,14 +73,35 @@ form {
 }
 
 .note-display {
+	display: flex;
+	gap: 2em;
+	justify-content: center;
+	margin: 1em 0;
 	padding: 1em;
 	background: oklch(0.95 0.05 250);
 	border-radius: 0.5em;
-	font-size: 2em;
-	font-weight: bold;
+}
+
+.algorithm-result {
 	text-align: center;
-	min-height: 1.5em;
+	min-width: 4em;
+}
+
+.algorithm-name {
+	font-size: 0.8em;
+	color: #666;
+	margin-bottom: 0.2em;
+}
+
+.algorithm-result .note {
+	font-size: 1.5em;
+	font-weight: bold;
 	font-family: monospace;
+}
+
+.algorithm-result .detecting {
+	font-size: 0.7em;
+	color: #666;
 }
 
 #debug-info {

@@ -1,5 +1,5 @@
 import * as utils from './utils.js';
-import { PitchDetector } from "https://esm.sh/pitchy@4";
+import { AMDF, YIN, DynamicWavelet, ACF2PLUS, Macleod } from "https://esm.sh/pitchfinder@2.3.2/es2022/pitchfinder.mjs";
 
 // Make Pitchy available globally
 globalThis.Pitchy = globalThis.Pitchy || {};
@@ -10,102 +10,89 @@ globalThis.utils = utils;
 let isRecording = false;
 let audioContext;
 let analyser;
-let detector;
+let detectors = [];
 let input;
-let lastNote = null;
-let lastNoteTime = 0;
-let lastPitch = 0;
-let stableCount = 0;
-let pitchHistory = [];
-const HISTORY_SIZE = 20;
 let lastAmplitude = 0;
-let amplitudeDecayCount = 0;
-const DECAY_THRESHOLD = 3; // Number of consecutive amplitude decreases to consider as release
+let currentPitches = {
+	Macleod: null,
+	ACF2PLUS: null,
+	YIN: null,
+	ZeroCrossing: null
+};
+let wasQuiet = true; // Track if we were previously in silence
+let lastLogTime = 0;
+const LOG_INTERVAL = 1000; // Log every second
+let quietFrames = 0;
+const QUIET_THRESHOLD = 5; // Number of quiet frames before resetting
+let lastBestPitch = null;
+let stableFrames = 0;
+const STABLE_THRESHOLD = 3; // Number of frames with same pitch before updating
+let updateTimeout = null;
 
 // Update debug info
 function updateDebugInfo(amplitude, pitch, clarity) {
 	const debugInfo = document.getElementById('debug-info');
-	// Convert amplitude to decibels (assuming 0 amplitude = -100 dB)
 	const db = 20 * Math.log10(amplitude);
 	debugInfo.innerHTML = `
 		<dt>Amplitude</dt>
 		<dd>${amplitude.toFixed(4)} (${db.toFixed(1)} dB)</dd>
 		<dt>Pitch</dt>
-		<dd>${pitch.toFixed(1)} Hz</dd>
+		<dd>${pitch === null ? 'No detection' :
+			(typeof pitch === 'object' ? pitch.freq : pitch).toFixed(1)} Hz</dd>
 		<dt>Clarity</dt>
 		<dd>${(clarity * 100).toFixed(1)}%</dd>
 	`;
 }
 
-// Get the most common note from recent history
-function getModeNote() {
-	if (pitchHistory.length === 0) return null;
+// Helper function to update the UI for an algorithm
+function updateAlgorithmResult(name, pitch) {
+	const container = Array.from(document.querySelectorAll('.algorithm-result'))
+		.find(el => el.querySelector('.algorithm-name').textContent === name);
 
-	// Count occurrences of each note
-	const noteCounts = {};
-	pitchHistory.forEach(note => {
-		noteCounts[note] = (noteCounts[note] || 0) + 1;
-	});
-
-	// Find the note with highest count
-	let maxCount = 0;
-	let modeNote = null;
-	for (const [note, count] of Object.entries(noteCounts)) {
-		if (count > maxCount) {
-			maxCount = count;
-			modeNote = note;
-		}
+	if (!container) {
+		console.warn(`No container found for algorithm: ${name}`);
+		return;
 	}
 
-	return modeNote;
+	const noteElement = container.querySelector('.note');
+	if (!noteElement) {
+		console.warn(`No note element found in container for: ${name}`);
+		return;
+	}
+
+	if (pitch) {
+		const note = utils.frequencyToNote(pitch);
+		noteElement.textContent = note;
+	} else {
+		noteElement.textContent = '-';
+	}
 }
 
-// Analyze harmonics to find the fundamental frequency
-function findFundamentalFrequency(analyser, currentPitch) {
-	const frequencyData = new Float32Array(analyser.frequencyBinCount);
-	analyser.getFloatFrequencyData(frequencyData);
+// Helper function to get the best guess from all algorithms
+function getBestGuess(macleodPitch, acfPitch, waveletPitch, zcPitch) {
+	// Get all valid pitches
+	const validPitches = [macleodPitch, acfPitch, waveletPitch, zcPitch].filter(p => p);
+	if (validPitches.length === 0) return null;
 
-	// Convert to linear scale and normalize
-	const linearData = frequencyData.map(db => Math.pow(10, db / 20));
-	const maxAmplitude = Math.max(...linearData);
-	const normalizedData = linearData.map(a => a / maxAmplitude);
+	// If we have multiple valid pitches, check if they're octaves of each other
+	if (validPitches.length > 1) {
+		// Sort pitches from lowest to highest
+		validPitches.sort((a, b) => a - b);
 
-	// Find peaks in the frequency spectrum
-	const peaks = [];
-	for (let i = 1; i < normalizedData.length - 1; i++) {
-		if (normalizedData[i] > normalizedData[i - 1] && normalizedData[i] > normalizedData[i + 1]) {
-			peaks.push({
-				frequency: i * audioContext.sampleRate / analyser.fftSize,
-				amplitude: normalizedData[i]
-			});
+		// Check if higher pitches are octaves of the lowest
+		const basePitch = validPitches[0];
+		const isOctave = validPitches.every(p => {
+			const ratio = p / basePitch;
+			return Math.abs(Math.log2(ratio) - Math.round(Math.log2(ratio))) < 0.1;
+		});
+
+		if (isOctave) {
+			return basePitch;
 		}
 	}
 
-	// Sort peaks by amplitude
-	peaks.sort((a, b) => b.amplitude - a.amplitude);
-
-	// Log the top 5 peaks
-	const log = document.getElementById('log');
-	log.value += 'Top 5 frequency peaks:\n';
-	peaks.slice(0, 5).forEach(p => {
-		log.value += `${p.frequency.toFixed(1)} Hz (${p.amplitude.toFixed(4)})\n`;
-	});
-	log.value += '\n';
-
-	// If the current pitch is suspiciously low for a high note
-	if (currentPitch < 500) {
-		// Look for a peak that's an octave or two above the current pitch
-		for (const peak of peaks) {
-			const ratio = peak.frequency / currentPitch;
-			// If the ratio is close to 2 (octave) or 4 (two octaves)
-			if (Math.abs(ratio - 2) < 0.1 || Math.abs(ratio - 4) < 0.1) {
-				return peak.frequency;
-			}
-		}
-	}
-
-	// If no better frequency found, return the current pitch
-	return currentPitch;
+	// If pitches aren't octaves or we only have one, prefer Macleod, then ACF2+, then DynamicWavelet, then ZeroCrossing
+	return macleodPitch || acfPitch || waveletPitch || zcPitch;
 }
 
 // Detect pitch
@@ -117,90 +104,50 @@ function updatePitch() {
 	const db = 20 * Math.log10(maxAmplitude);
 	const thresholdDb = parseFloat(document.getElementById('volume-threshold').value);
 
-	// Detect amplitude decay (end of keypress)
-	const isDecaying = db < lastAmplitude;
-	if (isDecaying) {
-		amplitudeDecayCount++;
-	} else {
-		amplitudeDecayCount = 0;
-	}
-	lastAmplitude = db;
+	// Only process if we have significant sound
+	if (db >= thresholdDb) {
+		// Get results from all detectors
+		const results = detectors.map(({name, detector}) => {
+			const rawPitch = detector(input);
+			return { name, rawPitch };
+		});
 
-	// Only proceed if there's significant sound
-	if (db < thresholdDb) {
-		// Clear history when there's silence
-		pitchHistory = [];
-		requestAnimationFrame(updatePitch);
-		return;
-	}
+		// Process results
+		results.forEach(({name, rawPitch}) => {
+			let pitch = rawPitch === null ? null :
+				(typeof rawPitch === 'object' ? rawPitch.freq : rawPitch);
 
-	const [pitch, clarity] = detector.findPitch(input, audioContext.sampleRate);
-
-	// If the detected pitch seems suspiciously low for a high note, try harmonic analysis
-	let finalPitch = pitch;
-	if (pitch < 500 && clarity > 0.6) {
-		finalPitch = findFundamentalFrequency(analyser, pitch);
-	}
-
-	// Log the detection results
-	const log = document.getElementById('log');
-	log.value += `Pitch detection:\n`;
-	log.value += `  Pitch: ${pitch.toFixed(1)} Hz\n`;
-	if (finalPitch !== pitch) {
-		log.value += `  Corrected pitch: ${finalPitch.toFixed(1)} Hz\n`;
-	}
-	log.value += `  Clarity: ${clarity.toFixed(3)}\n`;
-	log.value += `  Sample rate: ${audioContext.sampleRate}\n`;
-	log.value += `  FFT size: ${analyser.fftSize}\n`;
-	log.value += `  Frequency resolution: ${(audioContext.sampleRate / analyser.fftSize).toFixed(4)} Hz\n\n`;
-
-	// Scroll to bottom
-	log.scrollTop = log.scrollHeight;
-
-	updateDebugInfo(maxAmplitude, finalPitch, clarity);
-
-	if (finalPitch > 0 && clarity > 0.6) {
-		// Check if pitch is stable (within 0.5% of last pitch)
-		const pitchDiff = Math.abs(finalPitch - lastPitch) / lastPitch;
-		if (pitchDiff < 0.005) {
-			stableCount++;
-		} else {
-			stableCount = 0;
-		}
-		lastPitch = finalPitch;
-
-		// Only update if pitch has been stable for 10 frames
-		if (stableCount >= 10) {
-			const note = utils.frequencyToNote(finalPitch);
-			const now = Date.now();
-
-			// Add to history, with higher weight during release phase
-			if (amplitudeDecayCount >= DECAY_THRESHOLD) {
-				// During release phase, add the note multiple times to increase its weight
-				for (let i = 0; i < 3; i++) {
-					pitchHistory.push(note);
-					if (pitchHistory.length > HISTORY_SIZE) {
-						pitchHistory.shift();
-					}
-				}
-			} else {
-				// During attack/sustain, add normally
-				pitchHistory.push(note);
-				if (pitchHistory.length > HISTORY_SIZE) {
-					pitchHistory.shift();
-				}
+			if (typeof pitch === 'number' && (pitch < 20 || pitch > 4500)) {
+				pitch = null;
 			}
 
-			// Get the most common note from recent history
-			const modeNote = getModeNote();
+			currentPitches[name] = pitch;
+		});
 
-			// Only update if it's a different note or enough time has passed
-			if (modeNote !== lastNote || now - lastNoteTime > 1000) {
-				lastNote = modeNote;
-				lastNoteTime = now;
-				document.getElementById('detected-notes').textContent = `${modeNote} (${Math.round(clarity * 100)}% clarity)`;
-			}
+		// Debounce UI updates
+		if (updateTimeout) {
+			clearTimeout(updateTimeout);
 		}
+		updateTimeout = setTimeout(() => {
+			const bestPitch = getBestGuess(currentPitches.Macleod, currentPitches.ACF2PLUS, currentPitches.YIN, currentPitches.ZeroCrossing);
+
+			// Update UI
+			updateAlgorithmResult('Macleod', currentPitches.Macleod);
+			updateAlgorithmResult('ACF2+', currentPitches.ACF2PLUS);
+			updateAlgorithmResult('YIN', currentPitches.YIN);
+			updateAlgorithmResult('ZeroCrossing', currentPitches.ZeroCrossing);
+
+			const mainNoteDisplay = document.querySelector('.note-display .note');
+			if (mainNoteDisplay) {
+				mainNoteDisplay.textContent = bestPitch ? utils.frequencyToNote(bestPitch) : '-';
+			}
+
+			const macleodResult = results.find(r => r.name === 'Macleod');
+			const clarity = macleodResult?.rawPitch === null ? 0 :
+				(typeof macleodResult?.rawPitch === 'object' ?
+					Math.max(0, Math.min(1, macleodResult.rawPitch.probability)) : 1);
+			updateDebugInfo(maxAmplitude, macleodResult?.rawPitch, clarity);
+		}, 50); // 50ms debounce
 	}
 
 	requestAnimationFrame(updatePitch);
@@ -212,6 +159,44 @@ document.getElementById('volume-threshold').addEventListener('input', (e) => {
 	document.getElementById('threshold-value').textContent = `${db} dB`;
 });
 
+// Clear log button
+document.getElementById('clear-log').addEventListener('click', () => {
+	document.getElementById('log').value = '';
+});
+
+// Start recording automatically when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+	document.getElementById('record').click();
+});
+
+// Helper function to detect pitch by zero crossings
+function detectPitchByZeroCrossings(input, sampleRate) {
+	// Find zero crossings
+	let zeroCrossings = [];
+	for (let i = 1; i < input.length; i++) {
+		if ((input[i-1] < 0 && input[i] >= 0) || (input[i-1] > 0 && input[i] <= 0)) {
+			zeroCrossings.push(i);
+		}
+	}
+
+	if (zeroCrossings.length < 2) return null;
+
+	// Calculate average period between zero crossings
+	let totalPeriod = 0;
+	for (let i = 1; i < zeroCrossings.length; i++) {
+		totalPeriod += zeroCrossings[i] - zeroCrossings[i-1];
+	}
+	const averagePeriod = totalPeriod / (zeroCrossings.length - 1);
+
+	// Convert period to frequency
+	const frequency = sampleRate / averagePeriod;
+
+	// Filter out frequencies outside our range
+	if (frequency < 20 || frequency > 4500) return null;
+
+	return frequency;
+}
+
 // Start/stop recording
 document.getElementById('record').addEventListener('click', async () => {
 	if (!isRecording) {
@@ -222,13 +207,40 @@ document.getElementById('record').addEventListener('click', async () => {
 			if (!audioContext) {
 				audioContext = new AudioContext();
 				analyser = audioContext.createAnalyser();
-				analyser.fftSize = 32768; // Increased for better resolution
-				analyser.smoothingTimeConstant = 0.9;
-				detector = PitchDetector.forFloat32Array(analyser.fftSize);
-				detector.minVolumeDecibels = -50;
-				detector.minFrequency = 20;
-				detector.maxFrequency = 4500;
-				input = new Float32Array(detector.inputLength);
+				analyser.fftSize = 4096; // Reduced for faster processing
+				analyser.smoothingTimeConstant = 0.8;
+				detectors = [
+					{
+						name: "Macleod",
+						detector: Macleod({
+							minFrequency: 20,
+							maxFrequency: 4500,
+							sensitivity: 0.01,
+							probabilityThreshold: 0.1
+						})
+					},
+					{
+						name: "ACF2+",
+						detector: ACF2PLUS({
+							minFrequency: 20,
+							maxFrequency: 4500,
+							sensitivity: 0.01
+						})
+					},
+					{
+						name: "YIN",
+						detector: YIN({
+							minFrequency: 20,
+							maxFrequency: 4500,
+							threshold: 0.01
+						})
+					},
+					{
+						name: "ZeroCrossing",
+						detector: (input) => detectPitchByZeroCrossings(input, audioContext.sampleRate)
+					}
+				];
+				input = new Float32Array(analyser.fftSize);
 
 				// Connect microphone to analyser
 				const source = audioContext.createMediaStreamSource(stream);
@@ -238,7 +250,10 @@ document.getElementById('record').addEventListener('click', async () => {
 			// Start recording
 			isRecording = true;
 			document.getElementById('record').textContent = '🎤 Stop';
-			document.getElementById('detected-notes').textContent = 'Listening...';
+			// Initialize all algorithm results to '-'
+			Array.from(document.querySelectorAll('.algorithm-result .note')).forEach(el => {
+				el.textContent = '-';
+			});
 
 			// Start pitch detection
 			updatePitch();

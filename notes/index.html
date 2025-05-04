@@ -19,8 +19,26 @@
 		<input type="range" id="volume-threshold" min="-60" max="0" step="1" value="-30">
 		<span id="threshold-value">-30 dB</span>
 	</div>
-	<div id="detected-notes" class="note-display"></div>
+	<div id="detected-notes" class="note-display">
+		<div class="algorithm-result">
+			<div class="algorithm-name">Macleod</div>
+			<div class="note">-</div>
+		</div>
+		<div class="algorithm-result">
+			<div class="algorithm-name">ACF2+</div>
+			<div class="note">-</div>
+		</div>
+		<div class="algorithm-result">
+			<div class="algorithm-name">YIN</div>
+			<div class="note">-</div>
+		</div>
+		<div class="algorithm-result">
+			<div class="algorithm-name">ZeroCrossing</div>
+			<div class="note">-</div>
+		</div>
+	</div>
 	<dl id="debug-info"></dl>
 	<textarea id="log" readonly></textarea>
+	<button id="clear-log">Clear log</button>
 </body>
 </html>
