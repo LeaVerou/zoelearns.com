@@ -16,10 +16,11 @@
 	<button id="record">🎤 Record</button>
 	<div class="controls">
 		<label for="volume-threshold">Volume threshold:</label>
-		<input type="range" id="volume-threshold" min="0" max="0.1" step="0.001" value="0.01">
-		<span id="threshold-value">0.01</span>
+		<input type="range" id="volume-threshold" min="-60" max="0" step="1" value="-30">
+		<span id="threshold-value">-30 dB</span>
 	</div>
 	<div id="detected-notes" class="note-display"></div>
 	<dl id="debug-info"></dl>
+	<textarea id="log" readonly></textarea>
 </body>
 </html>

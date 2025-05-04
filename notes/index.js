@@ -25,22 +25,16 @@ const DECAY_THRESHOLD = 3; // Number of consecutive amplitude decreases to consi
 // Update debug info
 function updateDebugInfo(amplitude, pitch, clarity) {
 	const debugInfo = document.getElementById('debug-info');
+	// Convert amplitude to decibels (assuming 0 amplitude = -100 dB)
+	const db = 20 * Math.log10(amplitude);
 	debugInfo.innerHTML = `
 		<dt>Amplitude</dt>
-		<dd>${amplitude.toFixed(4)}</dd>
+		<dd>${amplitude.toFixed(4)} (${db.toFixed(1)} dB)</dd>
 		<dt>Pitch</dt>
 		<dd>${pitch.toFixed(1)} Hz</dd>
 		<dt>Clarity</dt>
 		<dd>${(clarity * 100).toFixed(1)}%</dd>
 	`;
-}
-
-// Update detected notes display
-function updateNotesDisplay() {
-	const notesDisplay = document.getElementById('detected-notes');
-	notesDisplay.innerHTML = detectedNotes.map(note =>
-		`<div class="note">${note}</div>`
-	).join('');
 }
 
 // Get the most common note from recent history
@@ -66,25 +60,74 @@ function getModeNote() {
 	return modeNote;
 }
 
+// Analyze harmonics to find the fundamental frequency
+function findFundamentalFrequency(analyser, currentPitch) {
+	const frequencyData = new Float32Array(analyser.frequencyBinCount);
+	analyser.getFloatFrequencyData(frequencyData);
+
+	// Convert to linear scale and normalize
+	const linearData = frequencyData.map(db => Math.pow(10, db / 20));
+	const maxAmplitude = Math.max(...linearData);
+	const normalizedData = linearData.map(a => a / maxAmplitude);
+
+	// Find peaks in the frequency spectrum
+	const peaks = [];
+	for (let i = 1; i < normalizedData.length - 1; i++) {
+		if (normalizedData[i] > normalizedData[i - 1] && normalizedData[i] > normalizedData[i + 1]) {
+			peaks.push({
+				frequency: i * audioContext.sampleRate / analyser.fftSize,
+				amplitude: normalizedData[i]
+			});
+		}
+	}
+
+	// Sort peaks by amplitude
+	peaks.sort((a, b) => b.amplitude - a.amplitude);
+
+	// Log the top 5 peaks
+	const log = document.getElementById('log');
+	log.value += 'Top 5 frequency peaks:\n';
+	peaks.slice(0, 5).forEach(p => {
+		log.value += `${p.frequency.toFixed(1)} Hz (${p.amplitude.toFixed(4)})\n`;
+	});
+	log.value += '\n';
+
+	// If the current pitch is suspiciously low for a high note
+	if (currentPitch < 500) {
+		// Look for a peak that's an octave or two above the current pitch
+		for (const peak of peaks) {
+			const ratio = peak.frequency / currentPitch;
+			// If the ratio is close to 2 (octave) or 4 (two octaves)
+			if (Math.abs(ratio - 2) < 0.1 || Math.abs(ratio - 4) < 0.1) {
+				return peak.frequency;
+			}
+		}
+	}
+
+	// If no better frequency found, return the current pitch
+	return currentPitch;
+}
+
 // Detect pitch
 function updatePitch() {
 	if (!isRecording) return;
 
 	analyser.getFloatTimeDomainData(input);
 	const maxAmplitude = Math.max(...input);
-	const threshold = parseFloat(document.getElementById('volume-threshold').value);
+	const db = 20 * Math.log10(maxAmplitude);
+	const thresholdDb = parseFloat(document.getElementById('volume-threshold').value);
 
 	// Detect amplitude decay (end of keypress)
-	const isDecaying = maxAmplitude < lastAmplitude;
+	const isDecaying = db < lastAmplitude;
 	if (isDecaying) {
 		amplitudeDecayCount++;
 	} else {
 		amplitudeDecayCount = 0;
 	}
-	lastAmplitude = maxAmplitude;
+	lastAmplitude = db;
 
 	// Only proceed if there's significant sound
-	if (maxAmplitude < threshold) {
+	if (db < thresholdDb) {
 		// Clear history when there's silence
 		pitchHistory = [];
 		requestAnimationFrame(updatePitch);
@@ -92,21 +135,43 @@ function updatePitch() {
 	}
 
 	const [pitch, clarity] = detector.findPitch(input, audioContext.sampleRate);
-	updateDebugInfo(maxAmplitude, pitch, clarity);
 
-	if (pitch > 0 && clarity > 0.6) {
+	// If the detected pitch seems suspiciously low for a high note, try harmonic analysis
+	let finalPitch = pitch;
+	if (pitch < 500 && clarity > 0.6) {
+		finalPitch = findFundamentalFrequency(analyser, pitch);
+	}
+
+	// Log the detection results
+	const log = document.getElementById('log');
+	log.value += `Pitch detection:\n`;
+	log.value += `  Pitch: ${pitch.toFixed(1)} Hz\n`;
+	if (finalPitch !== pitch) {
+		log.value += `  Corrected pitch: ${finalPitch.toFixed(1)} Hz\n`;
+	}
+	log.value += `  Clarity: ${clarity.toFixed(3)}\n`;
+	log.value += `  Sample rate: ${audioContext.sampleRate}\n`;
+	log.value += `  FFT size: ${analyser.fftSize}\n`;
+	log.value += `  Frequency resolution: ${(audioContext.sampleRate / analyser.fftSize).toFixed(4)} Hz\n\n`;
+
+	// Scroll to bottom
+	log.scrollTop = log.scrollHeight;
+
+	updateDebugInfo(maxAmplitude, finalPitch, clarity);
+
+	if (finalPitch > 0 && clarity > 0.6) {
 		// Check if pitch is stable (within 0.5% of last pitch)
-		const pitchDiff = Math.abs(pitch - lastPitch) / lastPitch;
+		const pitchDiff = Math.abs(finalPitch - lastPitch) / lastPitch;
 		if (pitchDiff < 0.005) {
 			stableCount++;
 		} else {
 			stableCount = 0;
 		}
-		lastPitch = pitch;
+		lastPitch = finalPitch;
 
 		// Only update if pitch has been stable for 10 frames
 		if (stableCount >= 10) {
-			const note = utils.frequencyToNote(pitch);
+			const note = utils.frequencyToNote(finalPitch);
 			const now = Date.now();
 
 			// Add to history, with higher weight during release phase
@@ -143,7 +208,8 @@ function updatePitch() {
 
 // Update threshold value display
 document.getElementById('volume-threshold').addEventListener('input', (e) => {
-	document.getElementById('threshold-value').textContent = e.target.value;
+	const db = parseFloat(e.target.value);
+	document.getElementById('threshold-value').textContent = `${db} dB`;
 });
 
 // Start/stop recording
@@ -156,18 +222,18 @@ document.getElementById('record').addEventListener('click', async () => {
 			if (!audioContext) {
 				audioContext = new AudioContext();
 				analyser = audioContext.createAnalyser();
-				analyser.fftSize = 16384; // Increased for even better resolution
-				analyser.smoothingTimeConstant = 0.9; // Increased smoothing
+				analyser.fftSize = 32768; // Increased for better resolution
+				analyser.smoothingTimeConstant = 0.9;
 				detector = PitchDetector.forFloat32Array(analyser.fftSize);
 				detector.minVolumeDecibels = -50;
 				detector.minFrequency = 20;
-				detector.maxFrequency = 800; // Lowered further to focus on fundamental
+				detector.maxFrequency = 4500;
 				input = new Float32Array(detector.inputLength);
-			}
 
-			// Connect microphone to analyser
-			const source = audioContext.createMediaStreamSource(stream);
-			source.connect(analyser);
+				// Connect microphone to analyser
+				const source = audioContext.createMediaStreamSource(stream);
+				source.connect(analyser);
+			}
 
 			// Start recording
 			isRecording = true;
