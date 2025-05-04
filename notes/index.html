@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Zoe Learns Music Notes!</title>
+	<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🎶</text></svg>'>
+	<link rel="stylesheet" href="style.css">
+	<script src="index.js" type="module"></script>
+</head>
+<body>
+	<form onsubmit="event.preventDefault(); utils.playNote(document.getElementById('note').value)">
+		<input type="text" id="note" placeholder="Enter a note" autofocus value="C4">
+		<button id="play" type="submit">Play</button>
+	</form>
+	<button id="record">🎤 Record</button>
+	<div class="controls">
+		<label for="volume-threshold">Volume threshold:</label>
+		<input type="range" id="volume-threshold" min="0" max="0.1" step="0.001" value="0.01">
+		<span id="threshold-value">0.01</span>
+	</div>
+	<div id="detected-notes" class="note-display"></div>
+	<dl id="debug-info"></dl>
+</body>
+</html>
