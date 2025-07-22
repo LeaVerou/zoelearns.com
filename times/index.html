@@ -70,6 +70,7 @@
 			   @input="refresh_class($event.target.previousElementSibling, 'incorrect')">
 			{{ amount(settings.error_delay, {one: 'second', none: 'No delay'}) }}
 		</label>
+		<button @click="clear">Clear</button>
 	</dialog>
 	<dialog id="success" ref="successDialog">
 		<h2>

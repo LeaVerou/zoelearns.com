@@ -186,5 +186,12 @@ globalThis.app = createApp({
 				}
 			}
 		},
+
+		clear() {
+			if (confirm("Are you sure you want to clear your answers?")) {
+				localStorage.removeItem("answers");
+				this.answers = {};
+			}
+		}
 	},
 }).mount(document.body);
