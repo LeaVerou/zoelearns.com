@@ -40,7 +40,7 @@
 					<label>
 						<span class="label">{{ m }}&thinsp;×&thinsp;{{ n }}&thinsp;=</span>
 					</label>
-					<input type="number" inputmode="numeric" v-model="answers[m][n]"
+					<input inputmode="numeric" v-model="answers[m][n]"
 					  :maxlength="ceil(log(max ** 2, 10)) + 1"
 					  :pattern="m * n" :placeholder="`${m}×${n}`"
 					  :key="`${m}x${n}`"

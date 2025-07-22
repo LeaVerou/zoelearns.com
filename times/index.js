@@ -59,8 +59,16 @@ globalThis.app = createApp({
 				for (let n = 1; n <= this.max; n++) {
 					let answer = this.answers[m][n];
 
+					if (!answer) {
+						continue;
+					}
+
+					if (typeof answer !== "number") {
+						answer = (answer + "").trim();
+					}
+
 					if (answer) {
-						statuses[n] = answer.trim() == m * n ? true : false;
+						statuses[n] = Boolean(answer == m * n);
 					}
 				}
 			}
